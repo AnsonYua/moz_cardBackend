@@ -1,0 +1,56 @@
+{
+  "defaultDecks": {
+    "starter": {
+      "id": "deck001",
+      "name": "Starter Deck",
+      "cards": [
+        "card001",
+        "card001",
+        "card001",
+        "card002",
+        "card002",
+        "card003"
+      ],
+      "maxCards": 30,
+      "minCards": 20
+    }
+  },
+  "playerDecks": {
+    "playerId_1": {
+      "activeDeck": "deck001",
+      "decks": {
+        "deck001": {
+          "id": "deck001",
+          "name": "Starter Deck",
+          "summoner": [
+            "S045","S051","S056B","S058","S073E","S109"
+          ],
+          "cards": [
+            "s43", "s44", "s45", "s46", "s47", "s49", "s50", "s52", 
+            "s53", "s54", "s56", "s109", "s110", "s111", "s122", 
+            "s125", "s186", "s187", "s189", "s190", "s191", "s227", 
+            "s228", "s229", "s230", "s231", "s279", "s688"
+          ]
+        }
+      }
+    },    
+    "playerId_2": {
+      "activeDeck": "deck001",
+      "decks": {
+        "deck001": {
+          "id": "deck001",
+          "name": "Starter Deck",
+          "summoner": [
+            "S045","S051","S056B","S058","S073E","S109"
+          ],
+          "cards": [
+            "s43", "s44", "s45", "s46", "s47", "s49", "s50", "s52", 
+            "s53", "s54", "s56", "s109", "s110", "s111", "s122", 
+            "s125", "s186", "s187", "s189", "s190", "s191", "s227", 
+            "s228", "s229", "s230", "s231", "s279", "s688"
+          ]
+        }
+      }
+    }
+  }
+}

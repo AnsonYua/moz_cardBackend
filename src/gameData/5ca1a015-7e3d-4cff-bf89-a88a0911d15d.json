@@ -1,0 +1,327 @@
+{
+  "gameId": "0f32fdc3-4dc0-4a5c-825b-093c30914342",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 1,
+        "summoner": [
+          "S051",
+          "S045",
+          "S056B",
+          "S073E",
+          "S058"
+        ],
+        "hand": [
+          "s52",
+          "s191",
+          "s46",
+          "s229",
+          "s186",
+          "s125",
+          "s56",
+          "s187"
+        ],
+        "mainDeck": [
+          "s230",
+          "s122",
+          "s279",
+          "s189",
+          "s54",
+          "s231",
+          "s53",
+          "s45",
+          "s43",
+          "s110",
+          "s44",
+          "s228",
+          "s190",
+          "s111",
+          "s50",
+          "s227",
+          "s109"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [
+        {
+          "type": "PlayCard",
+          "card_idx": 1,
+          "field_idx": 0,
+          "selectedCard": {
+            "card": [
+              "s47"
+            ],
+            "cardDetails": [
+              {
+                "id": "s47",
+                "attribute": [
+                  "wind"
+                ],
+                "value": 50,
+                "type": "monster"
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 0
+        },
+        {
+          "type": "PlayCard",
+          "card_idx": 2,
+          "field_idx": 1,
+          "selectedCard": {
+            "card": [
+              "s688"
+            ],
+            "cardDetails": [
+              {
+                "id": "s688",
+                "attribute": [
+                  "all"
+                ],
+                "value": 100,
+                "type": "monster"
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 1
+        },
+        {
+          "type": "PlayCardBack",
+          "card_idx": 5,
+          "field_idx": 2,
+          "selectedCard": {
+            "card": [
+              "s49"
+            ],
+            "cardDetails": [
+              {
+                "id": "s49",
+                "attribute": [
+                  "wind"
+                ],
+                "value": 50,
+                "type": "monster"
+              }
+            ],
+            "isBack": [
+              true
+            ]
+          },
+          "turn": 2
+        },
+        {
+          "turn": 2.5,
+          "type": "EndSummonerBattle",
+          "winner": "playerId_1"
+        }
+      ],
+      "Field": {
+        "summonner": {
+          "id": "S045",
+          "sky": [
+            "all",
+            "mountain",
+            "tree"
+          ],
+          "left": [
+            "wind",
+            "water"
+          ],
+          "right": [
+            "wind",
+            "tree"
+          ],
+          "age": 20,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "wind",
+              "value": 30
+            },
+            {
+              "type": "bird",
+              "value": 100
+            }
+          ],
+          "level": 3,
+          "type": [
+            "wind"
+          ],
+          "initialPoint": 25
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      },
+      "playerPoint": 0,
+      "overallGamePoint": 30
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 1,
+        "summoner": [
+          "S045",
+          "S109",
+          "S058",
+          "S051",
+          "S056B"
+        ],
+        "hand": [
+          "s231",
+          "s56",
+          "s688",
+          "s46",
+          "s45",
+          "s191",
+          "s227"
+        ],
+        "mainDeck": [
+          "s109",
+          "s111",
+          "s54",
+          "s279",
+          "s189",
+          "s52",
+          "s187",
+          "s122",
+          "s125",
+          "s229",
+          "s43",
+          "s47",
+          "s53",
+          "s110",
+          "s49",
+          "s230",
+          "s186",
+          "s44"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [
+        {
+          "type": "PlayCard",
+          "card_idx": 1,
+          "field_idx": 1,
+          "selectedCard": {
+            "card": [
+              "s50"
+            ],
+            "cardDetails": [
+              {
+                "id": "s50",
+                "attribute": [
+                  "wind"
+                ],
+                "value": 60,
+                "type": "monster"
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 0.5
+        },
+        {
+          "type": "PlayCard",
+          "card_idx": 6,
+          "field_idx": 0,
+          "selectedCard": {
+            "card": [
+              "s228"
+            ],
+            "cardDetails": [
+              {
+                "id": "s228",
+                "attribute": [
+                  "shell"
+                ],
+                "value": 20,
+                "type": "monster"
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 1.5
+        },
+        {
+          "type": "PlayCard",
+          "card_idx": 5,
+          "field_idx": 2,
+          "selectedCard": {
+            "card": [
+              "s190"
+            ],
+            "cardDetails": [
+              {
+                "id": "s190",
+                "attribute": [
+                  "wind"
+                ],
+                "value": 40,
+                "type": "monster"
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 2.5
+        },
+        {
+          "turn": 2.5,
+          "type": "EndSummonerBattle",
+          "winner": "playerId_1"
+        }
+      ],
+      "Field": {
+        "summonner": {
+          "id": "S109",
+          "sky": [
+            "all"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "all",
+              "value": 70
+            }
+          ],
+          "level": 7,
+          "type": [],
+          "initialPoint": 101
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      },
+      "playerPoint": 0,
+      "overallGamePoint": 0
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_1",
+    "currentTurn": 3
+  },
+  "lastUpdate": "2025-02-03T09:52:09.711Z",
+  "updateUUID": "5ac5e5bb-37b0-4df5-91eb-bc9ca8f86a2d"
+}

@@ -1,0 +1,279 @@
+{
+    "cards": {
+            "s43":{
+               "id":"s43",
+               "attribute":["wind"],
+               "monsterType":[],
+               "value":10,
+               "type":"monster",
+               "cardName":"吸血蝙蝠",
+               "effects":"if your current summoner is 柏古蘭巴杜, this card's value become 500"
+            },
+            "s44":{
+               "id":"s44",
+               "attribute":["wind"],
+               "monsterType":["bird"],
+               "value":10,
+               "type":"monster",
+               "cardName":"刀翼鳥",
+               "effects":"if your current summoner is 雷巴古, this card's value become 100"
+            },
+            "s45":{
+               "id":"s45",
+               "attribute":["wind"],
+               "monsterType":[],
+               "value":30,
+               "type":"monster",
+               "cardName":"慢風獸",
+               "effects":"if your opponent having monster(食草貝) on the field, opponent's monster(食草貝) value become 0"
+            },
+            "s46":{
+               "id":"s46",
+               "attribute":["wind"],
+               "monsterType":["bird"],
+               "value":40,
+               "type":"monster",
+               "cardName":"蛇形鳥",
+               "effects":"all your component's monster with monsterType 'fish' 's value become 0" 
+            },
+            "s47":{
+               "id":"s47",
+               "attribute":["wind"],
+               "monsterType":["beast"],
+               "value":50,
+               "type":"monster",
+               "cardName":"天馬",
+               "effects":"" 
+            },
+            "s49":{
+               "id":"s49",
+               "attribute":["wind"],
+               "monsterType":["worm"],
+               "value":50,
+               "type":"monster",
+               "cardName":"空壓怪",
+               "effects":"if your opponent having monster(天龍) on the field, opponent's monster(天龍) value become 0"
+            },
+            "s50":{
+               "id":"s50",
+               "attribute":["wind"],
+               "monsterType":["shell"],
+               "value":60,
+               "type":"monster",
+               "cardName":"天使蝸牛",
+               "effects":"when you use help card '1000年', this card's value become 100, at the same time, your opponent right and left monster's value become 0"
+            },
+            "s52":{
+               "id":"s52",
+               "attribute":["wind"],
+               "monsterType":["beast"],
+               "value":70,
+               "type":"monster",
+               "cardName":"鳥形蛇",
+               "effects":""
+            },
+            "s53":{
+               "id":"s53",
+               "attribute":["wind"],
+               "monsterType":["male"],
+               "value":40,
+               "type":"monster",
+               "cardName":"鳥形人",
+               "effects":"if i have '天馬' on the field, this card's value become 400"
+            },
+            "s54":{
+               "id":"s54",
+               "attribute":["wind"],
+               "monsterType":["worm"],
+               "value":80,
+               "type":"monster",
+               "cardName":"空中蟲",
+               "effects":""
+            },
+            "s56":{
+               "id":"s56",
+               "attribute":["wind"],
+               "monsterType":["dragon"],
+               "value":100,
+               "type":"monster",
+               "cardName":"天龍",
+               "effects":""
+            },
+            "s109":{
+               "id":"s109",
+               "attribute":["shell"],
+               "monsterType":["bird"],
+               "value":60,
+               "type":"monster",
+               "cardName":"叭叭鳥", 
+               "effects":"all your opponent's monster with monsterType 'worm' 's value become 0"
+            },
+            "s110":{
+               "id":"s110",
+               "attribute":["shell"],
+               "monsterType":["dragon"],
+               "value":70,
+               "type":"monster",
+               "cardName":"虹霞龍", 
+               "effects":""
+               
+            },
+            "s111":{
+               "id":"s111",
+               "attribute":["shell"],
+               "monsterType":[""],
+               "value":80,
+               "type":"monster",
+               "cardName":"食草貝", 
+               "effects":"all your opponent's monster with monsterType 'beast' 's value become 0"
+            },
+            "s122":{
+               "id":"s122",
+               "attribute":["shell"],
+               "monsterType":[""],
+               "value":90,
+               "type":"monster",
+               "cardName":"貝京", 
+               "effects":"when you have 波尤 on the field, this card's value become 180"
+            },
+            "s125":{
+               "id":"s125",
+               "attribute":["shell"],
+               "monsterType":["dragon"],
+               "value":100,
+               "type":"monster",
+               "cardName":"貝龍", 
+               "effects":""
+            },
+            "s186":{
+               "id":"s186",
+               "attribute":["wind"],
+               "monsterType":[""],
+               "value":10,
+               "type":"monster",
+               "cardName":"哺", 
+               "effects":"if your current summoner is 柏古蘭巴杜, this card's value become 500"
+            },
+            "s187":{
+               "id":"s187",
+               "attribute":["wind"],
+               "monsterType":["beast"],
+               "value":50,
+               "type":"monster",
+               "cardName":"白獅精", 
+               "effects":""
+            },
+            "s189":{
+               "id":"s189",
+               "attribute":["wind"],
+               "monsterType":["worm"],
+               "value":50,
+               "type":"monster",
+               "cardName":"旋風螳螂", 
+               "effects":"if your opponent having monster(天龍) on the field, opponent's monster(天龍) value become 0"
+            },
+            "s190":{
+               "id":"s190",
+               "attribute":["wind"],
+               "monsterType":["male"],
+               "value":40,
+               "type":"monster",
+               "cardName":"凱洛風", 
+               "effects":"if you have monster(白獅精) on the field, this monster's value become 400"
+            
+            },
+            "s191":{
+               "id":"s191",
+               "attribute":["wind"],
+               "monsterType":["worm"],
+               "value":80,
+               "type":"monster",
+               "cardName":"貼地蟲", 
+               "effects":""
+            },
+            "s227":{
+               "id":"s227",
+               "attribute":["shell"],
+               "monsterType":[""],
+               "value":10,
+               "type":"monster",
+               "cardName":"睡貓", 
+               "effects":"all your opponent's monster with value equal to 50 become 0"
+            },
+            "s228":{
+               "id":"s228",
+               "attribute":["shell"],
+               "monsterType":["fairy"],
+               "value":20,
+               "type":"monster",
+               "cardName":"貝精", 
+               "effects":"all your opponent's monster with monsterType 'male' 's value become 0"
+               
+            },
+            "s229":{
+               "id":"s229",
+               "attribute":["shell"],
+               "monsterType":["dragon"],
+               "value":40,
+               "type":"monster",
+               "cardName":"鎧甲龍", 
+               "effects":"if your have monster with monsterType 'shell' on the field, this card's value become 400"
+            },
+            "s230":{
+               "id":"s230",
+               "attribute":["shell"],
+               "monsterType":[],
+               "value":60,
+               "type":"monster",
+               "cardName":"貝兵", 
+               "effects":"when you use help card '貝獸仙人之咒语', this card's value become 300"  
+            },
+            "s231":{
+               "id":"s231",
+               "attribute":["shell"],
+               "monsterType":[],
+               "value":70,
+               "type":"monster",
+               "cardName":"絲拉", 
+               "effects":"this card can only summomed when your summoner is 波尤"
+            },
+            "s279":{
+               "id":"s279",
+               "attribute":["wind"],
+               "monsterType":["god"],
+               "value":80,
+               "type":"monster",
+               "cardName":"奧狄士", 
+               "effects":""
+            },
+            "s688":{
+               "id":"s688",
+               "attribute":["all"],
+               "monsterType":["dragon"],
+               "value":100,
+               "type":"monster",
+               "cardName":"魔食龍", 
+               "effects":"if your have monster with monsterType 'shell' on the field, this card's value become 400"
+           
+            }
+    },
+    "cardTypes": ["spell", "item", "unit"],
+    "rarities": ["common", "uncommon", "rare", "legendary"],
+    "effects": {
+        "burn": {
+            "name": "Burn",
+            "description": "Deals 1 damage per turn",
+            "duration": 3
+        },
+        "heal": {
+            "name": "Heal",
+            "description": "Heals target",
+            "instant": true
+        },
+        "flying": {
+            "name": "Flying",
+            "description": "Can attack over ground units",
+            "passive": true
+        }
+    }
+}
