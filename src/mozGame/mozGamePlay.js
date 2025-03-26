@@ -1,5 +1,6 @@
 const mozDeckHelper = require('./mozDeckHelper');
 const mozPhaseManager = require('./mozPhaseManager');
+const CardEffectManager = require('../services/CardEffectManager');
 
 const TurnPhase = {
     START_REDRAW: 'START_REDRAW',
@@ -13,6 +14,9 @@ const TurnPhase = {
     GAME_END: 'GAME_END'
 };
 class mozGamePlay{
+    constructor() {
+        this.cardEffectManager = new CardEffectManager();
+    }
     updateInitialGameEnvironment(gameEnv){
         // decide who goes first
         const summonerList = []
@@ -84,8 +88,6 @@ class mozGamePlay{
             if(action["type"] == "PlayCardBack"){
                 isPlayBack = true;
             }
-            //0 =sky , 1 = left , 2 = right, 3 = help , 4 = sp
-            //const positionDict = ["sky","left","right","help","sp"];
             const positionDict = ["sky","left","right"];
             if (action["field_idx"]>=positionDict.length){
                 return this.throwError("position out of range");
@@ -128,6 +130,12 @@ class mozGamePlay{
             action["selectedCard"] = cardObj;
             gameEnv[playerId]["turnAction"].push(action);
             action["turn"] = gameEnv["currentTurn"];
+
+            // Apply card effects if the card is played face up
+            if (!isPlayBack && cardDetails.type === "monster") {
+                gameEnv = this.cardEffectManager.applyCardEffect(gameEnv, playerId, cardDetails, gameEnv[playerId].Field);
+            }
+
             gameEnv[playerId]["playerPoint"] = await this.calculatePlayerPoint(gameEnv,playerId);
             const isSummonBattleReady = await this.checkIsSummonBattleReady(gameEnv);
             if(!isSummonBattleReady){
@@ -331,27 +339,23 @@ class mozGamePlay{
         gameEnv[gameEnv["currentPlayer"]].deck.mainDeck = result["mainDeck"];
         return gameEnv;
     }
-    async calculatePlayerPoint(gameEnvInput,playerId){ 
-        var returnValue = 0;
-        const gameEnv = gameEnvInput;
-        const fieldVal = gameEnv[playerId].Field
-        const summoner = mozDeckHelper.getCurrentSummoner(gameEnv, playerId);
-        for (let key in fieldVal){
-            if (key == "right" || key == "left" || key == "sky"){
-                const areaCardArr = fieldVal[key];
-                for (let cardIdx in areaCardArr){
-                    
-                    if(areaCardArr[cardIdx]["cardDetails"][0]["type"] == "monster" &&
-                        !areaCardArr[cardIdx]["isBack"][0]){
-                            returnValue += await this.getMonsterPoint(
-                                areaCardArr[cardIdx]["cardDetails"][0],
-                                summoner
-                            );
-                    }
+    async calculatePlayerPoint(gameEnv, playerId) {
+        let totalPoints = 0;
+        const fields = ['sky', 'left', 'right'];
+        const currentSummoner = mozDeckHelper.getCurrentSummoner(gameEnv, playerId);
+
+        for (const field of fields) {
+            const fieldCards = gameEnv[playerId].Field[field];
+            for (const cardObj of fieldCards) {
+                if (!cardObj.isBack[0] && cardObj.cardDetails[0].type === "monster") {
+                    // Apply card effects before calculating points
+                    gameEnv = this.cardEffectManager.applyCardEffect(gameEnv, playerId, cardObj.cardDetails[0], gameEnv[playerId].Field);
+                    totalPoints += await this.getMonsterPoint(cardObj.cardDetails[0], currentSummoner);
                 }
             }
         }
-        return returnValue;
+
+        return totalPoints;
     }
 
     async getMonsterPoint(card,summoner){

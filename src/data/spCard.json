@@ -1,0 +1,132 @@
+{
+    "spCards": {
+            "h140":{
+               "id":"h140",
+               "type":"help",
+               "subType":[],
+               "cardName":"1000年",
+               "effects":[
+                    "if you have monster '天使蝸牛' on the field, this card's value become 100,at the same time, your opponent right and left monster's value become 0"
+                ]
+            },
+            "h143b":{
+                "id":"h143b",
+                "type":"help",
+                "subType":[],
+                "cardName":"盛宴",
+                "effects":[
+                    "if your current summoner is 波尤, all your monster's current value increase by 10 times"
+                ]
+             },
+            "h145":{
+                "id":"h145",
+                "type":"help",
+                "subType":[],
+                "cardName":"援助軍團",
+                "effects":[
+                    "if your current summoner is 古比古比, your opponent's sp card with subType '天災' become no effect.",
+                    "your opponent's monster 哈維亞 's value become 0"]
+             },
+             "h158":{
+                "id":"h158",
+                "type":"help",
+                "subType":[],
+                "cardName":"臭氧層",
+                "effects":[
+                    "all monster on the field with attribute 'wind' 's value increase by 30"]
+             },
+             "h256":{
+                "id":"h256",
+                "type":"help",
+                "subType":[],
+                "cardName":"神秘之沙",
+                "effects":[
+                    "all monster on the field with attribute 'shell' 's value increase by 50"]
+             },
+             "h318":{
+                "id":"h318",
+                "type":"help",
+                "subType":[],
+                "cardName":"飯團",
+                "effects":[
+                    "if your current summoner is 波尤, your opponent's spell card's effect cannot activate. if your opponent's play 貝獸仙人爆炸 or 鬍子仙人大爆炸 , this card's effect become invalid" ]
+             },
+             "h690":{
+                "id":"h690",
+                "type":"help",
+                "subType":[],
+                "cardName":"召喚師替換",
+                "effects":[
+                    "swap your current summoner card with any of the summoner card in your summoner deck, this card can only trigger when your current summoner card is level 6 or below" ]
+             },
+             "sp159":{
+                "id":"sp159",
+                "type":"sp",
+                "subType":["neutral"],
+                "cardName":"天之奇蹟",
+                "effects":[
+                    "All opponent's effects—whether they are monster effects, support card effects, or spell card effects—that influence your monster's value will become invalid." ]
+             },
+             "sp160":{
+                "id":"sp160",
+                "type":"sp",
+                "subType":[],
+                "cardName":"層龍劍",
+                "effects":[
+                    "All opponent's monster with monster type 'dragon', value will become zero" ]
+             },
+             "sp162":{
+                "id":"sp162",
+                "type":"sp",
+                "subType":[],
+                "cardName":"交換",
+                "effects":[
+                    "Pick any of opponent's monster field and exchange its position with your monster(ignore the attribute)" ]
+             },
+             "sp163":{
+                "id":"sp163",
+                "type":"sp",
+                "subType":[],
+                "cardName":"惡魔的劣行",
+                "effects":[
+                    "All your opponent's effect including summoner effect,monster effect, help card effect, sp card effect will become invalid." ]
+             },
+             "sp266":{
+                "id":"sp266",
+                "type":"sp",
+                "subType":[],
+                "cardName":"惡魔的天秤200噸",
+                "effects":[
+                    "Minus opponent's total point by 200" ]
+             },
+             "sp267":{
+                "id":"sp267",
+                "type":"sp",
+                "subType":[],
+                "cardName":"送還",
+                "effects":[
+                    "your opponent's help card become no effect" ]
+             },
+             "sp268":{
+                "id":"sp268",
+                "type":"sp",
+                "subType":[],
+                "cardName":"神秘追踪者",
+                "effects":[
+                    "your opponent's monster with attribute('all') value become 0" ]
+             },
+             "sp298":{
+                "id":"sp298",
+                "type":"sp",
+                "subType":[],
+                "cardName":"大打擊",
+                "effects":[
+                    "all your opponent's monster' value will become the orginal value" ]
+             }
+             
+             
+             
+
+
+    }
+}
