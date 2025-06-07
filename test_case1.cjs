@@ -82,7 +82,6 @@ async function makePostRequest(url, body, maxRetries = 3) {
     console.log("summoner :"+JSON.stringify(p2_startReadyResp["gameEnv"]["playerId_2"]["Field"]["summonner"]));
 
     const path = require('path');
-    console.log("path "+path)
     const cardsPath = path.join(__dirname, './src/data/cards.json');
     const summonerCardPath = path.join(__dirname, './src/data/summonerCards.json');
     const decksPath = path.join(__dirname, './src/data/decks.json');
@@ -222,6 +221,7 @@ async function makePostRequest(url, body, maxRetries = 3) {
     console.log("player 1 hand card:"+playCardGameEnv["gameEnv"]["playerId_1"]["deck"]["hand"]);
     console.log("player 1 hand card length:"+playCardGameEnv["gameEnv"]["playerId_1"]["deck"]["hand"].length );
     console.log("player 1 mainDeck length:"+playCardGameEnv["gameEnv"]["playerId_1"]["deck"]["mainDeck"].length );
+    console.log("one card deployed on field(sky) total card = 20 + 7 +1 = 28");
     console.log("player 1: (expect 110) :" +playCardGameEnv["gameEnv"]["playerId_1"]["playerPoint"])
     console.log("summoner :" +JSON.stringify(playCardGameEnv["gameEnv"]["playerId_1"]["Field"]["summonner"]));
     console.log("sky :" +JSON.stringify(playCardGameEnv["gameEnv"]["playerId_1"]["Field"]["sky"]));
@@ -250,6 +250,7 @@ async function makePostRequest(url, body, maxRetries = 3) {
     console.log("player 2 hand card:"+playCardGameEnv["gameEnv"]["playerId_2"]["deck"]["hand"]);
     console.log("player 2 hand card length:"+playCardGameEnv["gameEnv"]["playerId_2"]["deck"]["hand"].length );
     console.log("player 2 mainDeck length:"+playCardGameEnv["gameEnv"]["playerId_2"]["deck"]["mainDeck"].length );
+    console.log("one card deployed on field(left) total card = 20 + 7 +1 = 28");
     console.log("player 2: (expect 90) :" +playCardGameEnv["gameEnv"]["playerId_2"]["playerPoint"])
     console.log("summoner :" +JSON.stringify(playCardGameEnv["gameEnv"]["playerId_2"]["Field"]["summonner"]));
     console.log("sky :" +JSON.stringify(playCardGameEnv["gameEnv"]["playerId_2"]["Field"]["sky"]));
@@ -288,6 +289,7 @@ async function makePostRequest(url, body, maxRetries = 3) {
     console.log("player 1 hand card:"+playCardGameEnv["gameEnv"]["playerId_1"]["deck"]["hand"]);
     console.log("player 1 hand card length:"+playCardGameEnv["gameEnv"]["playerId_1"]["deck"]["hand"].length );
     console.log("player 1 mainDeck length:"+playCardGameEnv["gameEnv"]["playerId_1"]["deck"]["mainDeck"].length );
+    console.log("two card deployed on field(sky) total card = 19 + 7 +2 = 28");
     console.log("player 1: (expect 210) :" +playCardGameEnv["gameEnv"]["playerId_1"]["playerPoint"])
     console.log("summoner :" +JSON.stringify(playCardGameEnv["gameEnv"]["playerId_1"]["Field"]["summonner"]));
     console.log("sky :" +JSON.stringify(playCardGameEnv["gameEnv"]["playerId_1"]["Field"]["sky"]));
@@ -351,6 +353,7 @@ async function makePostRequest(url, body, maxRetries = 3) {
     console.log("player 2 hand card:"+playCardGameEnv["gameEnv"]["playerId_2"]["deck"]["hand"]);
     console.log("player 2 hand card length:"+playCardGameEnv["gameEnv"]["playerId_2"]["deck"]["hand"].length );
     console.log("player 2 mainDeck length:"+playCardGameEnv["gameEnv"]["playerId_2"]["deck"]["mainDeck"].length );
+    console.log("two card deployed on field(sky) total card = 19 + 7 +2 = 28");
     console.log("player 2: (expect 110) :" +playCardGameEnv["gameEnv"]["playerId_2"]["playerPoint"])
     console.log("summoner :" +JSON.stringify(playCardGameEnv["gameEnv"]["playerId_2"]["Field"]["summonner"]));
     console.log("sky :" +JSON.stringify(playCardGameEnv["gameEnv"]["playerId_2"]["Field"]["sky"]));

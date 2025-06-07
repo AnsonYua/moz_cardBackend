@@ -1,8 +1,10 @@
 const DeckManager = require('./DeckManager');
+const MozGamePlay = require('../mozGame/mozGamePlay');
 
 class CardEffectManager {
     constructor() {
-        this.deckManager = new DeckManager();
+        this.deckManager = DeckManager;
+        this.mozGamePlay = new MozGamePlay();
     }
 
     /**
@@ -14,136 +16,108 @@ class CardEffectManager {
      * @returns {Object} - Modified game environment
      */
     applyCardEffect(gameEnv, playerId, card, field) {
-        if (!card.effects || card.effects === "") {
+        if (!card.effectRules || card.effectRules.length === 0) {
             return gameEnv;
         }
 
         // Get opponent ID
-        const players = Object.keys(gameEnv).filter(key => key !== "currentTurn" && key !== "currentPlayer" && key !== "firstPlayer");
+        const players = this.mozGamePlay.getPlayerFromGameEnv(gameEnv);
         const opponentId = players.find(id => id !== playerId);
 
-        // Handle different types of effects
-        if (this.isSummonerDependentEffect(card.effects)) {
-            return this.applySummonerEffect(gameEnv, playerId, card);
-        }
-        
-        if (this.isMonsterDependentEffect(card.effects)) {
-            return this.applyMonsterDependentEffect(gameEnv, playerId, opponentId, card);
-        }
-
-        if (this.isHelpCardDependentEffect(card.effects)) {
-            return this.applyHelpCardEffect(gameEnv, playerId, card);
-        }
-
-        if (this.isMonsterTypeEffect(card.effects)) {
-            return this.applyMonsterTypeEffect(gameEnv, playerId, opponentId, card);
-        }
-
-        return gameEnv;
-    }
-
-    /**
-     * Check if effect depends on current summoner
-     */
-    isSummonerDependentEffect(effect) {
-        return effect.includes("if your current summoner is");
-    }
-
-    /**
-     * Check if effect depends on specific monster on field
-     */
-    isMonsterDependentEffect(effect) {
-        return effect.includes("if you have") || effect.includes("if your opponent having");
-    }
-
-    /**
-     * Check if effect depends on help card
-     */
-    isHelpCardDependentEffect(effect) {
-        return effect.includes("when you use help card");
-    }
-
-    /**
-     * Check if effect targets monster types
-     */
-    isMonsterTypeEffect(effect) {
-        return effect.includes("monsterType");
-    }
-
-    /**
-     * Apply effects that depend on current summoner
-     */
-    applySummonerEffect(gameEnv, playerId, card) {
-        const currentSummoner = this.getCurrentSummonerName(gameEnv, playerId);
-        const effectParts = card.effects.split("if your current summoner is ");
-        const requiredSummoner = effectParts[1].split(",")[0];
-
-        if (currentSummoner === requiredSummoner) {
-            const newValue = parseInt(effectParts[1].match(/\d+/)[0]);
-            card.value = newValue;
-        }
-
-        return gameEnv;
-    }
-
-    /**
-     * Apply effects that depend on specific monsters
-     */
-    applyMonsterDependentEffect(gameEnv, playerId, opponentId, card) {
-        const effect = card.effects;
-        
-        if (effect.includes("if you have")) {
-            // Handle effects that check player's field
-            const requiredMonster = effect.match(/if you have '(.+?)'/)[1];
-            if (this.hasMonsterOnField(gameEnv, playerId, requiredMonster)) {
-                const newValue = parseInt(effect.match(/value become (\d+)/)[1]);
-                card.value = newValue;
+        // Apply each effect rule
+        card.effectRules.forEach(rule => {
+            if (this.checkCondition(gameEnv, playerId, rule.condition)) {
+                this.applyEffect(gameEnv, playerId, opponentId, rule);
             }
-        } else if (effect.includes("if your opponent having")) {
-            // Handle effects that check opponent's field
-            const requiredMonster = effect.match(/monster\((.+?)\)/)[1];
-            if (this.hasMonsterOnField(gameEnv, opponentId, requiredMonster)) {
-                // Find the opponent's monster and set its value to 0
-                this.setOpponentMonsterValue(gameEnv, opponentId, requiredMonster, 0);
-            }
-        }
+        });
 
         return gameEnv;
     }
 
     /**
-     * Apply effects that depend on help cards
+     * Check if a condition is met
      */
-    applyHelpCardEffect(gameEnv, playerId, card) {
-        const effect = card.effects;
-        const helpCard = effect.match(/'(.+?)'/)[1];
-        
-        if (this.isHelpCardPlayed(gameEnv, playerId, helpCard)) {
-            const newValue = parseInt(effect.match(/value become (\d+)/)[1]);
-            card.value = newValue;
-
-            // Handle additional effects
-            if (effect.includes("opponent right and left monster")) {
-                this.setAdjacentMonstersValue(gameEnv, playerId, 0);
-            }
+    checkCondition(gameEnv, playerId, condition) {
+        switch (condition.type) {
+            case 'summoner':
+                const currentSummoner = this.getCurrentSummonerName(gameEnv, playerId);
+                return currentSummoner === condition.value;
+            
+            case 'opponentHasMonster':
+                return this.hasMonsterOnField(gameEnv, opponentId, condition.monsterName);
+            
+            case 'selfHasMonster':
+                return this.hasMonsterOnField(gameEnv, playerId, condition.monsterName);
+            
+            case 'selfHasMonsterType':
+                return this.hasMonsterTypeOnField(gameEnv, playerId, condition.monsterType);
+            
+            case 'helpCardUsed':
+                return this.isHelpCardPlayed(gameEnv, playerId, condition.cardName);
+            
+            case 'always':
+                return true;
+            
+            default:
+                return false;
         }
-
-        return gameEnv;
     }
 
     /**
-     * Apply effects that target monster types
+     * Apply an effect based on its target and type
      */
-    applyMonsterTypeEffect(gameEnv, playerId, opponentId, card) {
-        const effect = card.effects;
-        const targetType = effect.match(/monsterType '(.+?)'/)[1];
-        
-        if (effect.includes("your opponent")) {
-            // Set value of all opponent's monsters of specific type to 0
-            this.setMonsterTypeValue(gameEnv, opponentId, targetType, 0);
-        }
+    applyEffect(gameEnv, playerId, opponentId, rule) {
+        const { target, effectType, value } = rule;
 
-        return gameEnv;
+        switch (effectType) {
+            case 'valueModification':
+                this.applyValueModification(gameEnv, playerId, opponentId, target, value);
+                break;
+            case 'summonCondition':
+                // Handle summon conditions if needed
+                break;
+        }
+    }
+
+    /**
+     * Apply value modification effect
+     */
+    applyValueModification(gameEnv, playerId, opponentId, target, value) {
+        switch (target.type) {
+            case 'self':
+                if (target.scope === 'single') {
+                    this.setCardValue(gameEnv, playerId, target, value);
+                }
+                break;
+            
+            case 'opponent':
+                switch (target.scope) {
+                    case 'single':
+                        if (target.monsterName) {
+                            this.setOpponentMonsterValue(gameEnv, opponentId, target.monsterName, value);
+                        }
+                        break;
+                    case 'all':
+                        if (target.monsterType) {
+                            this.setMonsterTypeValue(gameEnv, opponentId, target.monsterType, value);
+                        } else if (target.value) {
+                            this.setValueBasedMonsterValue(gameEnv, opponentId, target.value, value);
+                        } else {
+                            this.setAllOpponentMonsterValue(gameEnv, opponentId, value);
+                        }
+                        break;
+                    case 'adjacent':
+                        this.setAdjacentMonstersValue(gameEnv, opponentId, value);
+                        break;
+                }
+                break;
+            
+            case 'component':
+                if (target.scope === 'all' && target.monsterType) {
+                    this.setMonsterTypeValue(gameEnv, playerId, target.monsterType, value);
+                }
+                break;
+        }
     }
 
     /**
@@ -163,6 +137,34 @@ class CardEffectManager {
         return fields.some(field => {
             return gameEnv[playerId].Field[field].some(cardObj => {
                 return !cardObj.isBack[0] && cardObj.cardDetails[0].cardName === monsterName;
+            });
+        });
+    }
+
+    /**
+     * Helper method to check if a monster type is on the field
+     */
+    hasMonsterTypeOnField(gameEnv, playerId, monsterType) {
+        const fields = ['sky', 'left', 'right'];
+        return fields.some(field => {
+            return gameEnv[playerId].Field[field].some(cardObj => {
+                return !cardObj.isBack[0] && 
+                       cardObj.cardDetails[0].monsterType && 
+                       cardObj.cardDetails[0].monsterType.includes(monsterType);
+            });
+        });
+    }
+
+    /**
+     * Helper method to set a card's value
+     */
+    setCardValue(gameEnv, playerId, target, value) {
+        const fields = ['sky', 'left', 'right'];
+        fields.forEach(field => {
+            gameEnv[playerId].Field[field].forEach(cardObj => {
+                if (!cardObj.isBack[0] && cardObj.cardDetails[0].id === target.cardId) {
+                    cardObj.cardDetails[0].value = value;
+                }
             });
         });
     }
@@ -213,6 +215,34 @@ class CardEffectManager {
                 if (!cardObj.isBack[0] && 
                     cardObj.cardDetails[0].monsterType && 
                     cardObj.cardDetails[0].monsterType.includes(monsterType)) {
+                    cardObj.cardDetails[0].value = value;
+                }
+            });
+        });
+    }
+
+    /**
+     * Helper method to set value for monsters with specific value
+     */
+    setValueBasedMonsterValue(gameEnv, playerId, targetValue, newValue) {
+        const fields = ['sky', 'left', 'right'];
+        fields.forEach(field => {
+            gameEnv[playerId].Field[field].forEach(cardObj => {
+                if (!cardObj.isBack[0] && cardObj.cardDetails[0].value === targetValue) {
+                    cardObj.cardDetails[0].value = newValue;
+                }
+            });
+        });
+    }
+
+    /**
+     * Helper method to set value for all opponent's monsters
+     */
+    setAllOpponentMonsterValue(gameEnv, opponentId, value) {
+        const fields = ['sky', 'left', 'right'];
+        fields.forEach(field => {
+            gameEnv[opponentId].Field[field].forEach(cardObj => {
+                if (!cardObj.isBack[0]) {
                     cardObj.cardDetails[0].value = value;
                 }
             });

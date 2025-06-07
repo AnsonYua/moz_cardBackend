@@ -84,11 +84,11 @@ class mozGamePlay{
     async processAction(gameEnvInput,playerId,action){ 
         var gameEnv = gameEnvInput;
         if(action["type"] == "PlayCard" || action["type"] == "PlayCardBack"){
-            var isPlayBack = false;
+            var isPlayInFaceDown = false;
             if(action["type"] == "PlayCardBack"){
-                isPlayBack = true;
+                isPlayInFaceDown = true;
             }
-            const positionDict = ["sky","left","right"];
+            const positionDict = ["sky","left","right","help","sp"];
             if (action["field_idx"]>=positionDict.length){
                 return this.throwError("position out of range");
             }
@@ -101,38 +101,54 @@ class mozGamePlay{
             const cardToPlay = hand[action["card_idx"]];
             const cardDetails = mozDeckHelper.getDeckCardDetails(cardToPlay);
             
-            if (cardDetails["type"] == "monster" && 
-                !isPlayBack && (playPos == "help" || playPos == "sp")){
-                return this.throwError("Can't play monster card (faceup)in this position");
-            }
-            if(await this.monsterInField(gameEnv[playerId].Field[playPos])){
-                console.log("monsterInField "+JSON.stringify(gameEnv[playerId].Field[playPos]))
-                return this.throwError("Monster already in this position");
-            }
-            if (cardDetails["type"] == "monster" &&
-                !isPlayBack
-            ){
-                const isMatch = this.isCardMatchingSummoner(cardDetails,
-                    mozDeckHelper.getCurrentSummoner(gameEnv, playerId)
-                    ,playPos);
-                    if(!isMatch){   
-                        return this.throwError("Attribute not match");
+
+            if(isPlayInFaceDown){
+                // handle card play face down
+                // if play monster card (face down) in sky left right position, it will be throw error
+                if(cardDetails["type"] == "monster" && (playPos == "sky" || playPos == "left" || playPos == "right")){
+                    return this.throwError("Can't play monster card (face down)in this sky left right position");
+                }
+            }else{  
+                // handle card play face up
+                // if play monster card (face up) in help or sp position, it will be throw error
+                if(cardDetails["type"] == "monster" && (playPos == "help" || playPos == "sp")){
+                    return this.throwError("Can't play monster card (face up)in this help or sp position");
+                }
+                /*
+                 if play monster card (face up) in sky left right position, it will be throw error if there is monster in this position
+                 if there is monster in this position, it will be throw error
+                 */
+                else if(cardDetails["type"] == "monster" && (playPos == "sky" || playPos == "left" || playPos == "right")){
+                    if(await this.monsterInField(gameEnv[playerId].Field[playPos])){
+                        console.log("monsterInField "+JSON.stringify(gameEnv[playerId].Field[playPos]))
+                        return this.throwError("Monster already in this position");
                     }
+                }
+                else if (cardDetails["type"] == "monster"){
+                    const isMatch = this.isCardMatchingSummoner(cardDetails,
+                        mozDeckHelper.getCurrentSummoner(gameEnv, playerId)
+                        ,playPos);
+                        if(!isMatch){   
+                            return this.throwError("Attribute not match");
+                        }
+                }else{
+                    return this.throwError("Condition not handling");
+                }
             }
             
             var cardObj = {
                 "card": hand.splice(action["card_idx"],1),
                 "cardDetails": [cardDetails],
-                "isBack": [isPlayBack]
+                "isBack": [isPlayInFaceDown]
             }
             gameEnv[playerId].deck.hand = hand;
             gameEnv[playerId].Field[positionDict[action["field_idx"]]].push(cardObj);
             action["selectedCard"] = cardObj;
-            gameEnv[playerId]["turnAction"].push(action);
             action["turn"] = gameEnv["currentTurn"];
+            gameEnv[playerId]["turnAction"].push(action);
 
             // Apply card effects if the card is played face up
-            if (!isPlayBack && cardDetails.type === "monster") {
+            if (!isPlayInFaceDown && cardDetails.type === "monster") {
                 gameEnv = this.cardEffectManager.applyCardEffect(gameEnv, playerId, cardDetails, gameEnv[playerId].Field);
             }
 

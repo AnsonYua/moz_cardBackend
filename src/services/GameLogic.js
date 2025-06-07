@@ -78,7 +78,6 @@ class GameLogic {
         }else{
             gameData.gameEnv = await mozGamePlay.processAction(gameData.gameEnv,playerId,action);
             if (gameData.gameEnv.hasOwnProperty('error')){
-                
                 console.log("---------processPlayerAction------- attribute not match/other error");
                 return gameData.gameEnv;
             }else{

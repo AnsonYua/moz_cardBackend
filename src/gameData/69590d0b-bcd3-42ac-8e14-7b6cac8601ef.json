@@ -57,8 +57,14 @@
                 "attribute": [
                   "wind"
                 ],
+                "monsterType": [
+                  "beast"
+                ],
                 "value": 50,
-                "type": "monster"
+                "type": "monster",
+                "cardName": "天馬",
+                "effects": "",
+                "effectRules": []
               }
             ],
             "isBack": [
@@ -81,8 +87,27 @@
                 "attribute": [
                   "all"
                 ],
+                "monsterType": [
+                  "dragon"
+                ],
                 "value": 100,
-                "type": "monster"
+                "type": "monster",
+                "cardName": "魔食龍",
+                "effects": "if your have monster with monsterType 'shell' on the field, this card's value become 400",
+                "effectRules": [
+                  {
+                    "condition": {
+                      "type": "selfHasMonsterType",
+                      "monsterType": "shell"
+                    },
+                    "target": {
+                      "type": "self",
+                      "scope": "single"
+                    },
+                    "effectType": "valueModification",
+                    "value": 400
+                  }
+                ]
               }
             ],
             "isBack": [
@@ -105,8 +130,28 @@
                 "attribute": [
                   "wind"
                 ],
+                "monsterType": [
+                  "worm"
+                ],
                 "value": 50,
-                "type": "monster"
+                "type": "monster",
+                "cardName": "空壓怪",
+                "effects": "if your opponent having monster(天龍) on the field, opponent's monster(天龍) value become 0",
+                "effectRules": [
+                  {
+                    "condition": {
+                      "type": "opponentHasMonster",
+                      "monsterName": "天龍"
+                    },
+                    "target": {
+                      "type": "opponent",
+                      "scope": "monster",
+                      "monsterName": "天龍"
+                    },
+                    "effectType": "valueModification",
+                    "value": 0
+                  }
+                ]
               }
             ],
             "isBack": [
@@ -220,8 +265,39 @@
                 "attribute": [
                   "wind"
                 ],
+                "monsterType": [
+                  "shell"
+                ],
                 "value": 60,
-                "type": "monster"
+                "type": "monster",
+                "cardName": "天使蝸牛",
+                "effects": "when you use help card '1000年', this card's value become 100, at the same time, your opponent right and left monster's value become 0",
+                "effectRules": [
+                  {
+                    "condition": {
+                      "type": "helpCardUsed",
+                      "cardName": "1000年"
+                    },
+                    "target": {
+                      "type": "self",
+                      "scope": "single"
+                    },
+                    "effectType": "valueModification",
+                    "value": 100
+                  },
+                  {
+                    "condition": {
+                      "type": "helpCardUsed",
+                      "cardName": "1000年"
+                    },
+                    "target": {
+                      "type": "opponent",
+                      "scope": "adjacent"
+                    },
+                    "effectType": "valueModification",
+                    "value": 0
+                  }
+                ]
               }
             ],
             "isBack": [
@@ -244,8 +320,27 @@
                 "attribute": [
                   "shell"
                 ],
+                "monsterType": [
+                  "fairy"
+                ],
                 "value": 20,
-                "type": "monster"
+                "type": "monster",
+                "cardName": "貝精",
+                "effects": "all your opponent's monster with monsterType 'male' 's value become 0",
+                "effectRules": [
+                  {
+                    "condition": {
+                      "type": "always"
+                    },
+                    "target": {
+                      "type": "opponent",
+                      "scope": "all",
+                      "monsterType": "male"
+                    },
+                    "effectType": "valueModification",
+                    "value": 0
+                  }
+                ]
               }
             ],
             "isBack": [
@@ -268,8 +363,27 @@
                 "attribute": [
                   "wind"
                 ],
+                "monsterType": [
+                  "male"
+                ],
                 "value": 40,
-                "type": "monster"
+                "type": "monster",
+                "cardName": "凱洛風",
+                "effects": "if you have monster(白獅精) on the field, this monster's value become 400",
+                "effectRules": [
+                  {
+                    "condition": {
+                      "type": "selfHasMonster",
+                      "monsterName": "白獅精"
+                    },
+                    "target": {
+                      "type": "self",
+                      "scope": "single"
+                    },
+                    "effectType": "valueModification",
+                    "value": 400
+                  }
+                ]
               }
             ],
             "isBack": [
@@ -322,6 +436,6 @@
     "currentPlayer": "playerId_1",
     "currentTurn": 3
   },
-  "lastUpdate": "2025-02-03T06:54:20.285Z",
-  "updateUUID": "31da6884-cd7b-4d48-bc25-114d36a9f09c"
+  "lastUpdate": "2025-03-28T02:57:44.396Z",
+  "updateUUID": "1cd7a3c1-46c3-465b-8ff6-a22fad0ce96c"
 }

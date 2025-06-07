@@ -9,7 +9,21 @@
 			"value": 10,
 			"type": "monster",
 			"cardName": "吸血蝙蝠",
-			"effects": "if your current summoner is 柏古蘭巴杜, this card's value become 500"
+			"effects": "if your current summoner is 柏古蘭巴杜, this card's value become 500",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "summoner",
+						"value": "柏古蘭巴杜"
+					},
+					"target": {
+						"type": "self",
+						"scope": "single"
+					},
+					"effectType": "valueModification",
+					"value": 500
+				}
+			]
 		},
 		"s44": {
 			"id": "s44",
@@ -22,7 +36,21 @@
 			"value": 10,
 			"type": "monster",
 			"cardName": "刀翼鳥",
-			"effects": "if your current summoner is 雷巴古, this card's value become 100"
+			"effects": "if your current summoner is 雷巴古, this card's value become 100",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "summoner",
+						"value": "雷巴古"
+					},
+					"target": {
+						"type": "self",
+						"scope": "single"
+					},
+					"effectType": "valueModification",
+					"value": 100
+				}
+			]
 		},
 		"s45": {
 			"id": "s45",
@@ -33,7 +61,22 @@
 			"value": 30,
 			"type": "monster",
 			"cardName": "慢風獸",
-			"effects": "if your opponent having monster(食草貝) on the field, opponent's monster(食草貝) value become 0"
+			"effects": "if your opponent having monster(食草貝) on the field, opponent's monster(食草貝) value become 0",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "opponentHasMonster",
+						"monsterName": "食草貝"
+					},
+					"target": {
+						"type": "opponent",
+						"scope": "monster",
+						"monsterName": "食草貝"
+					},
+					"effectType": "valueModification",
+					"value": 0
+				}
+			]
 		},
 		"s46": {
 			"id": "s46",
@@ -46,7 +89,21 @@
 			"value": 40,
 			"type": "monster",
 			"cardName": "蛇形鳥",
-			"effects": "all your component's monster with monsterType 'fish' 's value become 0"
+			"effects": "all your component's monster with monsterType 'fish' 's value become 0",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "always"
+					},
+					"target": {
+						"type": "component",
+						"scope": "all",
+						"monsterType": "fish"
+					},
+					"effectType": "valueModification",
+					"value": 0
+				}
+			]
 		},
 		"s47": {
 			"id": "s47",
@@ -59,7 +116,8 @@
 			"value": 50,
 			"type": "monster",
 			"cardName": "天馬",
-			"effects": ""
+			"effects": "",
+			"effectRules": []
 		},
 		"s49": {
 			"id": "s49",
@@ -72,7 +130,22 @@
 			"value": 50,
 			"type": "monster",
 			"cardName": "空壓怪",
-			"effects": "if your opponent having monster(天龍) on the field, opponent's monster(天龍) value become 0"
+			"effects": "if your opponent having monster(天龍) on the field, opponent's monster(天龍) value become 0",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "opponentHasMonster",
+						"monsterName": "天龍"
+					},
+					"target": {
+						"type": "opponent",
+						"scope": "monster",
+						"monsterName": "天龍"
+					},
+					"effectType": "valueModification",
+					"value": 0
+				}
+			]
 		},
 		"s50": {
 			"id": "s50",
@@ -85,7 +158,33 @@
 			"value": 60,
 			"type": "monster",
 			"cardName": "天使蝸牛",
-			"effects": "when you use help card '1000年', this card's value become 100, at the same time, your opponent right and left monster's value become 0"
+			"effects": "when you use help card '1000年', this card's value become 100, at the same time, your opponent right and left monster's value become 0",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "helpCardUsed",
+						"cardName": "1000年"
+					},
+					"target": {
+						"type": "self",
+						"scope": "single"
+					},
+					"effectType": "valueModification",
+					"value": 100
+				},
+				{
+					"condition": {
+						"type": "helpCardUsed",
+						"cardName": "1000年"
+					},
+					"target": {
+						"type": "opponent",
+						"scope": "adjacent"
+					},
+					"effectType": "valueModification",
+					"value": 0
+				}
+			]
 		},
 		"s52": {
 			"id": "s52",
@@ -98,7 +197,8 @@
 			"value": 70,
 			"type": "monster",
 			"cardName": "鳥形蛇",
-			"effects": ""
+			"effects": "",
+			"effectRules": []
 		},
 		"s53": {
 			"id": "s53",
@@ -111,7 +211,21 @@
 			"value": 40,
 			"type": "monster",
 			"cardName": "鳥形人",
-			"effects": "if i have '天馬' on the field, this card's value become 400"
+			"effects": "if i have '天馬' on the field, this card's value become 400",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "selfHasMonster",
+						"monsterName": "天馬"
+					},
+					"target": {
+						"type": "self",
+						"scope": "single"
+					},
+					"effectType": "valueModification",
+					"value": 400
+				}
+			]
 		},
 		"s54": {
 			"id": "s54",
@@ -124,7 +238,8 @@
 			"value": 80,
 			"type": "monster",
 			"cardName": "空中蟲",
-			"effects": ""
+			"effects": "",
+			"effectRules": []
 		},
 		"s56": {
 			"id": "s56",
@@ -137,7 +252,8 @@
 			"value": 100,
 			"type": "monster",
 			"cardName": "天龍",
-			"effects": ""
+			"effects": "",
+			"effectRules": []
 		},
 		"s109": {
 			"id": "s109",
@@ -150,7 +266,21 @@
 			"value": 60,
 			"type": "monster",
 			"cardName": "叭叭鳥",
-			"effects": "all your opponent's monster with monsterType 'worm' 's value become 0"
+			"effects": "all your opponent's monster with monsterType 'worm' 's value become 0",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "always"
+					},
+					"target": {
+						"type": "opponent",
+						"scope": "all",
+						"monsterType": "worm"
+					},
+					"effectType": "valueModification",
+					"value": 0
+				}
+			]
 		},
 		"s110": {
 			"id": "s110",
@@ -163,7 +293,8 @@
 			"value": 70,
 			"type": "monster",
 			"cardName": "虹霞龍",
-			"effects": ""
+			"effects": "",
+			"effectRules": []
 		},
 		"s111": {
 			"id": "s111",
@@ -176,7 +307,21 @@
 			"value": 80,
 			"type": "monster",
 			"cardName": "食草貝",
-			"effects": "all your opponent's monster with monsterType 'beast' 's value become 0"
+			"effects": "all your opponent's monster with monsterType 'beast' 's value become 0",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "always"
+					},
+					"target": {
+						"type": "opponent",
+						"scope": "all",
+						"monsterType": "beast"
+					},
+					"effectType": "valueModification",
+					"value": 0
+				}
+			]
 		},
 		"s122": {
 			"id": "s122",
@@ -189,7 +334,21 @@
 			"value": 90,
 			"type": "monster",
 			"cardName": "貝京",
-			"effects": "when you have 波尤 on the field, this card's value become 180"
+			"effects": "when you have 波尤 on the field, this card's value become 180",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "selfHasMonster",
+						"monsterName": "波尤"
+					},
+					"target": {
+						"type": "self",
+						"scope": "single"
+					},
+					"effectType": "valueModification",
+					"value": 180
+				}
+			]
 		},
 		"s125": {
 			"id": "s125",
@@ -202,7 +361,8 @@
 			"value": 100,
 			"type": "monster",
 			"cardName": "貝龍",
-			"effects": ""
+			"effects": "",
+			"effectRules": []
 		},
 		"s186": {
 			"id": "s186",
@@ -215,7 +375,21 @@
 			"value": 10,
 			"type": "monster",
 			"cardName": "哺",
-			"effects": "if your current summoner is 柏古蘭巴杜, this card's value become 500"
+			"effects": "if your current summoner is 柏古蘭巴杜, this card's value become 500",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "summoner",
+						"value": "柏古蘭巴杜"
+					},
+					"target": {
+						"type": "self",
+						"scope": "single"
+					},
+					"effectType": "valueModification",
+					"value": 500
+				}
+			]
 		},
 		"s187": {
 			"id": "s187",
@@ -228,7 +402,8 @@
 			"value": 50,
 			"type": "monster",
 			"cardName": "白獅精",
-			"effects": ""
+			"effects": "",
+			"effectRules": []
 		},
 		"s189": {
 			"id": "s189",
@@ -241,7 +416,22 @@
 			"value": 50,
 			"type": "monster",
 			"cardName": "旋風螳螂",
-			"effects": "if your opponent having monster(天龍) on the field, opponent's monster(天龍) value become 0"
+			"effects": "if your opponent having monster(天龍) on the field, opponent's monster(天龍) value become 0",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "opponentHasMonster",
+						"monsterName": "天龍"
+					},
+					"target": {
+						"type": "opponent",
+						"scope": "monster",
+						"monsterName": "天龍"
+					},
+					"effectType": "valueModification",
+					"value": 0
+				}
+			]
 		},
 		"s190": {
 			"id": "s190",
@@ -254,7 +444,21 @@
 			"value": 40,
 			"type": "monster",
 			"cardName": "凱洛風",
-			"effects": "if you have monster(白獅精) on the field, this monster's value become 400"
+			"effects": "if you have monster(白獅精) on the field, this monster's value become 400",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "selfHasMonster",
+						"monsterName": "白獅精"
+					},
+					"target": {
+						"type": "self",
+						"scope": "single"
+					},
+					"effectType": "valueModification",
+					"value": 400
+				}
+			]
 		},
 		"s191": {
 			"id": "s191",
@@ -267,7 +471,8 @@
 			"value": 80,
 			"type": "monster",
 			"cardName": "貼地蟲",
-			"effects": ""
+			"effects": "",
+			"effectRules": []
 		},
 		"s227": {
 			"id": "s227",
@@ -280,7 +485,21 @@
 			"value": 10,
 			"type": "monster",
 			"cardName": "睡貓",
-			"effects": "all your opponent's monster with value equal to 50 become 0"
+			"effects": "all your opponent's monster with value equal to 50 become 0",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "always"
+					},
+					"target": {
+						"type": "opponent",
+						"scope": "all",
+						"value": 50
+					},
+					"effectType": "valueModification",
+					"value": 0
+				}
+			]
 		},
 		"s228": {
 			"id": "s228",
@@ -293,7 +512,21 @@
 			"value": 20,
 			"type": "monster",
 			"cardName": "貝精",
-			"effects": "all your opponent's monster with monsterType 'male' 's value become 0"
+			"effects": "all your opponent's monster with monsterType 'male' 's value become 0",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "always"
+					},
+					"target": {
+						"type": "opponent",
+						"scope": "all",
+						"monsterType": "male"
+					},
+					"effectType": "valueModification",
+					"value": 0
+				}
+			]
 		},
 		"s229": {
 			"id": "s229",
@@ -306,7 +539,21 @@
 			"value": 40,
 			"type": "monster",
 			"cardName": "鎧甲龍",
-			"effects": "if your have monster with monsterType 'shell' on the field, this card's value become 400"
+			"effects": "if your have monster with monsterType 'shell' on the field, this card's value become 400",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "selfHasMonsterType",
+						"monsterType": "shell"
+					},
+					"target": {
+						"type": "self",
+						"scope": "single"
+					},
+					"effectType": "valueModification",
+					"value": 400
+				}
+			]
 		},
 		"s230": {
 			"id": "s230",
@@ -317,7 +564,21 @@
 			"value": 60,
 			"type": "monster",
 			"cardName": "貝兵",
-			"effects": "when you use help card '貝獸仙人之咒语', this card's value become 300"
+			"effects": "when you use help card '貝獸仙人之咒语', this card's value become 300",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "helpCardUsed",
+						"cardName": "貝獸仙人之咒语"
+					},
+					"target": {
+						"type": "self",
+						"scope": "single"
+					},
+					"effectType": "valueModification",
+					"value": 300
+				}
+			]
 		},
 		"s231": {
 			"id": "s231",
@@ -328,7 +589,20 @@
 			"value": 70,
 			"type": "monster",
 			"cardName": "絲拉",
-			"effects": "this card can only summomed when your summoner is 波尤"
+			"effects": "this card can only be summoned when your summoner is 波尤",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "summoner",
+						"value": "波尤"
+					},
+					"target": {
+						"type": "self",
+						"scope": "single"
+					},
+					"effectType": "summonCondition"
+				}
+			]
 		},
 		"s279": {
 			"id": "s279",
@@ -341,7 +615,8 @@
 			"value": 80,
 			"type": "monster",
 			"cardName": "奧狄士",
-			"effects": ""
+			"effects": "",
+			"effectRules": []
 		},
 		"s688": {
 			"id": "s688",
@@ -354,35 +629,21 @@
 			"value": 100,
 			"type": "monster",
 			"cardName": "魔食龍",
-			"effects": "if your have monster with monsterType 'shell' on the field, this card's value become 400"
-		}
-	},
-	"cardTypes": [
-		"spell",
-		"item",
-		"unit"
-	],
-	"rarities": [
-		"common",
-		"uncommon",
-		"rare",
-		"legendary"
-	],
-	"effects": {
-		"burn": {
-			"name": "Burn",
-			"description": "Deals 1 damage per turn",
-			"duration": 3
-		},
-		"heal": {
-			"name": "Heal",
-			"description": "Heals target",
-			"instant": true
-		},
-		"flying": {
-			"name": "Flying",
-			"description": "Can attack over ground units",
-			"passive": true
+			"effects": "if your have monster with monsterType 'shell' on the field, this card's value become 400",
+			"effectRules": [
+				{
+					"condition": {
+						"type": "selfHasMonsterType",
+						"monsterType": "shell"
+					},
+					"target": {
+						"type": "self",
+						"scope": "single"
+					},
+					"effectType": "valueModification",
+					"value": 400
+				}
+			]
 		}
 	}
 }
