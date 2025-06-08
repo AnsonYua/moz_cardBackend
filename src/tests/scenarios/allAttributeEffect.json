@@ -1,0 +1,51 @@
+{
+    "currentPlayer": "playerId_1",
+    "phase": "MAIN_PHASE",
+    "currentTurn": 1,
+    "playerId_1": {
+        "deck": {
+            "currentSummonerIdx": 0,
+            "summoner": [],
+            "hand": [{
+                "id": "all_001",
+                "cardName": "Elemental Master",
+                "type": "monster",
+                "attribute": ["all"],
+                "value": 800,
+                "effectRules": [{
+                    "condition": { "type": "always" },
+                    "target": { "type": "self", "scope": "single" },
+                    "effectType": "valueModification",
+                    "value": 300
+                }]
+            }],
+            "mainDeck": []
+        },
+        "Field": {
+            "sky": [],
+            "left": [],
+            "right": [],
+            "help": [],
+            "sp": [],
+            "summonner": []
+        },
+        "playerPoint": 0
+    },
+    "playerId_2": {
+        "deck": {
+            "currentSummonerIdx": 0,
+            "summoner": [],
+            "hand": [],
+            "mainDeck": []
+        },
+        "Field": {
+            "sky": [],
+            "left": [],
+            "right": [],
+            "help": [],
+            "sp": [],
+            "summonner": []
+        },
+        "playerPoint": 0
+    }
+} 

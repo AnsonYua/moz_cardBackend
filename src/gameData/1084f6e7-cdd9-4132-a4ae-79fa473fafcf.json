@@ -1,0 +1,238 @@
+{
+  "gameId": "1084f6e7-cdd9-4132-a4ae-79fa473fafcf",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S045",
+          "S051",
+          "S058",
+          "S109",
+          "S056B"
+        ],
+        "hand": [
+          "s43",
+          "s125",
+          "s189",
+          "s45",
+          "s190",
+          "s122",
+          "s111"
+        ],
+        "mainDeck": [
+          "s230",
+          "s50",
+          "s110",
+          "s191",
+          "s186",
+          "s187",
+          "s46",
+          "s229",
+          "s688",
+          "s47",
+          "s228",
+          "s53",
+          "s44",
+          "s279",
+          "s52",
+          "s109",
+          "s227",
+          "s231",
+          "s49",
+          "s56"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [
+        {
+          "type": "PlayCard",
+          "card_idx": 1,
+          "field_idx": 0,
+          "selectedCard": {
+            "card": [
+              "s54"
+            ],
+            "cardDetails": [
+              {
+                "id": "s54",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "worm"
+                ],
+                "value": 80,
+                "type": "monster",
+                "cardName": "空中蟲",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 0
+        }
+      ],
+      "Field": {
+        "summonner": {
+          "id": "S045",
+          "sky": [
+            "all",
+            "mountain",
+            "tree"
+          ],
+          "left": [
+            "wind",
+            "water"
+          ],
+          "right": [
+            "wind",
+            "tree"
+          ],
+          "age": 20,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "wind",
+              "value": 30
+            },
+            {
+              "type": "bird",
+              "value": 100
+            }
+          ],
+          "level": 3,
+          "type": [
+            "wind"
+          ],
+          "initialPoint": 25
+        },
+        "right": [],
+        "left": [],
+        "sky": [
+          {
+            "card": [
+              "s54"
+            ],
+            "cardDetails": [
+              {
+                "id": "s54",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "worm"
+                ],
+                "value": 80,
+                "type": "monster",
+                "cardName": "空中蟲",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          }
+        ],
+        "help": [],
+        "sp": []
+      },
+      "playerPoint": 110
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S056B",
+          "S051",
+          "S073E",
+          "S109",
+          "S058"
+        ],
+        "hand": [
+          "s46",
+          "s231",
+          "s52",
+          "s187",
+          "s54",
+          "s44",
+          "s230",
+          "s45"
+        ],
+        "mainDeck": [
+          "s227",
+          "s186",
+          "s189",
+          "s43",
+          "s111",
+          "s53",
+          "s110",
+          "s229",
+          "s47",
+          "s50",
+          "s688",
+          "s49",
+          "s279",
+          "s190",
+          "s191",
+          "s125",
+          "s56",
+          "s109",
+          "s122",
+          "s228"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "summonner": {
+          "id": "S056B",
+          "sky": [
+            "water",
+            "shell"
+          ],
+          "left": [
+            "shell",
+            "water"
+          ],
+          "right": [
+            "water",
+            "shell"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "shell",
+              "value": 60
+            },
+            {
+              "type": "water",
+              "value": 60
+            }
+          ],
+          "level": 1,
+          "type": [
+            "shell"
+          ],
+          "initialPoint": 1
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      }
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_2",
+    "currentTurn": 0.5
+  },
+  "lastUpdate": "2025-06-07T18:20:03.398Z",
+  "updateUUID": "e5fdc3e2-160f-477c-8ba6-763daeb4f1de"
+}

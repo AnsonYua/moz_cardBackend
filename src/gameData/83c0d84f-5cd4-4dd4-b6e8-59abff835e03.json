@@ -1,0 +1,245 @@
+{
+  "gameId": "83c0d84f-5cd4-4dd4-b6e8-59abff835e03",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S109",
+          "S073E",
+          "S051",
+          "S058",
+          "S045"
+        ],
+        "hand": [
+          "s189",
+          "s47",
+          "s187",
+          "s231",
+          "s227",
+          "s230",
+          "s50"
+        ],
+        "mainDeck": [
+          "s110",
+          "s43",
+          "s46",
+          "s279",
+          "s186",
+          "s49",
+          "s56",
+          "s109",
+          "s52",
+          "s190",
+          "s111",
+          "s191",
+          "s688",
+          "s229",
+          "s45",
+          "s53",
+          "s125",
+          "s54",
+          "s44",
+          "s122"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [
+        {
+          "type": "PlayCardBack",
+          "card_idx": 1,
+          "field_idx": 3,
+          "selectedCard": {
+            "card": [
+              "s228"
+            ],
+            "cardDetails": [
+              {
+                "id": "s228",
+                "attribute": [
+                  "shell"
+                ],
+                "monsterType": [
+                  "fairy"
+                ],
+                "value": 20,
+                "type": "monster",
+                "cardName": "貝精",
+                "effects": "all your opponent's monster with monsterType 'male' 's value become 0",
+                "effectRules": [
+                  {
+                    "condition": {
+                      "type": "always"
+                    },
+                    "target": {
+                      "type": "opponent",
+                      "scope": "all",
+                      "monsterType": "male"
+                    },
+                    "effectType": "valueModification",
+                    "value": 0
+                  }
+                ]
+              }
+            ],
+            "isBack": [
+              true
+            ]
+          },
+          "turn": 0
+        }
+      ],
+      "Field": {
+        "summonner": {
+          "id": "S109",
+          "sky": [
+            "all"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "all",
+              "value": 70
+            }
+          ],
+          "level": 7,
+          "type": [],
+          "initialPoint": 101
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [
+          {
+            "card": [
+              "s228"
+            ],
+            "cardDetails": [
+              {
+                "id": "s228",
+                "attribute": [
+                  "shell"
+                ],
+                "monsterType": [
+                  "fairy"
+                ],
+                "value": 20,
+                "type": "monster",
+                "cardName": "貝精",
+                "effects": "all your opponent's monster with monsterType 'male' 's value become 0",
+                "effectRules": [
+                  {
+                    "condition": {
+                      "type": "always"
+                    },
+                    "target": {
+                      "type": "opponent",
+                      "scope": "all",
+                      "monsterType": "male"
+                    },
+                    "effectType": "valueModification",
+                    "value": 0
+                  }
+                ]
+              }
+            ],
+            "isBack": [
+              true
+            ]
+          }
+        ],
+        "sp": []
+      },
+      "playerPoint": 0
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S109",
+          "S058",
+          "S056B",
+          "S051",
+          "S045"
+        ],
+        "hand": [
+          "s228",
+          "s45",
+          "s54",
+          "s688",
+          "s190",
+          "s229",
+          "s279",
+          "s56"
+        ],
+        "mainDeck": [
+          "s109",
+          "s187",
+          "s47",
+          "s227",
+          "s53",
+          "s44",
+          "s191",
+          "s189",
+          "s125",
+          "s52",
+          "s186",
+          "s231",
+          "s230",
+          "s43",
+          "s111",
+          "s50",
+          "s46",
+          "s110",
+          "s122",
+          "s49"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "summonner": {
+          "id": "S109",
+          "sky": [
+            "all"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "all",
+              "value": 70
+            }
+          ],
+          "level": 7,
+          "type": [],
+          "initialPoint": 101
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      }
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_2",
+    "currentTurn": 0.5
+  },
+  "lastUpdate": "2025-06-07T18:20:03.407Z",
+  "updateUUID": "575cb8b9-7976-4d4f-bd47-7a0f0b2afe35"
+}

@@ -1,0 +1,66 @@
+{
+    "currentPlayer": "playerId_1",
+    "phase": "MAIN_PHASE",
+    "currentTurn": 1,
+    "playerId_1": {
+        "deck": {
+            "currentSummonerIdx": 0,
+            "summoner": [],
+            "hand": [
+                {
+                    "id": "wind_001",
+                    "cardName": "Wind Spirit",
+                    "type": "monster",
+                    "attribute": ["wind"],
+                    "value": 1000,
+                    "effectRules": [{
+                        "condition": { "type": "always" },
+                        "target": { "type": "self", "scope": "single" },
+                        "effectType": "valueModification",
+                        "value": 500
+                    }]
+                },
+                {
+                    "id": "wind_002",
+                    "cardName": "Wind Spirit II",
+                    "type": "monster",
+                    "attribute": ["wind"],
+                    "value": 1000,
+                    "effectRules": [{
+                        "condition": { "type": "always" },
+                        "target": { "type": "self", "scope": "single" },
+                        "effectType": "valueModification",
+                        "value": 500
+                    }]
+                }
+            ],
+            "mainDeck": []
+        },
+        "Field": {
+            "sky": [],
+            "left": [],
+            "right": [],
+            "help": [],
+            "sp": [],
+            "summonner": []
+        },
+        "playerPoint": 0
+    },
+    "playerId_2": {
+        "deck": {
+            "currentSummonerIdx": 0,
+            "summoner": [],
+            "hand": [],
+            "mainDeck": []
+        },
+        "Field": {
+            "sky": [],
+            "left": [],
+            "right": [],
+            "help": [],
+            "sp": [],
+            "summonner": []
+        },
+        "playerPoint": 0
+    }
+} 

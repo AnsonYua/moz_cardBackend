@@ -1,0 +1,233 @@
+{
+  "gameId": "a2d704c4-351d-4f90-9db1-495d71b6736a",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S051",
+          "S056B",
+          "S073E",
+          "S058",
+          "S045"
+        ],
+        "hand": [
+          "s111",
+          "s47",
+          "s227",
+          "s109",
+          "s688",
+          "s228",
+          "s110"
+        ],
+        "mainDeck": [
+          "s230",
+          "s49",
+          "s231",
+          "s44",
+          "s191",
+          "s54",
+          "s45",
+          "s187",
+          "s190",
+          "s43",
+          "s52",
+          "s46",
+          "s125",
+          "s229",
+          "s122",
+          "s53",
+          "s279",
+          "s186",
+          "s189",
+          "s50"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [
+        {
+          "type": "PlayCard",
+          "card_idx": 1,
+          "field_idx": 0,
+          "selectedCard": {
+            "card": [
+              "s56"
+            ],
+            "cardDetails": [
+              {
+                "id": "s56",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "dragon"
+                ],
+                "value": 100,
+                "type": "monster",
+                "cardName": "天龍",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 0
+        }
+      ],
+      "Field": {
+        "summonner": {
+          "id": "S051",
+          "sky": [
+            "fire",
+            "wind",
+            "mountain"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "female",
+          "nativeAddition": [
+            {
+              "type": "wind",
+              "value": 60
+            }
+          ],
+          "level": 6,
+          "type": [
+            "wind"
+          ],
+          "initialPoint": 87
+        },
+        "right": [],
+        "left": [],
+        "sky": [
+          {
+            "card": [
+              "s56"
+            ],
+            "cardDetails": [
+              {
+                "id": "s56",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "dragon"
+                ],
+                "value": 100,
+                "type": "monster",
+                "cardName": "天龍",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          }
+        ],
+        "help": [],
+        "sp": []
+      },
+      "playerPoint": 160
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S045",
+          "S073E",
+          "S058",
+          "S056B",
+          "S051"
+        ],
+        "hand": [
+          "s230",
+          "s122",
+          "s49",
+          "s688",
+          "s279",
+          "s54",
+          "s46",
+          "s52"
+        ],
+        "mainDeck": [
+          "s229",
+          "s50",
+          "s111",
+          "s109",
+          "s228",
+          "s110",
+          "s47",
+          "s186",
+          "s125",
+          "s189",
+          "s231",
+          "s56",
+          "s44",
+          "s53",
+          "s227",
+          "s43",
+          "s45",
+          "s191",
+          "s187",
+          "s190"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "summonner": {
+          "id": "S045",
+          "sky": [
+            "all",
+            "mountain",
+            "tree"
+          ],
+          "left": [
+            "wind",
+            "water"
+          ],
+          "right": [
+            "wind",
+            "tree"
+          ],
+          "age": 20,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "wind",
+              "value": 30
+            },
+            {
+              "type": "bird",
+              "value": 100
+            }
+          ],
+          "level": 3,
+          "type": [
+            "wind"
+          ],
+          "initialPoint": 25
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      }
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_2",
+    "currentTurn": 0.5
+  },
+  "lastUpdate": "2025-06-07T18:20:03.327Z",
+  "updateUUID": "8c66fd4e-9f15-499f-ba9b-76098a6424ee"
+}

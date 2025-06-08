@@ -4,7 +4,7 @@ const MozGamePlay = require('../mozGame/mozGamePlay');
 class CardEffectManager {
     constructor() {
         this.deckManager = DeckManager;
-        this.mozGamePlay = new MozGamePlay();
+        this.mozGamePlay = MozGamePlay;
     }
 
     /**

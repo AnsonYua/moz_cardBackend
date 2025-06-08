@@ -107,6 +107,28 @@ class GameLogic {
         return game;
     }
 
+    async injectGameState(gameId, gameEnv) {
+        // Only allow in test environment
+        if (process.env.NODE_ENV !== 'test') {
+            throw new Error('This method is only available in test environment');
+        }
+
+        // Create a new game ID if not provided
+        if (!gameId) {
+            gameId = uuidv4();
+        }
+
+        // Create new game with injected state
+        const newGame = {
+            gameId: gameId,
+            gameEnv: gameEnv,
+            lastUpdate: new Date()
+        };
+
+        await this.saveOrCreateGame(newGame, gameId);
+        return newGame;
+    }
+
     async saveOrCreateGame(data, gameId) {
         const jsonString = JSON.stringify(data, null, 2); // The '2' adds nice formatting
         //await fs.writeFile(path.join(__dirname, '../gameData/'+gameId+'.json'), jsonString);

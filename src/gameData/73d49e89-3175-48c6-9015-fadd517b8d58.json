@@ -1,0 +1,209 @@
+{
+  "gameId": "73d49e89-3175-48c6-9015-fadd517b8d58",
+  "gameEnv": {
+    "currentPlayer": "playerId_1",
+    "phase": "MAIN_PHASE",
+    "currentTurn": 1,
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          {
+            "id": "summoner_001",
+            "cardName": "Wind Summoner",
+            "type": "summoner",
+            "attribute": [
+              "wind"
+            ],
+            "value": 2000,
+            "nativeAddition": {
+              "wind": {
+                "type": "wind",
+                "value": 200
+              }
+            }
+          }
+        ],
+        "hand": [
+          {
+            "id": "wind_001",
+            "cardName": "Wind Spirit",
+            "type": "monster",
+            "attribute": [
+              "wind"
+            ],
+            "value": 1000,
+            "effectRules": [
+              {
+                "condition": {
+                  "type": "always"
+                },
+                "target": {
+                  "type": "self",
+                  "scope": "single"
+                },
+                "effectType": "valueModification",
+                "value": 500
+              }
+            ]
+          },
+          {
+            "id": "all_001",
+            "cardName": "Elemental Master",
+            "type": "monster",
+            "attribute": [
+              "all"
+            ],
+            "value": 800,
+            "effectRules": [
+              {
+                "condition": {
+                  "type": "always"
+                },
+                "target": {
+                  "type": "self",
+                  "scope": "single"
+                },
+                "effectType": "valueModification",
+                "value": 300
+              }
+            ]
+          },
+          {
+            "id": "wind_001",
+            "cardName": "Wind Spirit",
+            "type": "monster",
+            "attribute": [
+              "wind"
+            ],
+            "value": 1000,
+            "effectRules": [
+              {
+                "condition": {
+                  "type": "always"
+                },
+                "target": {
+                  "type": "self",
+                  "scope": "single"
+                },
+                "effectType": "valueModification",
+                "value": 500
+              }
+            ]
+          }
+        ],
+        "mainDeck": []
+      },
+      "Field": {
+        "sky": [],
+        "left": [],
+        "right": [],
+        "help": [],
+        "sp": [],
+        "summonner": []
+      },
+      "playerPoint": 0
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          {
+            "id": "summoner_001",
+            "cardName": "Wind Summoner",
+            "type": "summoner",
+            "attribute": [
+              "wind"
+            ],
+            "value": 2000,
+            "nativeAddition": {
+              "wind": {
+                "type": "wind",
+                "value": 200
+              }
+            }
+          }
+        ],
+        "hand": [
+          {
+            "id": "wind_001",
+            "cardName": "Wind Spirit",
+            "type": "monster",
+            "attribute": [
+              "wind"
+            ],
+            "value": 1000,
+            "effectRules": [
+              {
+                "condition": {
+                  "type": "always"
+                },
+                "target": {
+                  "type": "self",
+                  "scope": "single"
+                },
+                "effectType": "valueModification",
+                "value": 500
+              }
+            ]
+          },
+          {
+            "id": "all_001",
+            "cardName": "Elemental Master",
+            "type": "monster",
+            "attribute": [
+              "all"
+            ],
+            "value": 800,
+            "effectRules": [
+              {
+                "condition": {
+                  "type": "always"
+                },
+                "target": {
+                  "type": "self",
+                  "scope": "single"
+                },
+                "effectType": "valueModification",
+                "value": 300
+              }
+            ]
+          },
+          {
+            "id": "wind_001",
+            "cardName": "Wind Spirit",
+            "type": "monster",
+            "attribute": [
+              "wind"
+            ],
+            "value": 1000,
+            "effectRules": [
+              {
+                "condition": {
+                  "type": "always"
+                },
+                "target": {
+                  "type": "self",
+                  "scope": "single"
+                },
+                "effectType": "valueModification",
+                "value": 500
+              }
+            ]
+          }
+        ],
+        "mainDeck": []
+      },
+      "Field": {
+        "sky": [],
+        "left": [],
+        "right": [],
+        "help": [],
+        "sp": [],
+        "summonner": []
+      },
+      "playerPoint": 0
+    }
+  },
+  "lastUpdate": "2025-06-08T04:42:51.514Z"
+}

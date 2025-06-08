@@ -1,0 +1,232 @@
+{
+  "gameId": "1b73c258-a6f0-4b8b-af78-979236507566",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S051",
+          "S109",
+          "S056B",
+          "S073E",
+          "S045"
+        ],
+        "hand": [
+          "s44",
+          "s50",
+          "s279",
+          "s54",
+          "s688",
+          "s231",
+          "s187"
+        ],
+        "mainDeck": [
+          "s45",
+          "s43",
+          "s56",
+          "s189",
+          "s53",
+          "s190",
+          "s52",
+          "s109",
+          "s230",
+          "s125",
+          "s228",
+          "s186",
+          "s191",
+          "s122",
+          "s49",
+          "s227",
+          "s46",
+          "s229",
+          "s111",
+          "s110"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [
+        {
+          "type": "PlayCard",
+          "card_idx": 1,
+          "field_idx": 0,
+          "selectedCard": {
+            "card": [
+              "s47"
+            ],
+            "cardDetails": [
+              {
+                "id": "s47",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "beast"
+                ],
+                "value": 50,
+                "type": "monster",
+                "cardName": "天馬",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 0
+        }
+      ],
+      "Field": {
+        "summonner": {
+          "id": "S051",
+          "sky": [
+            "fire",
+            "wind",
+            "mountain"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "female",
+          "nativeAddition": [
+            {
+              "type": "wind",
+              "value": 60
+            }
+          ],
+          "level": 6,
+          "type": [
+            "wind"
+          ],
+          "initialPoint": 87
+        },
+        "right": [],
+        "left": [],
+        "sky": [
+          {
+            "card": [
+              "s47"
+            ],
+            "cardDetails": [
+              {
+                "id": "s47",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "beast"
+                ],
+                "value": 50,
+                "type": "monster",
+                "cardName": "天馬",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          }
+        ],
+        "help": [],
+        "sp": []
+      },
+      "playerPoint": 110
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S058",
+          "S056B",
+          "S051",
+          "S073E",
+          "S109"
+        ],
+        "hand": [
+          "s111",
+          "s122",
+          "s229",
+          "s230",
+          "s50",
+          "s49",
+          "s279",
+          "s53"
+        ],
+        "mainDeck": [
+          "s109",
+          "s190",
+          "s227",
+          "s52",
+          "s125",
+          "s228",
+          "s46",
+          "s189",
+          "s45",
+          "s47",
+          "s191",
+          "s231",
+          "s186",
+          "s56",
+          "s54",
+          "s110",
+          "s187",
+          "s44",
+          "s43",
+          "s688"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "summonner": {
+          "id": "S058",
+          "sky": [
+            "shell",
+            "wind"
+          ],
+          "left": [
+            "wind",
+            "shell"
+          ],
+          "right": [
+            "wind",
+            "shell"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "shell",
+              "value": 60
+            },
+            {
+              "type": "wind",
+              "value": 60
+            }
+          ],
+          "level": 1,
+          "type": [
+            "shell"
+          ],
+          "initialPoint": 10
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      }
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_2",
+    "currentTurn": 0.5
+  },
+  "lastUpdate": "2025-06-07T16:06:53.794Z",
+  "updateUUID": "42ec3e81-cb73-418f-8e38-6ee192da6a91"
+}

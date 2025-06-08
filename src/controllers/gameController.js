@@ -65,9 +65,10 @@ class GameController {
 
     async setCase(req, res) {
         try {
-            let gameState = await gameLogic.setCaseInGameLogic(req);
-            res.json(gameState);
+            const result = await gameLogic.setCaseInGameLogic(req);
+            res.json(result);
         } catch (error) {
+            console.error('Error in setCase:', error);
             res.status(500).json({ error: error.message });
         }
     }
@@ -92,6 +93,22 @@ class GameController {
             const result = gameLogic.processPlayerAction(playerId, action, targetId);
             res.json(result);
         } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    async injectGameState(req, res) {
+        try {
+            const { gameId, gameEnv } = req.body;
+            
+            if (!gameEnv) {
+                return res.status(400).json({ error: 'gameEnv is required' });
+            }
+
+            const result = await gameLogic.injectGameState(gameId, gameEnv);
+            res.json(result);
+        } catch (error) {
+            console.error('Error in injectGameState:', error);
             res.status(500).json({ error: error.message });
         }
     }

@@ -1,0 +1,219 @@
+{
+  "gameId": "7f2fdd66-f0f8-4116-afbd-5a1efd9ed3af",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S109",
+          "S058",
+          "S056B",
+          "S051",
+          "S073E"
+        ],
+        "hand": [
+          "s279",
+          "s230",
+          "s44",
+          "s52",
+          "s56",
+          "s187",
+          "s122"
+        ],
+        "mainDeck": [
+          "s111",
+          "s191",
+          "s47",
+          "s186",
+          "s53",
+          "s109",
+          "s49",
+          "s229",
+          "s45",
+          "s110",
+          "s228",
+          "s688",
+          "s190",
+          "s43",
+          "s231",
+          "s50",
+          "s54",
+          "s227",
+          "s46",
+          "s189"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [
+        {
+          "type": "PlayCard",
+          "card_idx": 2,
+          "field_idx": 1,
+          "selectedCard": {
+            "card": [
+              "s125"
+            ],
+            "cardDetails": [
+              {
+                "id": "s125",
+                "attribute": [
+                  "shell"
+                ],
+                "monsterType": [
+                  "dragon"
+                ],
+                "value": 100,
+                "type": "monster",
+                "cardName": "貝龍",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 0
+        }
+      ],
+      "Field": {
+        "summonner": {
+          "id": "S109",
+          "sky": [
+            "all"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "all",
+              "value": 70
+            }
+          ],
+          "level": 7,
+          "type": [],
+          "initialPoint": 101
+        },
+        "right": [],
+        "left": [
+          {
+            "card": [
+              "s125"
+            ],
+            "cardDetails": [
+              {
+                "id": "s125",
+                "attribute": [
+                  "shell"
+                ],
+                "monsterType": [
+                  "dragon"
+                ],
+                "value": 100,
+                "type": "monster",
+                "cardName": "貝龍",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          }
+        ],
+        "sky": [],
+        "help": [],
+        "sp": []
+      },
+      "playerPoint": 100
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S109",
+          "S051",
+          "S045",
+          "S056B",
+          "S058"
+        ],
+        "hand": [
+          "s52",
+          "s191",
+          "s110",
+          "s227",
+          "s186",
+          "s56",
+          "s49",
+          "s279"
+        ],
+        "mainDeck": [
+          "s122",
+          "s190",
+          "s187",
+          "s45",
+          "s53",
+          "s231",
+          "s43",
+          "s50",
+          "s109",
+          "s111",
+          "s688",
+          "s44",
+          "s47",
+          "s228",
+          "s46",
+          "s229",
+          "s230",
+          "s54",
+          "s189",
+          "s125"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "summonner": {
+          "id": "S109",
+          "sky": [
+            "all"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "all",
+              "value": 70
+            }
+          ],
+          "level": 7,
+          "type": [],
+          "initialPoint": 101
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      }
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_2",
+    "currentTurn": 0.5
+  },
+  "lastUpdate": "2025-06-07T16:06:53.779Z",
+  "updateUUID": "62813f41-21cd-468d-9f9f-bdbc4cb44103"
+}

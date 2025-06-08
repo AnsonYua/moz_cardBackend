@@ -1,0 +1,171 @@
+{
+  "gameId": "aaff80a8-d556-42ce-903d-2c38d0ba6805",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S109",
+          "S073E",
+          "S051",
+          "S058",
+          "S056B"
+        ],
+        "hand": [
+          "s191",
+          "s186",
+          "s125",
+          "s47",
+          "s229",
+          "s187",
+          "s44",
+          "s56"
+        ],
+        "mainDeck": [
+          "s111",
+          "s49",
+          "s43",
+          "s109",
+          "s46",
+          "s230",
+          "s122",
+          "s50",
+          "s110",
+          "s190",
+          "s189",
+          "s54",
+          "s52",
+          "s53",
+          "s279",
+          "s688",
+          "s228",
+          "s45",
+          "s231",
+          "s227"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "summonner": {
+          "id": "S109",
+          "sky": [
+            "all"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "all",
+              "value": 70
+            }
+          ],
+          "level": 7,
+          "type": [],
+          "initialPoint": 101
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      }
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S056B",
+          "S045",
+          "S109",
+          "S051",
+          "S073E"
+        ],
+        "hand": [
+          "s186",
+          "s45",
+          "s229",
+          "s231",
+          "s43",
+          "s50",
+          "s109"
+        ],
+        "mainDeck": [
+          "s110",
+          "s53",
+          "s46",
+          "s56",
+          "s54",
+          "s122",
+          "s279",
+          "s228",
+          "s47",
+          "s125",
+          "s190",
+          "s688",
+          "s52",
+          "s189",
+          "s187",
+          "s111",
+          "s227",
+          "s230",
+          "s49",
+          "s191",
+          "s44"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "summonner": {
+          "id": "S056B",
+          "sky": [
+            "water",
+            "shell"
+          ],
+          "left": [
+            "shell",
+            "water"
+          ],
+          "right": [
+            "water",
+            "shell"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "shell",
+              "value": 60
+            },
+            {
+              "type": "water",
+              "value": 60
+            }
+          ],
+          "level": 1,
+          "type": [
+            "shell"
+          ],
+          "initialPoint": 1
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      }
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_1",
+    "currentTurn": 0
+  },
+  "lastUpdate": "2025-06-07T18:16:17.562Z"
+}

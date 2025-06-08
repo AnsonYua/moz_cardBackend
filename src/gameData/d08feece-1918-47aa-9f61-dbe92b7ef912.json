@@ -1,0 +1,259 @@
+{
+  "gameId": "d08feece-1918-47aa-9f61-dbe92b7ef912",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S051",
+          "S073E",
+          "S058",
+          "S045",
+          "S109"
+        ],
+        "hand": [
+          "s111",
+          "s45",
+          "s43",
+          "s279",
+          "s52",
+          "s229",
+          "s44"
+        ],
+        "mainDeck": [
+          "s230",
+          "s47",
+          "s228",
+          "s49",
+          "s46",
+          "s227",
+          "s190",
+          "s186",
+          "s231",
+          "s187",
+          "s110",
+          "s56",
+          "s109",
+          "s125",
+          "s54",
+          "s191",
+          "s50",
+          "s122",
+          "s189",
+          "s688"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [
+        {
+          "type": "PlayCardBack",
+          "card_idx": 1,
+          "field_idx": 3,
+          "selectedCard": {
+            "card": [
+              "s53"
+            ],
+            "cardDetails": [
+              {
+                "id": "s53",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "male"
+                ],
+                "value": 40,
+                "type": "monster",
+                "cardName": "鳥形人",
+                "effects": "if i have '天馬' on the field, this card's value become 400",
+                "effectRules": [
+                  {
+                    "condition": {
+                      "type": "selfHasMonster",
+                      "monsterName": "天馬"
+                    },
+                    "target": {
+                      "type": "self",
+                      "scope": "single"
+                    },
+                    "effectType": "valueModification",
+                    "value": 400
+                  }
+                ]
+              }
+            ],
+            "isBack": [
+              true
+            ]
+          },
+          "turn": 0
+        }
+      ],
+      "Field": {
+        "summonner": {
+          "id": "S051",
+          "sky": [
+            "fire",
+            "wind",
+            "mountain"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "female",
+          "nativeAddition": [
+            {
+              "type": "wind",
+              "value": 60
+            }
+          ],
+          "level": 6,
+          "type": [
+            "wind"
+          ],
+          "initialPoint": 87
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [
+          {
+            "card": [
+              "s53"
+            ],
+            "cardDetails": [
+              {
+                "id": "s53",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "male"
+                ],
+                "value": 40,
+                "type": "monster",
+                "cardName": "鳥形人",
+                "effects": "if i have '天馬' on the field, this card's value become 400",
+                "effectRules": [
+                  {
+                    "condition": {
+                      "type": "selfHasMonster",
+                      "monsterName": "天馬"
+                    },
+                    "target": {
+                      "type": "self",
+                      "scope": "single"
+                    },
+                    "effectType": "valueModification",
+                    "value": 400
+                  }
+                ]
+              }
+            ],
+            "isBack": [
+              true
+            ]
+          }
+        ],
+        "sp": []
+      },
+      "playerPoint": 0
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S045",
+          "S058",
+          "S073E",
+          "S056B",
+          "S109"
+        ],
+        "hand": [
+          "s47",
+          "s688",
+          "s125",
+          "s231",
+          "s54",
+          "s187",
+          "s111",
+          "s56"
+        ],
+        "mainDeck": [
+          "s52",
+          "s43",
+          "s46",
+          "s189",
+          "s191",
+          "s53",
+          "s186",
+          "s45",
+          "s229",
+          "s227",
+          "s122",
+          "s110",
+          "s279",
+          "s190",
+          "s230",
+          "s49",
+          "s44",
+          "s50",
+          "s228",
+          "s109"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "summonner": {
+          "id": "S045",
+          "sky": [
+            "all",
+            "mountain",
+            "tree"
+          ],
+          "left": [
+            "wind",
+            "water"
+          ],
+          "right": [
+            "wind",
+            "tree"
+          ],
+          "age": 20,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "wind",
+              "value": 30
+            },
+            {
+              "type": "bird",
+              "value": 100
+            }
+          ],
+          "level": 3,
+          "type": [
+            "wind"
+          ],
+          "initialPoint": 25
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      }
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_2",
+    "currentTurn": 0.5
+  },
+  "lastUpdate": "2025-06-07T16:06:53.907Z",
+  "updateUUID": "b6d80256-303a-4d3e-a452-da707bf4eb9e"
+}

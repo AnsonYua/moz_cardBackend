@@ -1,0 +1,229 @@
+{
+  "gameId": "ca29feb9-a2ba-4c76-9a86-ea0a5b94f7cd",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S109",
+          "S045",
+          "S058",
+          "S073E",
+          "S056B"
+        ],
+        "hand": [
+          "s43",
+          "s122",
+          "s56",
+          "s229",
+          "s227",
+          "s228",
+          "s191"
+        ],
+        "mainDeck": [
+          "s279",
+          "s50",
+          "s125",
+          "s187",
+          "s46",
+          "s52",
+          "s189",
+          "s186",
+          "s53",
+          "s54",
+          "s111",
+          "s231",
+          "s110",
+          "s109",
+          "s190",
+          "s688",
+          "s44",
+          "s230",
+          "s45",
+          "s49"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [
+        {
+          "type": "PlayCard",
+          "card_idx": 1,
+          "field_idx": 0,
+          "selectedCard": {
+            "card": [
+              "s47"
+            ],
+            "cardDetails": [
+              {
+                "id": "s47",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "beast"
+                ],
+                "value": 50,
+                "type": "monster",
+                "cardName": "天馬",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 0
+        }
+      ],
+      "Field": {
+        "summonner": {
+          "id": "S109",
+          "sky": [
+            "all"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "all",
+              "value": 70
+            }
+          ],
+          "level": 7,
+          "type": [],
+          "initialPoint": 101
+        },
+        "right": [],
+        "left": [],
+        "sky": [
+          {
+            "card": [
+              "s47"
+            ],
+            "cardDetails": [
+              {
+                "id": "s47",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "beast"
+                ],
+                "value": 50,
+                "type": "monster",
+                "cardName": "天馬",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          }
+        ],
+        "help": [],
+        "sp": []
+      },
+      "playerPoint": 50
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S045",
+          "S109",
+          "S058",
+          "S073E",
+          "S051"
+        ],
+        "hand": [
+          "s189",
+          "s109",
+          "s111",
+          "s231",
+          "s125",
+          "s190",
+          "s122",
+          "s54"
+        ],
+        "mainDeck": [
+          "s187",
+          "s228",
+          "s44",
+          "s46",
+          "s47",
+          "s52",
+          "s191",
+          "s49",
+          "s230",
+          "s53",
+          "s186",
+          "s45",
+          "s43",
+          "s50",
+          "s110",
+          "s279",
+          "s688",
+          "s56",
+          "s227",
+          "s229"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "summonner": {
+          "id": "S045",
+          "sky": [
+            "all",
+            "mountain",
+            "tree"
+          ],
+          "left": [
+            "wind",
+            "water"
+          ],
+          "right": [
+            "wind",
+            "tree"
+          ],
+          "age": 20,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "wind",
+              "value": 30
+            },
+            {
+              "type": "bird",
+              "value": 100
+            }
+          ],
+          "level": 3,
+          "type": [
+            "wind"
+          ],
+          "initialPoint": 25
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      }
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_2",
+    "currentTurn": 0.5
+  },
+  "lastUpdate": "2025-06-08T04:33:26.679Z",
+  "updateUUID": "b1839f56-ef54-4f69-afad-0509a3e3f5f1"
+}

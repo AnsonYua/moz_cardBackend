@@ -1,0 +1,228 @@
+{
+  "gameId": "2002ab85-a24b-46a7-8baa-35382c6489b5",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S109",
+          "S051",
+          "S073E",
+          "S058",
+          "S045"
+        ],
+        "hand": [
+          "s228",
+          "s56",
+          "s43",
+          "s109",
+          "s187",
+          "s50",
+          "s191"
+        ],
+        "mainDeck": [
+          "s230",
+          "s190",
+          "s45",
+          "s47",
+          "s122",
+          "s231",
+          "s52",
+          "s44",
+          "s227",
+          "s46",
+          "s49",
+          "s688",
+          "s125",
+          "s229",
+          "s189",
+          "s54",
+          "s279",
+          "s186",
+          "s111",
+          "s53"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [
+        {
+          "type": "PlayCard",
+          "card_idx": 1,
+          "field_idx": 0,
+          "selectedCard": {
+            "card": [
+              "s110"
+            ],
+            "cardDetails": [
+              {
+                "id": "s110",
+                "attribute": [
+                  "shell"
+                ],
+                "monsterType": [
+                  "dragon"
+                ],
+                "value": 70,
+                "type": "monster",
+                "cardName": "虹霞龍",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 0
+        }
+      ],
+      "Field": {
+        "summonner": {
+          "id": "S109",
+          "sky": [
+            "all"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "all",
+              "value": 70
+            }
+          ],
+          "level": 7,
+          "type": [],
+          "initialPoint": 101
+        },
+        "right": [],
+        "left": [],
+        "sky": [
+          {
+            "card": [
+              "s110"
+            ],
+            "cardDetails": [
+              {
+                "id": "s110",
+                "attribute": [
+                  "shell"
+                ],
+                "monsterType": [
+                  "dragon"
+                ],
+                "value": 70,
+                "type": "monster",
+                "cardName": "虹霞龍",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          }
+        ],
+        "help": [],
+        "sp": []
+      },
+      "playerPoint": 70
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S056B",
+          "S109",
+          "S058",
+          "S051",
+          "S073E"
+        ],
+        "hand": [
+          "s191",
+          "s46",
+          "s50",
+          "s110",
+          "s187",
+          "s44",
+          "s230",
+          "s688"
+        ],
+        "mainDeck": [
+          "s54",
+          "s228",
+          "s279",
+          "s109",
+          "s125",
+          "s190",
+          "s45",
+          "s229",
+          "s52",
+          "s53",
+          "s111",
+          "s231",
+          "s186",
+          "s122",
+          "s43",
+          "s56",
+          "s189",
+          "s227",
+          "s49",
+          "s47"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "summonner": {
+          "id": "S056B",
+          "sky": [
+            "water",
+            "shell"
+          ],
+          "left": [
+            "shell",
+            "water"
+          ],
+          "right": [
+            "water",
+            "shell"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "shell",
+              "value": 60
+            },
+            {
+              "type": "water",
+              "value": 60
+            }
+          ],
+          "level": 1,
+          "type": [
+            "shell"
+          ],
+          "initialPoint": 1
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      }
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_2",
+    "currentTurn": 0.5
+  },
+  "lastUpdate": "2025-06-07T18:20:03.417Z",
+  "updateUUID": "64183086-066b-4bce-b4f2-890733267e66"
+}

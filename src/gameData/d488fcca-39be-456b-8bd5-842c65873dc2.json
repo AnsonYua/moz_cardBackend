@@ -1,0 +1,228 @@
+{
+  "gameId": "d488fcca-39be-456b-8bd5-842c65873dc2",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S109",
+          "S073E",
+          "S051",
+          "S058",
+          "S045"
+        ],
+        "hand": [
+          "s187",
+          "s53",
+          "s49",
+          "s227",
+          "s125",
+          "s191",
+          "s231"
+        ],
+        "mainDeck": [
+          "s43",
+          "s229",
+          "s186",
+          "s228",
+          "s122",
+          "s279",
+          "s46",
+          "s110",
+          "s109",
+          "s56",
+          "s44",
+          "s230",
+          "s54",
+          "s190",
+          "s189",
+          "s50",
+          "s111",
+          "s688",
+          "s47",
+          "s45"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [
+        {
+          "type": "PlayCard",
+          "card_idx": 1,
+          "field_idx": 0,
+          "selectedCard": {
+            "card": [
+              "s52"
+            ],
+            "cardDetails": [
+              {
+                "id": "s52",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "beast"
+                ],
+                "value": 70,
+                "type": "monster",
+                "cardName": "鳥形蛇",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          },
+          "turn": 0
+        }
+      ],
+      "Field": {
+        "summonner": {
+          "id": "S109",
+          "sky": [
+            "all"
+          ],
+          "left": [
+            "all"
+          ],
+          "right": [
+            "all"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "all",
+              "value": 70
+            }
+          ],
+          "level": 7,
+          "type": [],
+          "initialPoint": 101
+        },
+        "right": [],
+        "left": [],
+        "sky": [
+          {
+            "card": [
+              "s52"
+            ],
+            "cardDetails": [
+              {
+                "id": "s52",
+                "attribute": [
+                  "wind"
+                ],
+                "monsterType": [
+                  "beast"
+                ],
+                "value": 70,
+                "type": "monster",
+                "cardName": "鳥形蛇",
+                "effects": "",
+                "effectRules": []
+              }
+            ],
+            "isBack": [
+              false
+            ]
+          }
+        ],
+        "help": [],
+        "sp": []
+      },
+      "playerPoint": 70
+    },
+    "playerId_2": {
+      "deck": {
+        "currentSummonerIdx": 0,
+        "summoner": [
+          "S058",
+          "S045",
+          "S073E",
+          "S051",
+          "S109"
+        ],
+        "hand": [
+          "s122",
+          "s186",
+          "s187",
+          "s227",
+          "s125",
+          "s46",
+          "s50",
+          "s44"
+        ],
+        "mainDeck": [
+          "s189",
+          "s111",
+          "s229",
+          "s688",
+          "s228",
+          "s191",
+          "s47",
+          "s109",
+          "s45",
+          "s52",
+          "s53",
+          "s110",
+          "s190",
+          "s279",
+          "s56",
+          "s230",
+          "s43",
+          "s54",
+          "s49",
+          "s231"
+        ]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "summonner": {
+          "id": "S058",
+          "sky": [
+            "shell",
+            "wind"
+          ],
+          "left": [
+            "wind",
+            "shell"
+          ],
+          "right": [
+            "wind",
+            "shell"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+            {
+              "type": "shell",
+              "value": 60
+            },
+            {
+              "type": "wind",
+              "value": 60
+            }
+          ],
+          "level": 1,
+          "type": [
+            "shell"
+          ],
+          "initialPoint": 10
+        },
+        "right": [],
+        "left": [],
+        "sky": [],
+        "help": [],
+        "sp": []
+      }
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_2",
+    "currentTurn": 0.5
+  },
+  "lastUpdate": "2025-06-07T16:06:53.924Z",
+  "updateUUID": "46ac9342-4b1f-4db9-9d3c-29aacd880fcf"
+}
