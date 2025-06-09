@@ -1,9 +1,10 @@
 const mozGamePlay = require('./mozGamePlay');
 const mozDeckHelper = require('./mozDeckHelper');
-
+const CardInfoUtils = require('../services/CardInfoUtils');
 class mozAIClass {
     constructor() {
-        this.mozGamePlay = new mozGamePlay();
+        this.mozGamePlay = mozGamePlay;
+        this.cardInfoUtils = CardInfoUtils;
     }
 
     async getAIAction(gameEnv,playerId) {
@@ -73,7 +74,7 @@ class mozAIClass {
     async getPossibleMoves(gameState, playerId) {
         var moves = [];
         const playerHand = gameState[playerId].deck.hand
-        const summoner = mozDeckHelper.getCurrentSummoner(gameState,playerId);
+        const summoner = this.cardInfoUtils.getCurrentSummoner(gameState,playerId);
         const availableField = this.getAvailableField(gameState,playerId);
         for (let i = 0; i < playerHand.length; i++) {
             for (let j = 0; j < availableField.length; j++) {

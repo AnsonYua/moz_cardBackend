@@ -1,5 +1,9 @@
 const deckManager = require('../services/DeckManager');
+const CardInfoUtils = require('../services/CardInfoUtils');
 class mozDeckLogic{
+    constructor() {
+        this.cardInfoUtils = CardInfoUtils;
+    }
     async prepareDeckForPlayer(playerId) {
         var playerDeck = await deckManager.getPlayerDecks(playerId);
         playerDeck = JSON.parse(JSON.stringify(playerDeck));

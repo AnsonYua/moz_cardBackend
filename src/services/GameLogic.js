@@ -19,7 +19,7 @@ class GameLogic {
         
         // You could store temporary game data here or use a database
         this.activeGames = new Map();
-        this.mozGamePlay = new mozGamePlay();
+        this.mozGamePlay = mozGamePlay;
     }
 
 

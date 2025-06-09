@@ -1,9 +1,11 @@
 const DeckManager = require('./DeckManager');
+const CardInfoUtils = require('./CardInfoUtils');
 const { getPlayerFromGameEnv } = require('../utils/gameUtils');
 
 class CardEffectManager {
     constructor() {
         this.deckManager = DeckManager;
+        this.cardInfoUtils = CardInfoUtils;
     }
 
     /**
@@ -38,10 +40,6 @@ class CardEffectManager {
      */
     checkCondition(gameEnv, playerId, condition) {
         switch (condition.type) {
-            case 'summoner':
-                const currentSummoner = this.getCurrentSummonerName(gameEnv, playerId);
-                return currentSummoner === condition.value;
-            
             case 'opponentHasMonster':
                 return this.hasMonsterOnField(gameEnv, opponentId, condition.monsterName);
             
@@ -117,15 +115,6 @@ class CardEffectManager {
                 }
                 break;
         }
-    }
-
-    /**
-     * Helper method to get current summoner name
-     */
-    getCurrentSummonerName(gameEnv, playerId) {
-        const deck = gameEnv[playerId].deck;
-        const currentSummonerCard = deck.summoner[deck.currentSummonerIdx];
-        return this.deckManager.getSummonerCards(currentSummonerCard).name;
     }
 
     /**
@@ -296,8 +285,8 @@ class CardEffectManager {
             for (const rule of summoner.effectRules) {
                 // Check for opponentHasSummoner condition
                 if (rule.condition.type === 'opponentHasSummoner') {
-                    const opponentSummoner = this.getCurrentSummonerName(gameEnv, opponentId);
-                    if (opponentSummoner.includes(rule.condition.opponentName)) {
+                    const opponentSummonerName = this.cardInfoUtils.getCurrentSummonerName(gameEnv, opponentId);
+                    if (opponentSummonerName.includes(rule.condition.opponentName)) {
                         // Modify the nativeAddition values based on the rule
                         if (rule.effectType === 'valueModification' && 
                             rule.target.type === 'self' && 
@@ -345,4 +334,4 @@ class CardEffectManager {
     }
 }
 
-module.exports = CardEffectManager; 
+module.exports = new CardEffectManager(); 

@@ -2,7 +2,7 @@ const mozDeckHelper = require('./mozDeckHelper');
 const mozPhaseManager = require('./mozPhaseManager');
 const CardEffectManager = require('../services/CardEffectManager');
 const { getPlayerFromGameEnv } = require('../utils/gameUtils');
-
+const CardInfoUtils = require('../services/CardInfoUtils');
 const TurnPhase = {
     START_REDRAW: 'START_REDRAW',
     DRAW_PHASE: 'DRAW_PHASE',
@@ -17,7 +17,8 @@ const TurnPhase = {
 
 class mozGamePlay {
     constructor() {
-        this.cardEffectManager = new CardEffectManager();
+        this.cardEffectManager = CardEffectManager;
+        this.cardInfoUtils = CardInfoUtils;
     }
 
     updateInitialGameEnvironment(gameEnv){
@@ -25,7 +26,8 @@ class mozGamePlay {
         const summonerList = []
         const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
         for (let playerId in playerList){
-            summonerList.push(mozDeckHelper.getCurrentSummoner(gameEnv, playerList[playerId]));
+            let summoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, playerList[playerId]);
+            summonerList.push(summoner);
         }
         var firstPlayer = 0; 
         if (summonerList[1].initialPoint>summonerList[0].initialPoint){
@@ -71,9 +73,10 @@ class mozGamePlay {
            gameEnv["currentTurn"] = 0;
           
            for (let playerId in playerList){
+               let summoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, playerList[playerId]);
                gameEnv[playerList[playerId]]["turnAction"] = []
                gameEnv[playerList[playerId]]["Field"] = {};
-               gameEnv[playerList[playerId]]["Field"]["summonner"] = mozDeckHelper.getCurrentSummoner(gameEnv, playerList[playerId]);
+               gameEnv[playerList[playerId]]["Field"]["summonner"] = summoner;
                gameEnv[playerList[playerId]]["Field"]["right"] = [];
                gameEnv[playerList[playerId]]["Field"]["left"] = [];
                gameEnv[playerList[playerId]]["Field"]["sky"] = [];
@@ -128,9 +131,11 @@ class mozGamePlay {
                     }
                 }
                 else if (cardDetails["type"] == "monster"){
-                    const isMatch = this.isCardMatchingSummoner(cardDetails,
-                        mozDeckHelper.getCurrentSummoner(gameEnv, playerId)
-                        ,playPos);
+                    let summoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, playerId);
+                    const isMatch = this.isCardMatchingSummoner(
+                        cardDetails,
+                        summoner,
+                        playPos);
                         if(!isMatch){   
                             return this.throwError("Attribute not match");
                         }
@@ -246,10 +251,14 @@ class mozGamePlay {
                 return gameEnv; 
             }
         }else{
+
             gameEnv[opponent].deck.currentSummonerIdx = gameEnv[opponent].deck.currentSummonerIdx + 1;
-            gameEnv[opponent].Field["summonner"] = mozDeckHelper.getCurrentSummoner(gameEnv, opponent);
+            let opponentSummoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, opponent);
+            gameEnv[opponent].Field["summonner"] = opponentSummoner
+            
             gameEnv[crtPlayer].deck.currentSummonerIdx = gameEnv[crtPlayer].deck.currentSummonerIdx + 1; 
-            gameEnv[crtPlayer].Field["summonner"] = mozDeckHelper.getCurrentSummoner(gameEnv, crtPlayer);
+            let crtSummoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, crtPlayer);
+            gameEnv[crtPlayer].Field["summonner"] = crtSummoner
         }
         gameEnv = await this.startNewTurn(gameEnv);
         return gameEnv;
@@ -362,8 +371,8 @@ class mozGamePlay {
     async calculatePlayerPoint(gameEnv, playerId) {
         let totalPoints = 0;
         const fields = ['sky', 'left', 'right'];
-        const currentSummoner = mozDeckHelper.getCurrentSummoner(gameEnv, playerId);
 
+        const currentSummoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, playerId);
         for (const field of fields) {
             const fieldCards = gameEnv[playerId].Field[field];
             for (const cardObj of fieldCards) {
@@ -483,4 +492,4 @@ class mozGamePlay {
         return returnValue;
     }
 }
-module.exports = mozGamePlay;
+module.exports = new mozGamePlay();
