@@ -1,6 +1,7 @@
 const mozDeckHelper = require('./mozDeckHelper');
 const mozPhaseManager = require('./mozPhaseManager');
 const CardEffectManager = require('../services/CardEffectManager');
+const { getPlayerFromGameEnv } = require('../utils/gameUtils');
 
 const TurnPhase = {
     START_REDRAW: 'START_REDRAW',
@@ -13,14 +14,16 @@ const TurnPhase = {
     END_PHASE: 'END_PHASE',
     GAME_END: 'GAME_END'
 };
-class mozGamePlay{
+
+class mozGamePlay {
     constructor() {
         this.cardEffectManager = new CardEffectManager();
     }
+
     updateInitialGameEnvironment(gameEnv){
         // decide who goes first
         const summonerList = []
-        const playerList = this.getPlayerFromGameEnv(gameEnv);
+        const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
         for (let playerId in playerList){
             summonerList.push(mozDeckHelper.getCurrentSummoner(gameEnv, playerList[playerId]));
         }
@@ -49,7 +52,7 @@ class mozGamePlay{
                 gameEnv[playerId].deck.mainDeck = mainDeck;
             }
         }
-        const playerList = this.getPlayerFromGameEnv(gameEnv);
+        const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
         var allReady = true;
         for (let playerId in playerList){
             if(gameEnv[playerList[playerId]].redraw == 0){
@@ -135,11 +138,16 @@ class mozGamePlay{
                     return this.throwError("Condition not handling");
                 }
             }
-            
+           
             var cardObj = {
                 "card": hand.splice(action["card_idx"],1),
                 "cardDetails": [cardDetails],
-                "isBack": [isPlayInFaceDown]
+                "isBack": [isPlayInFaceDown],
+                "valueOnField": cardDetails["value"]
+            }
+
+            if(isPlayInFaceDown){
+                cardObj["valueOnField"] = 0;
             }
             gameEnv[playerId].deck.hand = hand;
             gameEnv[playerId].Field[positionDict[action["field_idx"]]].push(cardObj);
@@ -147,10 +155,6 @@ class mozGamePlay{
             action["turn"] = gameEnv["currentTurn"];
             gameEnv[playerId]["turnAction"].push(action);
 
-            // Apply card effects if the card is played face up
-            if (!isPlayInFaceDown && cardDetails.type === "monster") {
-                gameEnv = this.cardEffectManager.applyCardEffect(gameEnv, playerId, cardDetails, gameEnv[playerId].Field);
-            }
 
             gameEnv[playerId]["playerPoint"] = await this.calculatePlayerPoint(gameEnv,playerId);
             const isSummonBattleReady = await this.checkIsSummonBattleReady(gameEnv);
@@ -169,7 +173,7 @@ class mozGamePlay{
 
     async concludeSummonerBattleAndNewStart(gameEnvInput,playerId){
         var gameEnv = gameEnvInput;
-        const playerList = this.getPlayerFromGameEnv(gameEnv);
+        const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
         var crtPlayer = playerId;
         var opponent = playerList[0];
         if(playerList[0] === playerId){
@@ -252,7 +256,7 @@ class mozGamePlay{
     }
     resetField(gameEnvInput){
         var gameEnv = gameEnvInput;
-        const playerList = this.getPlayerFromGameEnv(gameEnv);
+        const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
         for (let playerId in playerList){
             gameEnv[playerList[playerId]]["Field"]["sky"] = [];
             gameEnv[playerList[playerId]]["Field"]["right"] = [];
@@ -287,7 +291,7 @@ class mozGamePlay{
         return monsterInField;
     }
     async checkIsSummonBattleReady(gameEnv){
-        const playerList =  this.getPlayerFromGameEnv(gameEnv);
+        const playerList =  mozGamePlay.getPlayerFromGameEnv(gameEnv);
         const area = ["sky","left","right"];
         var allFillWithMonster = true;
        
@@ -338,7 +342,7 @@ class mozGamePlay{
     async startNewTurn(gameEnvInput){
         var gameEnv = gameEnvInput;
         gameEnv["currentTurn"] = gameEnv["currentTurn"] + 0.5;
-        const playerArr = this.getPlayerFromGameEnv(gameEnv)
+        const playerArr = mozGamePlay.getPlayerFromGameEnv(gameEnv)
         gameEnv["currentPlayer"] = playerArr[gameEnv["firstPlayer"]];
         if(gameEnv["currentTurn"] * 10 % 10 == 5){
             if(gameEnv["firstPlayer"] == 0){
@@ -366,12 +370,64 @@ class mozGamePlay{
                 if (!cardObj.isBack[0] && cardObj.cardDetails[0].type === "monster") {
                     // Apply card effects before calculating points
                     gameEnv = this.cardEffectManager.applyCardEffect(gameEnv, playerId, cardObj.cardDetails[0], gameEnv[playerId].Field);
-                    totalPoints += await this.getMonsterPoint(cardObj.cardDetails[0], currentSummoner);
+                    // Apply summoner effects
+                    gameEnv = await this.cardEffectManager.applySummonerEffect(gameEnv, playerId, cardObj, currentSummoner);
+                    // Sum up the valueOnField
+                    totalPoints += cardObj.valueOnField || cardObj.cardDetails[0].value;
                 }
             }
         }
 
         return totalPoints;
+    }
+
+    /**
+     * Apply summoner's native addition effects to a single value
+     * @param {number} baseValue - The base value to apply effects to
+     * @param {Array} cardAttr - Card's attributes
+     * @param {Object} summonerNativeAddition - Summoner's native addition object
+     * @returns {number} - The total value after applying native addition effects
+     */
+    applySummonerNativeAddition(baseValue, cardAttr, summonerNativeAddition) {
+        let totalValue = baseValue;
+
+        // Check for "all" type in summoner's native addition
+        for (let key in summonerNativeAddition) {
+            if (summonerNativeAddition[key].type === "all") {
+                totalValue += summonerNativeAddition[key].value;
+                return totalValue; // Return immediately after applying "all" bonus
+            }
+        }
+
+        // If no "all" type in summoner, check for matching attributes
+        for (let key in summonerNativeAddition) {
+            const additionType = summonerNativeAddition[key].type;
+            if (cardAttr.includes(additionType)) {
+                totalValue += summonerNativeAddition[key].value;
+            }
+        }
+
+        return totalValue;
+    }
+
+    /**
+     * Apply summoner's native addition effects to monster cards
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} playerId - ID of the player who owns the card
+     * @param {Object} cardObj - Card object to apply effects to
+     * @param {Object} summoner - Current summoner object
+     * @returns {Object} - Modified game environment
+     */
+    async applySummonerEffect(gameEnv, playerId, cardObj, summoner) {
+        const cardAttr = cardObj.cardDetails[0].attribute;
+        const baseValue = cardObj.valueOnField || cardObj.cardDetails[0].value;
+        
+        // Apply native addition effects
+        const totalValue = this.applySummonerNativeAddition(baseValue, cardAttr, summoner.nativeAddition);
+        
+        // Update the card object in gameEnv
+        cardObj.valueOnField = totalValue;
+        return gameEnv;
     }
 
     async getMonsterPoint(card,summoner){
@@ -435,14 +491,8 @@ class mozGamePlay{
         return returnObj
     }
 
-    getPlayerFromGameEnv(gameEnv){
-        const playerArr = []   
-        for (let playerId in gameEnv){
-            if(playerId.includes("playerId_")){
-                playerArr.push(playerId);
-            }
-        }
-        return playerArr;
+    static getPlayerFromGameEnv(gameEnv) {
+        return getPlayerFromGameEnv(gameEnv);
     }
 
     isSummonBattleEnd(gameEnv){
@@ -453,4 +503,4 @@ class mozGamePlay{
         return returnValue;
     }
 }
-module.exports = new mozGamePlay();
+module.exports = mozGamePlay;

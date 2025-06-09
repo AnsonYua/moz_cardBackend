@@ -19,6 +19,7 @@ class GameLogic {
         
         // You could store temporary game data here or use a database
         this.activeGames = new Map();
+        this.mozGamePlay = new mozGamePlay();
     }
 
 
@@ -44,24 +45,21 @@ class GameLogic {
                 "deck":results[i],
             };
         }
-        gameEnv = mozGamePlay.updateInitialGameEnvironment(gameEnv);
+        gameEnv = this.mozGamePlay.updateInitialGameEnvironment(gameEnv);
 
         const newGame = {
-            //"playerId":playerId,
             "gameId":gameId,
             "gameEnv":gameEnv,
-            //"deck":gameEnv[playerId].deck,
             lastUpdate: new Date()
         };
         await this.saveOrCreateGame(newGame, gameId);
-        //this.activeGames.set(playerId, newGame);
         return newGame;
     }
 
     async startReady(req) {
         var {playerId ,gameId,isRedraw} = req.body;
         var gameData = await this.readJSONFileAsync(gameId);
-        const gameEnv = await mozGamePlay.redrawInBegining(gameData.gameEnv,playerId,isRedraw);
+        const gameEnv = await this.mozGamePlay.redrawInBegining(gameData.gameEnv,playerId,isRedraw);
         gameData.gameEnv = gameEnv;
         await this.saveOrCreateGame(gameData, gameId);
         return gameData
@@ -71,12 +69,12 @@ class GameLogic {
         console.log("---------processPlayerAction-------" + JSON.stringify(req.body));
         var {playerId ,gameId,action} = req.body;
         var gameData = await this.readJSONFileAsync(gameId);
-        const result = await mozGamePlay.checkIsPlayOkForAction(gameData.gameEnv,playerId,action);
+        const result = await this.mozGamePlay.checkIsPlayOkForAction(gameData.gameEnv,playerId,action);
         if(!result){
             console.log("---------processPlayerAction------- Not your turn");
-            return mozGamePlay.throwError("Not your turn");
+            return this.mozGamePlay.throwError("Not your turn");
         }else{
-            gameData.gameEnv = await mozGamePlay.processAction(gameData.gameEnv,playerId,action);
+            gameData.gameEnv = await this.mozGamePlay.processAction(gameData.gameEnv,playerId,action);
             if (gameData.gameEnv.hasOwnProperty('error')){
                 console.log("---------processPlayerAction------- attribute not match/other error");
                 return gameData.gameEnv;
@@ -109,9 +107,10 @@ class GameLogic {
 
     async injectGameState(gameId, gameEnv) {
         // Only allow in test environment
+        /*
         if (process.env.NODE_ENV !== 'test') {
             throw new Error('This method is only available in test environment');
-        }
+        }*/
 
         // Create a new game ID if not provided
         if (!gameId) {

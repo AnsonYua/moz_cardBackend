@@ -1,10 +1,9 @@
 const DeckManager = require('./DeckManager');
-const MozGamePlay = require('../mozGame/mozGamePlay');
+const { getPlayerFromGameEnv } = require('../utils/gameUtils');
 
 class CardEffectManager {
     constructor() {
         this.deckManager = DeckManager;
-        this.mozGamePlay = MozGamePlay;
     }
 
     /**
@@ -21,7 +20,7 @@ class CardEffectManager {
         }
 
         // Get opponent ID
-        const players = this.mozGamePlay.getPlayerFromGameEnv(gameEnv);
+        const players = getPlayerFromGameEnv(gameEnv);
         const opponentId = players.find(id => id !== playerId);
 
         // Apply each effect rule
@@ -163,7 +162,7 @@ class CardEffectManager {
         fields.forEach(field => {
             gameEnv[playerId].Field[field].forEach(cardObj => {
                 if (!cardObj.isBack[0] && cardObj.cardDetails[0].id === target.cardId) {
-                    cardObj.cardDetails[0].value = value;
+                    cardObj.valueOnField = value;
                 }
             });
         });
@@ -247,6 +246,55 @@ class CardEffectManager {
                 }
             });
         });
+    }
+
+    /**
+     * Apply summoner's native addition effects to a single value
+     * @param {number} baseValue - The base value to apply effects to
+     * @param {Array} cardAttr - Card's attributes
+     * @param {Object} summonerNativeAddition - Summoner's native addition object
+     * @returns {number} - The total value after applying native addition effects
+     */
+    applySummonerNativeAddition(baseValue, cardAttr, summonerNativeAddition) {
+        let totalValue = baseValue;
+
+        // Check for "all" type in summoner's native addition
+        for (let key in summonerNativeAddition) {
+            if (summonerNativeAddition[key].type === "all") {
+                totalValue += summonerNativeAddition[key].value;
+                return totalValue; // Return immediately after applying "all" bonus
+            }
+        }
+
+        // If no "all" type in summoner, check for matching attributes
+        for (let key in summonerNativeAddition) {
+            const additionType = summonerNativeAddition[key].type;
+            if (cardAttr.includes(additionType)) {
+                totalValue += summonerNativeAddition[key].value;
+            }
+        }
+
+        return totalValue;
+    }
+
+    /**
+     * Apply summoner's native addition effects to monster cards
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} playerId - ID of the player who owns the card
+     * @param {Object} cardObj - Card object to apply effects to
+     * @param {Object} summoner - Current summoner object
+     * @returns {Object} - Modified game environment
+     */
+    async applySummonerEffect(gameEnv, playerId, cardObj, summoner) {
+        const cardAttr = cardObj.cardDetails[0].attribute;
+        const baseValue = cardObj.valueOnField || cardObj.cardDetails[0].value;
+        
+        // Apply native addition effects
+        const totalValue = this.applySummonerNativeAddition(baseValue, cardAttr, summoner.nativeAddition);
+        
+        // Update the card object in gameEnv
+        cardObj.valueOnField = totalValue;
+        return gameEnv;
     }
 }
 

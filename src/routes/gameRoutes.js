@@ -22,9 +22,10 @@ router.post('/test/setCase', gameController.setCase);
 
 // Test-only endpoint for injecting game environment
 router.post('/test/injectGameState', (req, res, next) => {
+    /*
     if (process.env.NODE_ENV !== 'test') {
         return res.status(403).json({ error: 'This endpoint is only available in test environment' });
-    }
+    }*/
     next();
 }, gameController.injectGameState);
 

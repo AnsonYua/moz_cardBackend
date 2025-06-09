@@ -1,120 +1,128 @@
-# Card Game Backend
+# TCG Engine Documentation
 
-A Node.js backend service for a Trading Card Game (TCG) that handles game logic, player actions, and card effects.
+## Overview
+This is a Trading Card Game (TCG) engine that manages game state, card interactions, and gameplay mechanics. The engine is designed to handle complex card interactions, summoner battles, and game progression.
 
-## Features
+## Data Structure
 
-- Game state management
-- Player action processing
-- Card effect system
-- Turn management
-- Deck management
-- Comprehensive test suite
+### Game Environment (`gameEnv`)
+The game environment is stored in JSON format and contains the following key components:
 
-## Prerequisites
+#### Player Data Structure
+Each player (`playerId_1`, `playerId_2`) contains:
+- **Deck Information**
+  - `currentSummonerIdx`: Index of the active summoner
+  - `summoner`: Array of summoner card IDs
+  - `hand`: Array of cards in player's hand
+  - `mainDeck`: Array of cards in the main deck
+- **Game State**
+  - `redraw`: Number of redraws available
+  - `turnAction`: Array of actions taken in the current turn
+  - `Field`: Current state of the player's field
+  - `playerPoint`: Current points for the player
+  - `overallGamePoint`: Total points accumulated
 
-- Node.js (v14 or higher)
-- npm (v6 or higher)
+#### Field Structure
+Each player's field contains:
+- `summonner`: Active summoner card details
+- `right`: Right field zone cards
+- `left`: Left field zone cards
+- `sky`: Sky zone cards
+- `help`: Help zone cards
+- `sp`: Special zone cards
 
-## Installation
+### Card Types
 
-1. Clone the repository:
-```bash
-git clone [your-repository-url]
-cd cardBackend
+#### Monster Cards
+Monster cards have the following properties:
+- `id`: Unique card identifier
+- `attribute`: Array of card attributes (e.g., "wind", "water")
+- `monsterType`: Array of monster types (e.g., "beast", "bird")
+- `value`: Base power value
+- `type`: Card type (e.g., "monster")
+- `cardName`: Name of the card
+- `effects`: Text description of effects
+- `effectRules`: Array of effect rules with conditions and targets
+
+#### Summoner Cards
+Summoner cards have additional properties:
+- `sky`: Array of allowed sky zone attributes
+- `left`: Array of allowed left zone attributes
+- `right`: Array of allowed right zone attributes
+- `age`: Age value (-1 for unknown)
+- `gender`: Gender of the summoner
+- `nativeAddition`: Array of native bonuses
+- `level`: Summoner level
+- `type`: Array of summoner types
+- `initialPoint`: Starting points
+
+## Game Phases
+
+1. **START_REDRAW**
+   - Initial phase where players can redraw cards
+   - Players have limited redraw attempts
+
+2. **MAIN_PHASE**
+   - Players can play cards from their hand
+   - Cards can be played face-up or face-down
+   - Effects are resolved based on card rules
+
+## Card Effects System
+
+The engine supports various effect types:
+- Value modifications
+- Conditional effects
+- Zone-specific effects
+- Card type interactions
+
+### Effect Rules Structure
+```json
+{
+  "condition": {
+    "type": "condition_type",
+    "value": "condition_value"
+  },
+  "target": {
+    "type": "target_type",
+    "scope": "target_scope"
+  },
+  "effectType": "effect_type",
+  "value": effect_value
+}
 ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+## Game Flow
 
-3. Create a `.env` file in the root directory with the following variables:
-```env
-PORT=3000
-NODE_ENV=development
-```
+1. Game initialization with player decks and summoners
+2. Redraw phase for initial hand adjustment
+3. Main phase where players:
+   - Play cards to appropriate zones
+   - Activate card effects
+   - Engage in summoner battles
+4. Turn-based progression with action tracking
+5. Point accumulation and victory determination
 
-## Project Structure
+## File Structure
 
-```
-cardBackend/
-├── src/
-│   ├── config/         # Configuration files
-│   ├── controllers/    # Route controllers
-│   ├── data/          # Game data
-│   ├── gameData/      # Game state data
-│   ├── mozGame/       # Game logic implementation
-│   ├── routes/        # API routes
-│   ├── services/      # Business logic services
-│   └── tests/         # Test files
-├── server.js          # Main application entry point
-├── package.json       # Project dependencies and scripts
-└── README.md         # Project documentation
-```
+- `src/gameData/`: Contains game state files
+- `src/data/`: Contains card data files
+  - `cards.json`: Monster and spell card definitions
+  - `summonerCards.json`: Summoner card definitions
+  - `decks.json`: Predefined deck configurations
+  - `spCard.json`: Special card definitions
 
-## Available Scripts
+## Usage
 
-- `npm start` - Start the server in production mode
-- `npm run dev` - Start the server in development mode with hot-reload
-- `npm test` - Run the test suite
-- `npm run test:watch` - Run tests in watch mode
-- `npm run run-test` - Run the main test file
-- `npm run run-testcase1` - Run test case 1
+1. Initialize a new game with player decks
+2. Load the game environment
+3. Process player actions
+4. Update game state
+5. Handle effect resolution
+6. Track game progression
 
-## API Endpoints
+## Notes
 
-### Game Management
-- `GET /api/game/health` - Health check endpoint
-- `POST /api/game/player/startGame` - Start a new game
-- `POST /api/game/player/startReady` - Player ready status
-- `POST /api/game/player/playerAction` - Process player actions
-
-## Testing
-
-The project uses Jest for testing. Tests are located in the `src/tests` directory.
-
-To run tests:
-```bash
-npm test
-```
-
-For watch mode:
-```bash
-npm run test:watch
-```
-
-## Development
-
-1. Start the development server:
-```bash
-npm run dev
-```
-
-2. The server will be available at `http://localhost:3000`
-
-## Error Handling
-
-The application includes comprehensive error handling for:
-- Invalid player actions
-- Game state validation
-- Server errors
-- Route not found errors
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the ISC License.
-
-## Acknowledgments
-
-- Express.js for the web framework
-- Jest for testing framework
-- All contributors who have helped shape this project 
+- Card IDs starting with 'S' are summoner cards
+- Card IDs starting with 's' are regular cards
+- Effects are processed in order of play
+- Zone restrictions are enforced based on summoner attributes 

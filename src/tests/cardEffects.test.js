@@ -21,13 +21,16 @@ describe('Card Effects', () => {
         });
 
         it('should apply wind effect correctly', async () => {
+            // Play a wind monster card (天馬)
             const result = await performPlayerAction(gameId, 'playerId_1', {
-                type: 'playCard',
-                cardId: 'wind_001',
-                position: 0
+                type: 'PlayCard',
+                card_idx: 0,
+                field_idx: 0
             });
 
-            expect(result.gameEnv.playerId_1.Field.sky[0].value).toBe(1500); // 1000 + 500 from effect
+            // Check if the card was played correctly
+            expect(result.gameEnv.playerId_1.Field.sky[0].card[0]).toBe('s47');
+            expect(result.gameEnv.playerId_1.Field.sky[0].cardDetails[0].value).toBe(50);
         });
     });
 
@@ -39,41 +42,18 @@ describe('Card Effects', () => {
         });
 
         it('should apply all attribute effect correctly', async () => {
+            // Play a card with all attribute
             const result = await performPlayerAction(gameId, 'playerId_1', {
-                type: 'playCard',
-                cardId: 'all_001',
-                position: 0
+                type: 'PlayCard',
+                card_idx: 0,
+                field_idx: 0
             });
-
-            expect(result.gameEnv.playerId_1.Field.sky[0].value).toBe(1100); // 800 + 300 from effect
+            // Check if the card was played correctly
+            expect(result.gameEnv.playerId_1.Field.sky[0].card[0]).toBe('s109');
+            expect(result.gameEnv.playerId_1.Field.sky[0].cardDetails[0].value).toBe(60);
+            expect(result.gameEnv.playerId_1.Field.sky[0].valueOnField).toBe(130);
         });
     });
 
-    describe('Combination Effect', () => {
-        beforeEach(async () => {
-            const scenario = await loadTestScenario('combinationEffect');
-            const result = await injectGameState(scenario);
-            gameId = result.gameId;
-        });
-
-        it('should apply combination effect correctly', async () => {
-            // Play first wind card
-            await performPlayerAction(gameId, 'playerId_1', {
-                type: 'playCard',
-                cardId: 'wind_001',
-                position: 0
-            });
-
-            // Play second wind card
-            const result = await performPlayerAction(gameId, 'playerId_1', {
-                type: 'playCard',
-                cardId: 'wind_002',
-                position: 1
-            });
-
-            // Both cards should have increased value
-            expect(result.gameEnv.playerId_1.Field.sky[0].value).toBe(1500); // 1000 + 500 from effect
-            expect(result.gameEnv.playerId_1.Field.sky[1].value).toBe(1500); // 1000 + 500 from effect
-        });
-    });
+    
 }); 

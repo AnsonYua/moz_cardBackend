@@ -1,50 +1,26 @@
 {
-  "gameId": "f43aad4e-0948-4951-a6da-db66a56cf64f",
+  "gameId": "test-combination-effect",
   "gameEnv": {
     "playerId_1": {
       "deck": {
         "currentSummonerIdx": 0,
         "summoner": [
-          "S051",
-          "S073E",
-          "S058",
-          "S056B",
-          "S109"
+          "S051"
         ],
         "hand": [
-          "s688",
-          "s109",
-          "s231",
-          "s187",
-          "s125",
-          "s43",
-          "s49",
-          "s227"
+          "s45",
+          "s46",
+          "s47"
         ],
         "mainDeck": [
-          "s47",
-          "s189",
-          "s229",
-          "s279",
-          "s44",
-          "s228",
-          "s45",
-          "s230",
-          "s56",
-          "s53",
-          "s190",
-          "s111",
-          "s186",
-          "s54",
-          "s122",
-          "s191",
+          "s48",
+          "s49",
           "s50",
-          "s46",
-          "s110",
+          "s51",
           "s52"
         ]
       },
-      "redraw": 1,
+      "redraw": 0,
       "turnAction": [],
       "Field": {
         "summonner": {
@@ -79,52 +55,22 @@
         "sky": [],
         "help": [],
         "sp": []
-      }
+      },
+      "playerPoint": 0,
+      "overallGamePoint": 0
     },
     "playerId_2": {
       "deck": {
         "currentSummonerIdx": 0,
         "summoner": [
-          "S045",
-          "S056B",
-          "S051",
-          "S058",
-          "S073E"
+          "S045"
         ],
         "hand": [
-          "s227",
-          "s50",
-          "s189",
-          "s230",
-          "s229",
-          "s110",
-          "s52"
+          "s50"
         ],
-        "mainDeck": [
-          "s43",
-          "s53",
-          "s688",
-          "s191",
-          "s228",
-          "s54",
-          "s49",
-          "s190",
-          "s47",
-          "s125",
-          "s231",
-          "s111",
-          "s122",
-          "s45",
-          "s46",
-          "s187",
-          "s186",
-          "s279",
-          "s56",
-          "s44",
-          "s109"
-        ]
+        "mainDeck": []
       },
-      "redraw": 1,
+      "redraw": 0,
       "turnAction": [],
       "Field": {
         "summonner": {
@@ -165,12 +111,14 @@
         "sky": [],
         "help": [],
         "sp": []
-      }
+      },
+      "playerPoint": 0,
+      "overallGamePoint": 0
     },
-    "firstPlayer": 0,
+    "firstPlayer": 1,
     "phase": "MAIN_PHASE",
     "currentPlayer": "playerId_1",
-    "currentTurn": 0
+    "currentTurn": 1
   },
-  "lastUpdate": "2025-06-07T18:16:17.660Z"
+  "lastUpdate": "2025-06-08T16:19:20.288Z"
 }

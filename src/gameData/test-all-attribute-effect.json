@@ -1,71 +1,47 @@
 {
-  "gameId": "83c0d84f-5cd4-4dd4-b6e8-59abff835e03",
+  "gameId": "test-all-attribute-effect",
   "gameEnv": {
     "playerId_1": {
       "deck": {
         "currentSummonerIdx": 0,
         "summoner": [
-          "S109",
-          "S073E",
-          "S051",
-          "S058",
-          "S045"
+          "S109"
         ],
         "hand": [
-          "s189",
-          "s47",
-          "s187",
-          "s231",
-          "s227",
-          "s230",
-          "s50"
+          "s110",
+          "s111",
+          "s112"
         ],
         "mainDeck": [
-          "s110",
-          "s43",
-          "s46",
-          "s279",
-          "s186",
-          "s49",
-          "s56",
-          "s109",
-          "s52",
-          "s190",
-          "s111",
-          "s191",
-          "s688",
-          "s229",
-          "s45",
-          "s53",
-          "s125",
-          "s54",
-          "s44",
-          "s122"
+          "s113",
+          "s114",
+          "s115",
+          "s116"
         ]
       },
-      "redraw": 1,
+      "redraw": 0,
       "turnAction": [
         {
-          "type": "PlayCardBack",
-          "card_idx": 1,
-          "field_idx": 3,
+          "type": "PlayCard",
+          "card_idx": 0,
+          "field_idx": 0,
           "selectedCard": {
             "card": [
-              "s228"
+              "s109"
             ],
             "cardDetails": [
               {
-                "id": "s228",
+                "id": "s109",
                 "attribute": [
                   "shell"
                 ],
                 "monsterType": [
-                  "fairy"
+                  "bird"
                 ],
-                "value": 20,
+                "value": 60,
                 "type": "monster",
-                "cardName": "貝精",
-                "effects": "all your opponent's monster with monsterType 'male' 's value become 0",
+                "cardName": "叭叭鳥",
+                "effects": "all your opponent's monster with monsterType 'worm' 's value become 0",
                 "effectRules": [
                   {
                     "condition": {
@@ -74,7 +50,7 @@
                     "target": {
                       "type": "opponent",
                       "scope": "all",
-                      "monsterType": "male"
+                      "monsterType": "worm"
                     },
                     "effectType": "valueModification",
                     "value": 0
@@ -83,10 +59,11 @@
               }
             ],
             "isBack": [
-              true
-            ]
+              false
+            ],
+            "valueOnField": 130
           },
-          "turn": 0
+          "turn": 1
         }
       ],
       "Field": {
@@ -115,25 +92,24 @@
         },
         "right": [],
         "left": [],
-        "sky": [],
-        "help": [
+        "sky": [
           {
             "card": [
-              "s228"
+              "s109"
             ],
             "cardDetails": [
               {
-                "id": "s228",
+                "id": "s109",
                 "attribute": [
                   "shell"
                 ],
                 "monsterType": [
-                  "fairy"
+                  "bird"
                 ],
-                "value": 20,
+                "value": 60,
                 "type": "monster",
-                "cardName": "貝精",
-                "effects": "all your opponent's monster with monsterType 'male' 's value become 0",
+                "cardName": "叭叭鳥",
+                "effects": "all your opponent's monster with monsterType 'worm' 's value become 0",
                 "effectRules": [
                   {
                     "condition": {
@@ -142,7 +118,7 @@
                     "target": {
                       "type": "opponent",
                       "scope": "all",
-                      "monsterType": "male"
+                      "monsterType": "worm"
                     },
                     "effectType": "valueModification",
                     "value": 0
@@ -151,95 +127,76 @@
               }
             ],
             "isBack": [
-              true
-            ]
+              false
+            ],
+            "valueOnField": 130
           }
         ],
+        "help": [],
         "sp": []
       },
-      "playerPoint": 0
+      "playerPoint": 130,
+      "overallGamePoint": 0
     },
     "playerId_2": {
       "deck": {
         "currentSummonerIdx": 0,
         "summoner": [
-          "S109",
-          "S058",
-          "S056B",
-          "S051",
           "S045"
         ],
-        "hand": [
-          "s228",
-          "s45",
-          "s54",
-          "s688",
-          "s190",
-          "s229",
-          "s279",
-          "s56"
-        ],
-        "mainDeck": [
-          "s109",
-          "s187",
-          "s47",
-          "s227",
-          "s53",
-          "s44",
-          "s191",
-          "s189",
-          "s125",
-          "s52",
-          "s186",
-          "s231",
-          "s230",
-          "s43",
-          "s111",
-          "s50",
-          "s46",
-          "s110",
-          "s122",
-          "s49"
-        ]
+        "hand": [],
+        "mainDeck": []
       },
-      "redraw": 1,
+      "redraw": 0,
       "turnAction": [],
       "Field": {
         "summonner": {
-          "id": "S109",
+          "id": "S045",
           "sky": [
-            "all"
+            "all",
+            "mountain",
+            "tree"
           ],
           "left": [
-            "all"
+            "wind",
+            "water"
           ],
           "right": [
-            "all"
+            "wind",
+            "tree"
           ],
-          "age": -1,
+          "age": 20,
           "gender": "male",
           "nativeAddition": [
             {
-              "type": "all",
-              "value": 70
+              "type": "wind",
+              "value": 30
+            },
+            {
+              "type": "bird",
+              "value": 100
             }
           ],
-          "level": 7,
-          "type": [],
-          "initialPoint": 101
+          "level": 3,
+          "type": [
+            "wind"
+          ],
+          "initialPoint": 25
         },
         "right": [],
         "left": [],
         "sky": [],
         "help": [],
         "sp": []
-      }
+      },
+      "playerPoint": 0,
+      "overallGamePoint": 0
     },
-    "firstPlayer": 0,
+    "firstPlayer": 1,
     "phase": "MAIN_PHASE",
-    "currentPlayer": "playerId_2",
-    "currentTurn": 0.5
+    "currentPlayer": "playerId_1",
+    "currentTurn": 1.5
   },
-  "lastUpdate": "2025-06-07T18:20:03.407Z",
-  "updateUUID": "575cb8b9-7976-4d4f-bd47-7a0f0b2afe35"
+  "lastUpdate": "2025-06-09T01:38:18.819Z",
+  "updateUUID": "f9676fef-e491-4371-a110-35f63d24c2a0"
 }

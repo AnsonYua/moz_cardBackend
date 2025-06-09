@@ -1,7 +1,9 @@
 const mozGamePlay = require('./mozGamePlay');
 const mozDeckHelper = require('./mozDeckHelper');
+
 class mozAIClass {
     constructor() {
+        this.mozGamePlay = new mozGamePlay();
     }
 
     async getAIAction(gameEnv,playerId) {
@@ -9,6 +11,7 @@ class mozAIClass {
         const bestMove = await this.findBestMove(cloneEnv,playerId);
         return cloneEnv;
     }
+
     async findBestMove(gameState,playerId) {
         this.maxDepth = 3;
         console.log("findBestMove start "+this.getCurrentTime());
@@ -22,18 +25,21 @@ class mozAIClass {
         console.log("findBestMove end "+this.getCurrentTime());
         return result;
     }
+
     getCurrentTime() {
         const now = new Date();
         return now.toLocaleTimeString();
     }
+
     evaluate(gameState, playerId) {
         var returnVal = 0;
         return returnVal;
     }
-    async minimax(gameState, depth, isMaximizing, alpha, beta,treePlayerId) {
-        if (depth === 0 || mozGamePlay.isSummonBattleEnd(gameState)) {
+
+    async minimax(gameState, depth, isMaximizing, alpha, beta, treePlayerId) {
+        if (depth === 0 || this.mozGamePlay.isSummonBattleEnd(gameState)) {
             return {
-                score: evaluate(gameState, treePlayerId),
+                score: this.evaluate(gameState, treePlayerId),
                 move: null
             };
         }
@@ -52,7 +58,7 @@ class mozAIClass {
         let bestScore = isMaximizing ? -Infinity : Infinity;
         for (const move of moves) {
             var cloneGameState = this.Clone(gameState);
-            cloneGameState = await mozGamePlay.processAction(cloneGameState,actionPlayer,move);
+            cloneGameState = await this.mozGamePlay.processAction(cloneGameState,actionPlayer,move);
             const result = await this.minimax(cloneGameState, depth - 1, !isMaximizing, alpha, beta,treePlayerId);
         }
     }
