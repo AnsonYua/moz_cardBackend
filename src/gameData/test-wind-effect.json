@@ -48,7 +48,7 @@
             "isBack": [
               false
             ],
-            "valueOnField": 50
+            "valueOnField": 110
           },
           "turn": 1
         }
@@ -107,13 +107,13 @@
             "isBack": [
               false
             ],
-            "valueOnField": 50
+            "valueOnField": 110
           }
         ],
         "help": [],
         "sp": []
       },
-      "playerPoint": 50,
+      "playerPoint": 110,
       "overallGamePoint": 0,
       "restrictions": {
         "summonRestrictions": []
@@ -173,9 +173,7 @@
       "playerPoint": 0,
       "overallGamePoint": 0,
       "restrictions": {
-        "summonRestrictions": [
-          "dragon"
-        ]
+        "summonRestrictions": []
       }
     },
     "firstPlayer": 1,
@@ -183,6 +181,6 @@
     "currentPlayer": "playerId_1",
     "currentTurn": 1.5
   },
-  "lastUpdate": "2025-06-09T11:33:28.623Z",
-  "updateUUID": "00a92c43-08c1-4664-a044-dd1e2b437e54"
+  "lastUpdate": "2025-06-09T16:41:15.100Z",
+  "updateUUID": "30f531cc-c6a1-4cbc-855b-43bf9d058339"
 }

@@ -395,6 +395,27 @@ class CardEffectManager {
             gameEnv[playerId].restrictions.summonRestrictions.push(monsterType);
         }
     }
+
+    /**
+     * Check if a card can be summoned based on current restrictions
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} playerId - ID of the player attempting to summon
+     * @param {Object} cardDetails - Details of the card being summoned
+     * @param {boolean} isPlayInFaceDown - Whether the card is being played face down
+     * @returns {Object|null} - Error object if restricted, null if allowed
+     */
+    checkSummonRestriction(gameEnv, playerId, cardDetails, isPlayInFaceDown) {
+        if (!isPlayInFaceDown && 
+            cardDetails.type === "monster" && 
+            gameEnv[playerId].restrictions && 
+            gameEnv[playerId].restrictions.summonRestrictions && 
+            cardDetails.monsterType.some(type => 
+                gameEnv[playerId].restrictions.summonRestrictions.includes(type)
+            )) {
+                return  `Cannot summon ${cardDetails.monsterType.join(', ')} type monsters due to opponent summoner effect`
+        }
+        return null;
+    }
 }
 
 module.exports = new CardEffectManager(); 

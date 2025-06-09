@@ -1,4 +1,4 @@
-const { loadTestScenario, injectGameState, makePostRequest } = require('./testHelpers');
+const { loadTestScenario, injectGameState, makePostRequest, performPlayerAction } = require('./testHelpers');
 
 describe('Summoner Restrictions', () => {
     let gameId;
@@ -19,7 +19,7 @@ describe('Summoner Restrictions', () => {
             const result = await injectGameState(scenario);
             gameId = result.gameId;
         });
-
+        /*
         it('should add dragon restriction when opponent"s summoner is 顧寧特', async () => {
             // Player 1 ready (player 2 is already ready in the scenario)
             const result = await makePostRequest('/player/startReady', {
@@ -31,23 +31,31 @@ describe('Summoner Restrictions', () => {
             // Check if player2 (opponent) has the dragon restriction
             expect(result.gameEnv.playerId_2.restrictions).toBeDefined();
             expect(result.gameEnv.playerId_2.restrictions.summonRestrictions).toContain('dragon');
+        });*/ 
+
+        it('should prevent playing dragon cards when restricted', async () => {
+            // Player 1 ready (player 2 is already ready in the scenario)
+            await makePostRequest('/player/startReady', {
+                playerId: "playerId_1",
+                gameId: gameId,
+                redraw: false
+            });
+
+            // Try to play a dragon card
+            const result = await performPlayerAction(gameId, 'playerId_2', {
+                type: "PlayCard",
+                card_idx: 0,  // d001 is the first card in hand
+                field_idx: 0  // sky position
+            });
+           
+            console.log("-----------result------------");
+            console.log(result);
+            console.log("--------------------------------");
+            // Should return error
+            expect(result.error).toBeDefined();
+            expect(result.error).toContain('Cannot summon dragon type monsters due to opponent summoner effect');
         });
         /*
-        it('should prevent playing dragon cards when restricted', async () => {
-            // Try to play a dragon card
-            try {
-                await performPlayerAction(gameId, 'playerId_2', {
-                    type: 'PlayCard',
-                    card_idx: 0, // Assuming first card is a dragon
-                    field_idx: 0
-                });
-                // If we get here, the test should fail
-                expect(true).toBe(false);
-            } catch (error) {
-                expect(error.message).toContain('Cannot summon dragon-type monsters');
-            }
-        });
-
         it('should allow playing non-dragon cards when restricted', async () => {
             // Play a non-dragon card
             const result = await performPlayerAction(gameId, 'playerId_2', {

@@ -1,7 +1,41 @@
 {
     "cards": {
-        "S045": {
+        "TEST001": {
             "name": "顧寧特",
+            "id": "TEST001",
+            "sky": [
+                "all",
+                "mountain",
+                "tree"
+            ],
+            "left": [
+                "wind",
+                "water"
+            ],
+            "right": [
+                "wind",
+                "tree"
+            ],
+            "age": 20,
+            "gender": "male",
+            "nativeAddition": [
+                {
+                    "type": "wind",
+                    "value": 30
+                },
+                {
+                    "type": "bird",
+                    "value": 100
+                }
+            ],
+            "level": 3,
+            "type": [
+                "wind"
+            ],
+            "initialPoint": 25
+        },
+        "S045": {
+            "name": "鷹面人(彗星大師)",
             "id": "S045",
             "sky": [
                 "all",
@@ -175,6 +209,33 @@
                     "value": 70
                 }
             ],
+            "effectRules": [
+                {
+                    "condition": {
+                        "type": "opponentSummonerHasType",
+                        "opponentName": "mechanic"
+                    },
+                    "effectType": "valueModification",
+                    "target": {
+                        "type": "self",
+                        "scope": "all",
+                        "modificationType": "nativeAddition"
+                    },
+                    "value": 0
+                },
+                {
+                    "condition": {
+                        "type": "opponentSummonerHasType",
+                        "opponentName": "mechanic"
+                    },
+                    "effectType": "summonRestriction",
+                    "target": {
+                        "type": "self",
+                        "monsterType": "dragon"
+                    },
+                    "value": false
+                }
+            ],          
             "level": 7,
             "type": [
                 "wind"

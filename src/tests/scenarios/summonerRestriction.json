@@ -50,14 +50,14 @@
             "deck": {
                 "currentSummonerIdx": 0,
                 "summoner": [
-                    "S045",
+                    "TEST001",
                     "S051",
                     "S109",
                     "S056B",
                     "S058"
                 ],
                 "hand": [
-                    "s43",
+                    "s110",
                     "s125",
                     "s44",
                     "s46",

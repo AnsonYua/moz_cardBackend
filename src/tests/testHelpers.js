@@ -17,10 +17,19 @@ async function makePostRequest(endpoint, body) {
                 'Content-Type': 'application/json'
             }
         });
-
+        console.log("-----------response------------");
+        console.log(response);
+        console.log("--------------------------------");
         return response.data;
     } catch (error) {
-        console.error('Error:', error);
+        console.log("-----------response------------");
+        console.log(error);
+        console.log("--------------------------------");
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            return error.response.data;
+        }
         throw error;
     }
 }

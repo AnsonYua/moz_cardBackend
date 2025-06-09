@@ -75,7 +75,7 @@ class mozGamePlay {
            gameEnv[playerList[gameEnv["firstPlayer"]]].deck.mainDeck = result["mainDeck"];
            
            // Update summon restrictions before changing phase
-           gameEnv = CardEffectManager.updateSummonRestrictions(gameEnv);
+           gameEnv = this.cardEffectManager.updateSummonRestrictions(gameEnv);
            
            mozPhaseManager.setCurrentPhase(TurnPhase.MAIN_PHASE)
            gameEnv["phase"] = mozPhaseManager.currentPhase;
@@ -99,7 +99,7 @@ class mozGamePlay {
 
     async processAction(gameEnvInput,playerId,action){ 
         var gameEnv = gameEnvInput;
-        gameEnv = CardEffectManager.updateSummonRestrictions(gameEnv);
+        gameEnv = this.cardEffectManager.updateSummonRestrictions(gameEnv);
         if(action["type"] == "PlayCard" || action["type"] == "PlayCardBack"){
             var isPlayInFaceDown = false;
             if(action["type"] == "PlayCardBack"){
@@ -118,6 +118,11 @@ class mozGamePlay {
             const cardToPlay = hand[action["card_idx"]];
             const cardDetails = mozDeckHelper.getDeckCardDetails(cardToPlay);
             
+            // Check summon restrictions
+            const restrictionError = this.cardEffectManager.checkSummonRestriction(gameEnv, playerId, cardDetails, isPlayInFaceDown);
+            if (restrictionError) {
+                return this.throwError(restrictionError);
+            }
 
             if(isPlayInFaceDown){
                 // handle card play face down

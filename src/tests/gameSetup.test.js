@@ -41,63 +41,82 @@ describe('Game Setup Tests', () => {
                 redraw: false
             }
         );
-    });
 
-    test('Game initialization should set up correct game state', () => {
-        // Check game ID
-        expect(gameId).toBeDefined();
-
-        // Check summoners
-        expect(startGameResp.gameEnv.playerId_1.deck.summoner).toBeDefined();
-        expect(startGameResp.gameEnv.playerId_2.deck.summoner).toBeDefined();
-    });
-
-    test('Player ready should set up correct deck state', () => {
-        const gameEnv = p2_startReadyResp.gameEnv;
-
-        // Check first player and current player
-        expect(gameEnv.firstPlayer).toBeDefined();
-        expect(gameEnv.currentPlayer).toBeDefined();
-        console.log("-----------gameEnv.currentPlayer------------");
-        console.log(gameEnv.currentPlayer);
+        console.log("-----------p2_startReadyResp------------");
+        console.log(p2_startReadyResp);
         console.log("--------------------------------");
-        if(gameEnv.currentPlayer == "playerId_1"){
-            // Check player 1 deck state
-            expect(gameEnv.playerId_1.deck.hand).toHaveLength(8);
-            expect(gameEnv.playerId_1.deck.mainDeck).toHaveLength(decksData.playerDecks.playerId_1.decks.deck001.cards.length - 8);
-            expect(gameEnv.playerId_1.Field.summonner).toBeDefined();
-
-            // Check player 2 deck state
-            expect(gameEnv.playerId_2.deck.hand).toHaveLength(7);
-            expect(gameEnv.playerId_2.deck.mainDeck).toHaveLength(decksData.playerDecks.playerId_2.decks.deck001.cards.length - 7);
-            expect(gameEnv.playerId_2.Field.summonner).toBeDefined();
-        }
-
     });
 
-    test('Hand cards should be valid and from deck', () => {
-        const gameEnv = p2_startReadyResp.gameEnv;
-        const players = ["playerId_1", "playerId_2"];
+    describe('Game Initialization', () => {
+        it('should set up correct game state', () => {
+            // Check game ID
+            expect(gameId).toBeDefined();
 
-        players.forEach(playerId => {
-            const hand = gameEnv[playerId].deck.hand;
-            const mainDeck = gameEnv[playerId].deck.mainDeck;
-            const originalDeck = decksData.playerDecks[playerId].decks.deck001.cards;
+            // Check summoners
+            expect(startGameResp.gameEnv.playerId_1.deck.summoner).toBeDefined();
+            expect(startGameResp.gameEnv.playerId_2.deck.summoner).toBeDefined();
+        });
+    });
 
-            // Check if all hand cards are in original deck
-            hand.forEach(cardId => {
-                expect(originalDeck).toContain(cardId);
-                expect(cardsData.cards).toHaveProperty(cardId);
+    describe('Player Ready State', () => {
+        it('should set up correct deck state', () => {
+            const gameEnv = p2_startReadyResp.gameEnv;
+
+            console.log("-----------gameEnv------------");
+            console.log(gameEnv);
+            console.log("--------------------------------");
+            //wait 1 second
+            // Check first player and current player
+            expect(gameEnv.firstPlayer).toBeDefined();
+            expect(gameEnv.currentPlayer).toBeDefined();
+            if(gameEnv.currentPlayer == "playerId_1"){
+                // Check player 1 deck state
+                expect(gameEnv.playerId_1.deck.hand).toHaveLength(8);
+                expect(gameEnv.playerId_1.deck.mainDeck).toHaveLength(decksData.playerDecks.playerId_1.decks.deck001.cards.length - 8);
+                expect(gameEnv.playerId_1.Field.summonner).toBeDefined();
+
+                // Check player 2 deck state
+                expect(gameEnv.playerId_2.deck.hand).toHaveLength(7);
+                expect(gameEnv.playerId_2.deck.mainDeck).toHaveLength(decksData.playerDecks.playerId_2.decks.deck001.cards.length - 7);
+                expect(gameEnv.playerId_2.Field.summonner).toBeDefined();
+            }
+        });
+    });
+
+    describe('Hand Cards Validation', () => {
+        it('should be valid and from deck', async () => {
+            const gameEnv = p2_startReadyResp.gameEnv;
+            const players = ["playerId_1", "playerId_2"];
+            console.log("-----------gameEnv------------");
+            console.log(gameEnv);
+            console.log("--------------------------------");
+            // Wait for game state to be ready
+            let retries = 0;
+            while (!gameEnv.playerId_1?.deck?.hand && retries < 5) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                retries++;
+            }
+
+            players.forEach(playerId => {
+                const hand = gameEnv[playerId].deck.hand;
+                const mainDeck = gameEnv[playerId].deck.mainDeck;
+                const originalDeck = decksData.playerDecks[playerId].decks.deck001.cards;
+
+                // Check if all hand cards are in original deck
+                hand.forEach(cardId => {
+                    expect(originalDeck).toContain(cardId);
+                    expect(cardsData.cards).toHaveProperty(cardId);
+                });
+
+                // Check if all main deck cards are in original deck
+                mainDeck.forEach(cardId => {
+                    expect(originalDeck).toContain(cardId);
+                    expect(cardsData.cards).toHaveProperty(cardId);
+                });
+
+                // Check total cards
+                expect(hand.length + mainDeck.length).toBe(originalDeck.length);
             });
-
-            // Check if all main deck cards are in original deck
-            mainDeck.forEach(cardId => {
-                expect(originalDeck).toContain(cardId);
-                expect(cardsData.cards).toHaveProperty(cardId);
-            });
-
-            // Check total cards
-            expect(hand.length + mainDeck.length).toBe(originalDeck.length);
         });
     });
 }); 

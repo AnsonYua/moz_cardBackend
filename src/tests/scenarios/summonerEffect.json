@@ -55,7 +55,7 @@
         "playerId_2": {
             "deck": {
                 "currentSummonerIdx": 0,
-                "summoner": ["S045", "S056B"],
+                "summoner": ["TEST001", "S056B"],
                 "hand": [],
                 "mainDeck": []
             },
