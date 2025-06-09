@@ -67,6 +67,10 @@ class mozGamePlay {
            const result = mozDeckHelper.drawToHand(hand,mainDeck);
            gameEnv[playerList[gameEnv["firstPlayer"]]].deck.hand = result["hand"];
            gameEnv[playerList[gameEnv["firstPlayer"]]].deck.mainDeck = result["mainDeck"];
+           
+           // Update summon restrictions before changing phase
+           gameEnv = CardEffectManager.updateSummonRestrictions(gameEnv, playerList[gameEnv["firstPlayer"]]);
+           
            mozPhaseManager.setCurrentPhase(TurnPhase.MAIN_PHASE)
            gameEnv["phase"] = mozPhaseManager.currentPhase;
            gameEnv["currentPlayer"] = playerList[gameEnv["firstPlayer"]];

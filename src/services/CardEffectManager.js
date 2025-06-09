@@ -39,7 +39,13 @@ class CardEffectManager {
      * Check if a condition is met
      */
     checkCondition(gameEnv, playerId, condition) {
+        const players = getPlayerFromGameEnv(gameEnv);
+        const opponentId = players.find(id => id !== playerId);
+
         switch (condition.type) {
+            case 'summoner':
+                return this.cardInfoUtils.getCurrentSummonerName(gameEnv, playerId).includes(condition.value);
+            
             case 'opponentHasMonster':
                 return this.hasMonsterOnField(gameEnv, opponentId, condition.monsterName);
             
@@ -51,6 +57,10 @@ class CardEffectManager {
             
             case 'helpCardUsed':
                 return this.isHelpCardPlayed(gameEnv, playerId, condition.cardName);
+            
+            case 'opponentHasSummoner':
+                const opponentSummonerName = this.cardInfoUtils.getCurrentSummonerName(gameEnv, opponentId);
+                return opponentSummonerName.includes(condition.opponentName);
             
             case 'always':
                 return true;
@@ -331,6 +341,60 @@ class CardEffectManager {
         // Update the card object in gameEnv
         cardObj.valueOnField = totalValue;
         return gameEnv;
+    }
+
+    /**
+     * Update summon restrictions for both players at the start of turn
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} currentPlayerId - ID of the current player
+     * @returns {Object} - Updated game environment
+     */
+    updateSummonRestrictions(gameEnv, currentPlayerId) {
+        const players = getPlayerFromGameEnv(gameEnv);
+
+        // Reset restrictions for both players
+        players.forEach(playerId => {
+            if (!gameEnv[playerId].restrictions) {
+                gameEnv[playerId].restrictions = { summonRestrictions: [] };
+            }
+            gameEnv[playerId].restrictions.summonRestrictions = [];
+        });
+
+        // Check summoner effects for both players
+        players.forEach(playerId => {
+            const summoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, playerId);
+            if (summoner.effectRules) {
+                summoner.effectRules.forEach(rule => {
+                    if (rule.effectType === 'summonRestriction' && 
+                        this.checkCondition(gameEnv, playerId, rule.condition)) {
+                        const opponentId = players.find(id => id !== playerId);
+                        this.addSummonRestriction(gameEnv, opponentId, rule.target.monsterType);
+                    }
+                });
+            }
+        });
+
+        return gameEnv;
+    }
+
+    /**
+     * Add a monster type to player's summon restrictions
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} playerId - ID of the player to add restriction to
+     * @param {string} monsterType - Type of monster to restrict
+     */
+    addSummonRestriction(gameEnv, playerId, monsterType) {
+        if (!gameEnv[playerId].restrictions) {
+            gameEnv[playerId].restrictions = { summonRestrictions: [] };
+        }
+        if (!gameEnv[playerId].restrictions.summonRestrictions) {
+            gameEnv[playerId].restrictions.summonRestrictions = [];
+        }
+        
+        // Add the restriction if it's not already there
+        if (!gameEnv[playerId].restrictions.summonRestrictions.includes(monsterType)) {
+            gameEnv[playerId].restrictions.summonRestrictions.push(monsterType);
+        }
     }
 }
 

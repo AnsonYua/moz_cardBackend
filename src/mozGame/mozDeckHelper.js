@@ -69,11 +69,6 @@ class mozDeckLogic{
         return array;
     }
 
-    getCurrentSummoner(gameEnv, playerId){
-        const deck = gameEnv[playerId].deck;
-        const crtSummonCard = deck.summoner[deck.currentSummonerIdx]
-        return deckManager.getSummonerCards(crtSummonCard);
-    }
     getDeckCardDetails(cardId){
         const crtCard = deckManager.getCardDetails(cardId);
         return crtCard;
