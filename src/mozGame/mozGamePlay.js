@@ -410,26 +410,6 @@ class mozGamePlay {
         return totalValue;
     }
 
-    /**
-     * Apply summoner's native addition effects to monster cards
-     * @param {Object} gameEnv - Current game environment
-     * @param {string} playerId - ID of the player who owns the card
-     * @param {Object} cardObj - Card object to apply effects to
-     * @param {Object} summoner - Current summoner object
-     * @returns {Object} - Modified game environment
-     */
-    async applySummonerEffect(gameEnv, playerId, cardObj, summoner) {
-        const cardAttr = cardObj.cardDetails[0].attribute;
-        const baseValue = cardObj.valueOnField || cardObj.cardDetails[0].value;
-        
-        // Apply native addition effects
-        const totalValue = this.applySummonerNativeAddition(baseValue, cardAttr, summoner.nativeAddition);
-        
-        // Update the card object in gameEnv
-        cardObj.valueOnField = totalValue;
-        return gameEnv;
-    }
-
     async getMonsterPoint(card,summoner){
         var returnValue = card["value"];
         const cardAttr = card["attribute"];

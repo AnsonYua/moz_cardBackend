@@ -1,137 +1,196 @@
 {
   "cards": {
       "S045": {
+          "name": "鷹面人(彗星大師)",
           "id": "S045",
-          "sky":["all","mountain","tree"],
-          "left":["wind","water"],
-          "right":["wind","tree"],
+          "sky": [
+              "all",
+              "mountain",
+              "tree"
+          ],
+          "left": [
+              "wind",
+              "water"
+          ],
+          "right": [
+              "wind",
+              "tree"
+          ],
           "age": 20,
-          "gender":"male",
-          "nativeAddition":[
-            {
-              "type":"wind",
-              "value":30
-            },
-            {
-              "type":"bird",
-              "value":100
-            }
-          ] ,
-          "level":3,
-          "type":["wind"],
-          "initialPoint":25
+          "gender": "male",
+          "nativeAddition": [
+              {
+                  "type": "wind",
+                  "value": 30
+              },
+              {
+                  "type": "bird",
+                  "value": 100
+              }
+          ],
+          "level": 3,
+          "type": [
+              "wind"
+          ],
+          "initialPoint": 25
       },
       "S051": {
-        "id": "S051",
-        "sky":["fire","wind","mountain"],
-        "left":["all"],
-        "right":["all"],
-        "age": -1,
-        "gender":"female",
-        "nativeAddition":[
-          {
-            "type":"wind",
-            "value":60
-          }
-        ] ,
-        "level":6,
-        "type":["wind"],
-        "initialPoint":87
-    },
-    "S056B": {
-      "id": "S056B",
-      "sky":["water","shell"],
-      "left":["shell","water"],
-      "right":["water","shell"],
-      "age": -1,
-      "gender":"male",
-      "nativeAddition":[
-        {
-          "type":"shell",
-          "value":60
-        },
-        {
-          "type":"water",
-          "value":60
-        }
-      ] ,
-      "level":1,
-      "type":["shell"],
-      "initialPoint":1
-    },
-    "S058": {
-      "id": "S058",
-      "sky":["shell","wind"],
-      "left":["wind","shell"],
-      "right":["wind","shell"],
-      "age": -1,
-      "gender":"male",
-      "nativeAddition":[
-        {
-          "type":"shell",
-          "value":60
-        },
-        {
-          "type":"wind",
-          "value":60
-        }
-      ] ,
-      "level":1,
-      "type":["shell"],
-      "initialPoint":10
-    },
-    "S073E": {
-      "id": "S073E",
-      "sky":["all"],
-      "left":["all"],
-      "right":["all"],
-      "age": -1,
-      "gender":"male",
-      "nativeAddition":[
-        {
-          "type":"wind",
-          "value":70
-        }
-      ] ,
-      "level":7,
-      "type":["wind"],
-      "initialPoint":122
-    },
-    "S109": {
-      "id": "S109",
-      "sky":["all"],
-      "left":["all"],
-      "right":["all"],
-      "age": -1,
-      "gender":"male",
-      "nativeAddition":[
-        {
-          "type":"all",
-          "value":70
-        }
-      ] ,
-      "level":7,
-      "type":[],
-      "initialPoint":101
-    }
-  },
-  "cardTypes": ["spell", "item", "unit"],
-  "rarities": ["common", "uncommon", "rare", "legendary"],
-  "effects": {
-      "burn": {
-          "name": "Burn",
-          "description": "Deals 1 damage per turn",
-          "duration": 3
+          "name": "杜吉亞(檔案大師)",
+          "id": "S051",
+          "sky": [
+              "fire",
+              "wind",
+              "mountain"
+          ],
+          "left": [
+              "all"
+          ],
+          "right": [
+              "all"
+          ],
+          "age": -1,
+          "gender": "female",
+          "nativeAddition": [
+              {
+                  "type": "wind",
+                  "value": 60
+              }
+          ],
+          "effectRules": [
+              {
+                  "condition": {
+                      "type": "opponentHasSummoner",
+                      "opponentName": "師顧寧特"
+                  },
+                  "effectType": "valueModification",
+                  "target": {
+                      "type": "self",
+                      "scope": "all",
+                      "modificationType": "nativeAddition"
+                  },
+                  "value": 0
+              }
+          ],
+          "level": 6,
+          "type": [
+              "wind"
+          ],
+          "initialPoint": 87
       },
-      "heal": {
-          "name": "Heal",
-          "description": "Heals target",
-          "instant": true
+      "S056B": {
+          "name": "波尤（方舟大師）",
+          "id": "S056B",
+          "sky": [
+              "water",
+              "shell"
+          ],
+          "left": [
+              "shell",
+              "water"
+          ],
+          "right": [
+              "water",
+              "shell"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+              {
+                  "type": "shell",
+                  "value": 60
+              },
+              {
+                  "type": "water",
+                  "value": 60
+              }
+          ],
+          "level": 1,
+          "type": [
+              "shell"
+          ],
+          "initialPoint": 1
       },
-      "flying": {
-          "name": "Flying",
-          "description": "Can attack over ground units",
-          "passive": true
+      "S058": {
+          "name": "古比古比（方舟大師）",
+          "id": "S058",
+          "sky": [
+              "shell",
+              "wind"
+          ],
+          "left": [
+              "wind",
+              "shell"
+          ],
+          "right": [
+              "wind",
+              "shell"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+              {
+                  "type": "shell",
+                  "value": 60
+              },
+              {
+                  "type": "wind",
+                  "value": 60
+              }
+          ],
+          "level": 1,
+          "type": [
+              "shell"
+          ],
+          "initialPoint": 10
+      },
+      "S073E": {
+          "name": "弗：大氣之面具（奇蹟大師）",
+          "id": "S073E",
+          "sky": [
+              "all"
+          ],
+          "left": [
+              "all"
+          ],
+          "right": [
+              "all"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+              {
+                  "type": "wind",
+                  "value": 70
+              }
+          ],
+          "level": 7,
+          "type": [
+              "wind"
+          ],
+          "initialPoint": 122
+      },
+      "S109": {
+          "id": "S109",
+          "sky": [
+              "all"
+          ],
+          "left": [
+              "all"
+          ],
+          "right": [
+              "all"
+          ],
+          "age": -1,
+          "gender": "male",
+          "nativeAddition": [
+              {
+                  "type": "all",
+                  "value": 70
+              }
+          ],
+          "level": 7,
+          "type": [],
+          "initialPoint": 101
       }
   }
 }

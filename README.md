@@ -91,6 +91,41 @@ The engine supports various effect types:
 }
 ```
 
+## Summoner Effects System
+
+The engine supports various summoner effect types:
+- Native addition effects (base attribute bonuses)
+- Conditional effects based on opponent's summoner
+- Value modifications
+
+### Summoner Effect Rules Structure
+```json
+{
+  "condition": {
+    "type": "opponentHasSummoner",
+    "opponentName": "summoner_name"
+  },
+  "effectType": "valueModification",
+  "target": {
+    "type": "self",
+    "scope": "all",
+    "modificationType": "nativeAddition"
+  },
+  "value": 0
+}
+```
+
+### Effect Processing
+1. Summoner effects are processed when calculating card values
+2. Effects can modify the summoner's native addition values
+3. Modified values are then applied to cards on the field
+
+### Example
+When a summoner has an effect that checks for opponent's summoner:
+- If the condition is met (opponent has specified summoner)
+- The summoner's native addition values are modified
+- These modified values are used when calculating card values
+
 ## Game Flow
 
 1. Game initialization with player decks and summoners

@@ -278,6 +278,48 @@ class CardEffectManager {
     }
 
     /**
+     * Get modified native addition values based on summoner effects
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} playerId - ID of the player who owns the summoner
+     * @param {Object} summoner - Current summoner object
+     * @returns {Array} - Modified native addition values
+     */
+    getModifiedNativeAddition(gameEnv, playerId, summoner) {
+        // Create a copy of the summoner's nativeAddition to modify
+        let modifiedNativeAddition = [...summoner.nativeAddition];
+        
+        // Apply summoner effect rules if they exist
+        if (summoner.effectRules && summoner.effectRules.length > 0) {
+            const players = getPlayerFromGameEnv(gameEnv);
+            const opponentId = players.find(id => id !== playerId);
+            
+            for (const rule of summoner.effectRules) {
+                // Check for opponentHasSummoner condition
+                if (rule.condition.type === 'opponentHasSummoner') {
+                    const opponentSummoner = this.getCurrentSummonerName(gameEnv, opponentId);
+                    if (opponentSummoner.includes(rule.condition.opponentName)) {
+                        // Modify the nativeAddition values based on the rule
+                        if (rule.effectType === 'valueModification' && 
+                            rule.target.type === 'self' && 
+                            rule.target.modificationType === 'nativeAddition') {
+                            // Set all nativeAddition values to the specified value (0 in this case)
+                            modifiedNativeAddition = modifiedNativeAddition.map(addition => ({
+                                ...addition,
+                                value: rule.value
+                            }));
+                            console.log("-----------modifiedNativeAddition222------------");
+                            console.log(JSON.stringify(modifiedNativeAddition, null, 2));
+                            console.log("--------------------------------");
+                        }
+                    }
+                }
+            }
+        }
+        
+        return modifiedNativeAddition;
+    }
+
+    /**
      * Apply summoner's native addition effects to monster cards
      * @param {Object} gameEnv - Current game environment
      * @param {string} playerId - ID of the player who owns the card
@@ -289,8 +331,13 @@ class CardEffectManager {
         const cardAttr = cardObj.cardDetails[0].attribute;
         const baseValue = cardObj.valueOnField || cardObj.cardDetails[0].value;
         
-        // Apply native addition effects
-        const totalValue = this.applySummonerNativeAddition(baseValue, cardAttr, summoner.nativeAddition);
+        // Get modified native addition values
+        const modifiedNativeAddition = this.getModifiedNativeAddition(gameEnv, playerId, summoner);
+        console.log("-----------modifiedNativeAddition------------");
+        console.log(JSON.stringify(modifiedNativeAddition, null, 2));
+        console.log("--------------------------------");
+        // Apply the modified native addition effects
+        const totalValue = this.applySummonerNativeAddition(baseValue, cardAttr, modifiedNativeAddition);
         
         // Update the card object in gameEnv
         cardObj.valueOnField = totalValue;
