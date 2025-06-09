@@ -28,7 +28,7 @@
                         {
                             "condition": {
                                 "type": "opponentHasSummoner",
-                                "opponentName": "師顧寧特"
+                                "opponentName": "顧寧特"
                             },
                             "effectType": "valueModification",
                             "target": {
@@ -64,7 +64,7 @@
             "Field": {
                 "summonner": {
                     "id": "S045",
-                    "name": "師顧寧特",
+                    "name": "顧寧特",
                     "sky": ["all", "mountain", "tree"],
                     "left": ["wind", "water"],
                     "right": ["wind", "tree"],

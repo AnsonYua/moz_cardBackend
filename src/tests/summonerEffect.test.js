@@ -20,7 +20,7 @@ describe('Summoner Effects', () => {
             gameId = result.gameId;
         });
 
-        it('should modify native addition when opponent has 師顧寧特', async () => {
+        it('should modify native addition when opponent has 顧寧特', async () => {
             // Play a wind monster card
             const result = await performPlayerAction(gameId, 'playerId_1', {
                 type: 'PlayCard',

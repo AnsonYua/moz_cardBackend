@@ -2,16 +2,25 @@ const fs = require('fs').promises;
 const path = require('path');
 const axios = require('axios');
 
-const domainPath = 'http://localhost:3000/api/game';
+const API_BASE_URL = 'http://localhost:3000/api/game';
 
-async function makePostRequest(endpoint, data) {
+/**
+ * Make a POST request to the game API
+ * @param {string} endpoint - API endpoint
+ * @param {Object} body - Request body
+ * @returns {Promise<Object>} - Response data
+ */
+async function makePostRequest(endpoint, body) {
     try {
-        const response = await axios.post(endpoint, data);
+        const response = await axios.post(`${API_BASE_URL}${endpoint}`, body, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
         return response.data;
     } catch (error) {
-        if (error.response) {
-            throw new Error(error.response.data.error || error.message);
-        }
+        console.error('Error:', error);
         throw error;
     }
 }
@@ -28,43 +37,30 @@ async function loadTestScenario(scenarioName) {
 
 async function injectGameState(scenario) {
     try {
-        return await makePostRequest(
-            domainPath + '/test/injectGameState',
-            scenario
-        );
+        return await makePostRequest('/test/injectGameState', scenario);
     } catch (error) {
         throw new Error(`Failed to inject game state: ${error.message}`);
     }
 }
 
+/**
+ * Set up a new test game
+ * @returns {Promise<Object>} - Game setup response
+ */
 async function setupTestGame() {
-    try {
-        const result = await makePostRequest(
-            domainPath + '/player/startGame',
-            {
-                playerId: 'playerId_1',
-                deckId: 'test_deck_1'
-            }
-        );
-        return {
-            gameId: result.gameId,
-            gameState: result.gameEnv
-        };
-    } catch (error) {
-        throw new Error(`Failed to setup test game: ${error.message}`);
-    }
+    return await makePostRequest('/player/startGame', {
+        playerId: "playerId_1",
+        players: ["playerId_1", "playerId_2"]
+    });
 }
 
 async function performPlayerAction(gameId, playerId, action) {
     try {
-        return await makePostRequest(
-            domainPath + '/player/playerAction',
-            {
-                playerId: playerId,
-                gameId: gameId,
-                action: action
-            }
-        );
+        return await makePostRequest('/player/playerAction', {
+            playerId: playerId,
+            gameId: gameId,
+            action: action
+        });
     } catch (error) {
         console.log("-----------error------------");
         console.log(error);
@@ -73,10 +69,50 @@ async function performPlayerAction(gameId, playerId, action) {
     }
 }
 
+/**
+ * Create a test game environment
+ * @returns {Object} - Test game environment
+ */
+function createTestGameEnv() {
+    return {
+        playerId_1: {
+            deck: {
+                hand: [],
+                mainDeck: [],
+                summoner: []
+            },
+            Field: {
+                sky: [],
+                left: [],
+                right: [],
+                help: [],
+                summonner: []
+            }
+        },
+        playerId_2: {
+            deck: {
+                hand: [],
+                mainDeck: [],
+                summoner: []
+            },
+            Field: {
+                sky: [],
+                left: [],
+                right: [],
+                help: [],
+                summonner: []
+            }
+        },
+        firstPlayer: null,
+        currentPlayer: null
+    };
+}
+
 module.exports = {
     loadTestScenario,
     injectGameState,
     setupTestGame,
     performPlayerAction,
-    makePostRequest
+    makePostRequest,
+    createTestGameEnv
 }; 
