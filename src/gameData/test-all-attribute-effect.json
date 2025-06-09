@@ -136,7 +136,10 @@
         "sp": []
       },
       "playerPoint": 130,
-      "overallGamePoint": 0
+      "overallGamePoint": 0,
+      "restrictions": {
+        "summonRestrictions": []
+      }
     },
     "playerId_2": {
       "deck": {
@@ -190,13 +193,16 @@
         "sp": []
       },
       "playerPoint": 0,
-      "overallGamePoint": 0
+      "overallGamePoint": 0,
+      "restrictions": {
+        "summonRestrictions": []
+      }
     },
     "firstPlayer": 1,
     "phase": "MAIN_PHASE",
     "currentPlayer": "playerId_1",
     "currentTurn": 1.5
   },
-  "lastUpdate": "2025-06-09T08:44:00.820Z",
-  "updateUUID": "77283edf-c0df-4e06-9d97-63f2e214242f"
+  "lastUpdate": "2025-06-09T11:33:28.629Z",
+  "updateUUID": "950da161-247a-4286-a47f-2d947860b2cd"
 }

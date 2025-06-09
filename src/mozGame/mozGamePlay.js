@@ -55,6 +55,12 @@ class mozGamePlay {
             }
         }
         const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
+
+        /*
+        when all player have redraw 1 and turnPhase is startRedraw,
+        meaning all player is ready to start the game
+        so we can change the phase to main phase
+        */
         var allReady = true;
         for (let playerId in playerList){
             if(gameEnv[playerList[playerId]].redraw == 0){
@@ -69,7 +75,7 @@ class mozGamePlay {
            gameEnv[playerList[gameEnv["firstPlayer"]]].deck.mainDeck = result["mainDeck"];
            
            // Update summon restrictions before changing phase
-           gameEnv = CardEffectManager.updateSummonRestrictions(gameEnv, playerList[gameEnv["firstPlayer"]]);
+           gameEnv = CardEffectManager.updateSummonRestrictions(gameEnv);
            
            mozPhaseManager.setCurrentPhase(TurnPhase.MAIN_PHASE)
            gameEnv["phase"] = mozPhaseManager.currentPhase;
@@ -93,6 +99,7 @@ class mozGamePlay {
 
     async processAction(gameEnvInput,playerId,action){ 
         var gameEnv = gameEnvInput;
+        gameEnv = CardEffectManager.updateSummonRestrictions(gameEnv);
         if(action["type"] == "PlayCard" || action["type"] == "PlayCardBack"){
             var isPlayInFaceDown = false;
             if(action["type"] == "PlayCardBack"){

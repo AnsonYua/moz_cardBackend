@@ -137,6 +137,39 @@ When a summoner has an effect that checks for opponent's summoner:
 4. Turn-based progression with action tracking
 5. Point accumulation and victory determination
 
+## Game Start Logic
+
+The game initialization follows these steps:
+
+1. **Initial Game State**
+   - Game state is injected with initial deck setup
+   - Both players' hands are dealt
+   - Summoners are selected
+   - Game phase is set to `START_REDRAW`
+
+2. **Player Ready Phase**
+   - Players must declare ready using `/api/game/player/startReady`
+   - Request format:
+     ```json
+     {
+         "playerId": "playerId_X",
+         "gameId": "game-id",
+         "redraw": false
+     }
+     ```
+   - When both players are ready:
+     - Game phase changes to `MAIN_PHASE`
+     - Summoner effects are applied (e.g., summon restrictions)
+     - First player's turn begins
+
+3. **Summoner Effects**
+   - Effects are checked and applied when both players are ready
+   - Example: 杜吉亞(檔案大師)'s effect prevents opponent from summoning dragon-type monsters if opponent"s summoner is 顧寧特
+
+4. **Game Flow**
+   - After initialization, game follows normal turn structure
+   - Players can perform actions based on current phase and restrictions
+
 ## File Structure
 
 - `src/gameData/`: Contains game state files

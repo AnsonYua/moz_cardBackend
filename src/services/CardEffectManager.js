@@ -346,10 +346,9 @@ class CardEffectManager {
     /**
      * Update summon restrictions for both players at the start of turn
      * @param {Object} gameEnv - Current game environment
-     * @param {string} currentPlayerId - ID of the current player
      * @returns {Object} - Updated game environment
      */
-    updateSummonRestrictions(gameEnv, currentPlayerId) {
+    updateSummonRestrictions(gameEnv) {
         const players = getPlayerFromGameEnv(gameEnv);
 
         // Reset restrictions for both players

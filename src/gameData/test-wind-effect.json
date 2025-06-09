@@ -114,7 +114,10 @@
         "sp": []
       },
       "playerPoint": 50,
-      "overallGamePoint": 0
+      "overallGamePoint": 0,
+      "restrictions": {
+        "summonRestrictions": []
+      }
     },
     "playerId_2": {
       "deck": {
@@ -168,13 +171,18 @@
         "sp": []
       },
       "playerPoint": 0,
-      "overallGamePoint": 0
+      "overallGamePoint": 0,
+      "restrictions": {
+        "summonRestrictions": [
+          "dragon"
+        ]
+      }
     },
     "firstPlayer": 1,
     "phase": "MAIN_PHASE",
     "currentPlayer": "playerId_1",
     "currentTurn": 1.5
   },
-  "lastUpdate": "2025-06-09T08:44:00.814Z",
-  "updateUUID": "ce4d4143-a4f2-4040-b43d-8b4382e3b877"
+  "lastUpdate": "2025-06-09T11:33:28.623Z",
+  "updateUUID": "00a92c43-08c1-4664-a044-dd1e2b437e54"
 }
