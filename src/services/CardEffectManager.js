@@ -62,6 +62,10 @@ class CardEffectManager {
                 const opponentSummonerName = this.cardInfoUtils.getCurrentSummonerName(gameEnv, opponentId);
                 return opponentSummonerName.includes(condition.opponentName);
             
+            case 'opponentSummonerHasType':
+                const opponentSummonerType = this.cardInfoUtils.getCurrentSummonerType(gameEnv, opponentId);
+                return opponentSummonerType.includes(condition.opponentType);
+            
             case 'always':
                 return true;
             
@@ -294,23 +298,29 @@ class CardEffectManager {
             
             for (const rule of summoner.effectRules) {
                 // Check for opponentHasSummoner condition
-                if (rule.condition.type === 'opponentHasSummoner') {
-                    const opponentSummonerName = this.cardInfoUtils.getCurrentSummonerName(gameEnv, opponentId);
-                    if (opponentSummonerName.includes(rule.condition.opponentName)) {
-                        // Modify the nativeAddition values based on the rule
-                        if (rule.effectType === 'valueModification' && 
-                            rule.target.type === 'self' && 
-                            rule.target.modificationType === 'nativeAddition') {
-                            // Set all nativeAddition values to the specified value (0 in this case)
-                            modifiedNativeAddition = modifiedNativeAddition.map(addition => ({
-                                ...addition,
-                                value: rule.value
-                            }));
-                            console.log("-----------modifiedNativeAddition222------------");
-                            console.log(JSON.stringify(modifiedNativeAddition, null, 2));
-                            console.log("--------------------------------");
+                if (rule.effectType === 'valueModification' && 
+                    rule.target.type === 'self' &&
+                    rule.target.modificationType === 'nativeAddition') {
+                    let isConditionMet = false;
+                    if(rule.condition.type === 'opponentHasSummoner'){
+                        const opponentSummonerName = this.cardInfoUtils.getCurrentSummonerName(gameEnv, opponentId);
+                        if (opponentSummonerName.includes(rule.condition.opponentName)) {
+                            isConditionMet = true;
+                        }
+                    }else if(rule.condition.type === 'opponentSummonerHasType'){
+                        const opponentSummonerType = this.cardInfoUtils.getCurrentSummonerType(gameEnv, opponentId);
+                        if (opponentSummonerType.includes(rule.condition.opponentType)) {
+                            isConditionMet = true;
                         }
                     }
+
+                    if(isConditionMet){
+                        modifiedNativeAddition = modifiedNativeAddition.map(addition => ({
+                            ...addition,
+                            value: rule.value
+                        }));
+                    }
+                
                 }
             }
         }
@@ -366,8 +376,11 @@ class CardEffectManager {
                 summoner.effectRules.forEach(rule => {
                     if (rule.effectType === 'summonRestriction' && 
                         this.checkCondition(gameEnv, playerId, rule.condition)) {
-                        const opponentId = players.find(id => id !== playerId);
-                        this.addSummonRestriction(gameEnv, opponentId, rule.target.monsterType);
+                        let targetPlayerId = players.find(id => id !== playerId);
+                        if(rule.target.type === 'self'){
+                            targetPlayerId = playerId;
+                        }
+                        this.addSummonRestriction(gameEnv, targetPlayerId, rule.target.monsterType);
                     }
                 });
             }

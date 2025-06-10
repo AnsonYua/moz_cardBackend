@@ -13,25 +13,12 @@ describe('Summoner Restrictions', () => {
         process.env.NODE_ENV = 'development';
     });
     
-    describe('Dragon Summon Restriction', () => {
+    describe('Dragon Summon Name Restriction', () => {
         beforeEach(async () => {
-            const scenario = await loadTestScenario('summonerRestriction');
+            const scenario = await loadTestScenario('summonerRestriction_SummonerName');
             const result = await injectGameState(scenario);
             gameId = result.gameId;
         });
-        /*
-        it('should add dragon restriction when opponent"s summoner is 顧寧特', async () => {
-            // Player 1 ready (player 2 is already ready in the scenario)
-            const result = await makePostRequest('/player/startReady', {
-                playerId: "playerId_1",
-                gameId: gameId,
-                redraw: false
-            });
-
-            // Check if player2 (opponent) has the dragon restriction
-            expect(result.gameEnv.playerId_2.restrictions).toBeDefined();
-            expect(result.gameEnv.playerId_2.restrictions.summonRestrictions).toContain('dragon');
-        });*/ 
 
         it('should prevent playing dragon cards when restricted', async () => {
             // Player 1 ready (player 2 is already ready in the scenario)
@@ -55,19 +42,70 @@ describe('Summoner Restrictions', () => {
             expect(result.error).toBeDefined();
             expect(result.error).toContain('Cannot summon dragon type monsters due to opponent summoner effect');
         });
-        /*
-        it('should allow playing non-dragon cards when restricted', async () => {
-            // Play a non-dragon card
-            const result = await performPlayerAction(gameId, 'playerId_2', {
-                type: 'PlayCard',
-                card_idx: 1, // Assuming second card is not a dragon
-                field_idx: 0
+    });
+
+
+    describe('Dragon Summon Type Restriction', () => {
+        beforeEach(async () => {
+            const scenario = await loadTestScenario('summonerRestriction_SummonerType');
+            const result = await injectGameState(scenario);
+            gameId = result.gameId;
+        });
+
+        it('should prevent playing dragon cards when restricted', async () => {
+            // Player 1 ready (player 2 is already ready in the scenario)
+            await makePostRequest('/player/startReady', {
+                playerId: "playerId_1",
+                gameId: gameId,
+                redraw: false
             });
 
-            // Check if the card was played successfully
-            expect(result.gameEnv.playerId_2.Field.sky[0]).toBeDefined();
-            expect(result.gameEnv.playerId_2.Field.sky[0].cardDetails[0].monsterType).not.toBe('dragon');
+            // Try to play a dragon card
+            const result = await performPlayerAction(gameId, 'playerId_2', {
+                type: "PlayCard",
+                card_idx: 0,  // d001 is the first card in hand
+                field_idx: 0  // sky position
+            });
+           
+            console.log("-----------result------------");
+            console.log(result);
+            console.log("--------------------------------");
+            // Should return error
+            expect(result.error).toBeDefined();
+            expect(result.error).toContain('Cannot summon dragon type monsters due to opponent summoner effect');
         });
-        */
     });
+
+    describe('Dragon Summon Type Restriction', () => {
+        beforeEach(async () => {
+            const scenario = await loadTestScenario('summonerRestriction_SummonerTypeNativeAddition');
+            const result = await injectGameState(scenario);
+            gameId = result.gameId;
+        });
+        /*
+          given S073E, when opponent having mechanic type
+          S073E will not have nativeAddition
+          test case : when play monster card when wind type
+          expect nativeAddition should be 0
+        */
+        it('should not have any native addition when opponent has mechanic type for S073E', async () => {
+            // Player 1 ready (player 2 is already ready in the scenario)
+            await makePostRequest('/player/startReady', {
+                playerId: "playerId_1",
+                gameId: gameId,
+                redraw: false
+            });
+
+            // Try to play a dragon card
+            const result = await performPlayerAction(gameId, 'playerId_2', {
+                type: "PlayCard",
+                card_idx: 0,  // d001 is the first card in hand
+                field_idx: 0  // sky position
+            });
+            expect(result.gameEnv.playerId_2.Field.sky[0].card[0]).toBe('s52');
+            expect(result.gameEnv.playerId_2.Field.sky[0].cardDetails[0].value).toBe(70);
+        });
+    });
+
+
 }); 

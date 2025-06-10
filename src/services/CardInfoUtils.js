@@ -15,6 +15,11 @@ class CardInfoUtils {
         const crtSummonCard = deck.summoner[deck.currentSummonerIdx]
         return this.deckManager.getSummonerCards(crtSummonCard);
     }
+
+    getCurrentSummonerType(gameEnv, playerId) {
+        const currentSummoner = this.getCurrentSummoner(gameEnv, playerId);
+        return currentSummoner.type || [];
+    }
 }
 
 module.exports = new CardInfoUtils();

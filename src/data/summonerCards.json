@@ -34,6 +34,40 @@
             ],
             "initialPoint": 25
         },
+        "TEST002": {
+            "name": "Test002",
+            "id": "TEST002",
+            "sky": [
+                "all",
+                "mountain",
+                "tree"
+            ],
+            "left": [
+                "wind",
+                "water"
+            ],
+            "right": [
+                "wind",
+                "tree"
+            ],
+            "age": 20,
+            "gender": "male",
+            "nativeAddition": [
+                {
+                    "type": "wind",
+                    "value": 30
+                },
+                {
+                    "type": "bird",
+                    "value": 100
+                }
+            ],
+            "level": 3,
+            "type": [
+                "mechanic"
+            ],
+            "initialPoint": 25
+        },
         "S045": {
             "name": "鷹面人(彗星大師)",
             "id": "S045",
@@ -213,7 +247,7 @@
                 {
                     "condition": {
                         "type": "opponentSummonerHasType",
-                        "opponentName": "mechanic"
+                        "opponentType": "mechanic"
                     },
                     "effectType": "valueModification",
                     "target": {
@@ -226,7 +260,7 @@
                 {
                     "condition": {
                         "type": "opponentSummonerHasType",
-                        "opponentName": "mechanic"
+                        "opponentType": "mechanic"
                     },
                     "effectType": "summonRestriction",
                     "target": {
