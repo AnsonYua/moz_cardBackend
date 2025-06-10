@@ -196,7 +196,12 @@
       "overallGamePoint": 0,
       "restrictions": {
         "summonRestrictions": [
-          "sky"
+          {
+            "ruleId": "playerId_1_S109_1",
+            "scope": "sky",
+            "target": "disable",
+            "type": "allMonster"
+          }
         ]
       }
     },
@@ -205,6 +210,6 @@
     "currentPlayer": "playerId_1",
     "currentTurn": 1.5
   },
-  "lastUpdate": "2025-06-10T10:28:43.784Z",
-  "updateUUID": "00658041-a244-4d59-974e-7f3fe85dd7ed"
+  "lastUpdate": "2025-06-10T15:00:40.417Z",
+  "updateUUID": "603c8ea5-d185-497a-b7e6-01e7e18b7f26"
 }

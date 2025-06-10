@@ -62,7 +62,7 @@
                     "value": 100
                 }
             ],
-            "level": 3,
+            "level": 7,
             "type": [
                 "mechanic"
             ],
@@ -146,7 +146,7 @@
                     "effectType": "summonRestriction",
                     "target": {
                         "type": "opponent",
-                        "scope": "allMonster",
+                        "scope": "allField",
                         "monsterType": "dragon"
                     },
                     "value": false
@@ -266,7 +266,7 @@
                     "effectType": "summonRestriction",
                     "target": {
                         "type": "self",
-                        "scope": "allMonster",
+                        "scope": "allField",
                         "monsterType": "dragon"
                     },
                     "value": false

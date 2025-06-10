@@ -117,9 +117,11 @@ class mozGamePlay {
             }
             const cardToPlay = hand[action["card_idx"]];
             const cardDetails = mozDeckHelper.getDeckCardDetails(cardToPlay);
-            
+            if (!cardDetails){
+                return this.throwError("Card not found");
+            }
             // Check summon restrictions
-            const restrictionError = this.cardEffectManager.checkSummonRestriction(gameEnv, playerId, cardDetails, isPlayInFaceDown);
+            const restrictionError = this.cardEffectManager.checkSummonRestriction(gameEnv, playerId, cardDetails, isPlayInFaceDown, playPos);
             if (restrictionError) {
                 return this.throwError(restrictionError);
             }

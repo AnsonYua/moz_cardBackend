@@ -7,21 +7,32 @@ class DeckManager {
         this.cardsPath = path.join(__dirname, '../data/cards.json');
         this.summonerCardPath = path.join(__dirname, '../data/summonerCards.json');
         this.decksPath = path.join(__dirname, '../data/decks.json');
+        this.spCardPath = path.join(__dirname, '../data/spCard.json');
         this.cards = null;
         this.decks = null;
     }
 
     async initialize() {
         try {
-            const [cardsData, summonerCards, decksData] = await Promise.all([
+            const [cardsData, summonerCards, decksData, spCardData] = await Promise.all([
                 fs.readFile(this.cardsPath, 'utf8'),
                 fs.readFile(this.summonerCardPath, 'utf8'),
-                fs.readFile(this.decksPath, 'utf8')
+                fs.readFile(this.decksPath, 'utf8'),
+                fs.readFile(this.spCardPath, 'utf8')
             ]);
 
             this.cards = JSON.parse(cardsData);
             this.summonerCards = JSON.parse(summonerCards);
             this.decks = JSON.parse(decksData);
+            const spCards = JSON.parse(spCardData);
+            
+            // Merge spCards into this.cards
+            if (this.cards && this.cards.cards) {
+                this.cards.cards = {
+                    ...this.cards.cards,
+                    ...spCards.spCards
+                };
+            }
         } catch (error) {
             console.error('Error initializing DeckManager:', error);
             throw error;

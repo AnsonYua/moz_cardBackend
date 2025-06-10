@@ -367,6 +367,20 @@ class CardEffectManager {
     }
 
     /**
+     * Initialize restrictions for a player if they don't exist
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} playerId - ID of the player to initialize restrictions for
+     */
+    initializeRestrictions(gameEnv, playerId) {
+        if (!gameEnv[playerId].restrictions) {
+            gameEnv[playerId].restrictions = { summonRestrictions: [] };
+        }
+        if (!gameEnv[playerId].restrictions.summonRestrictions) {
+            gameEnv[playerId].restrictions.summonRestrictions = [];
+        }
+    }
+
+    /**
      * Update summon restrictions for both players at the start of turn
      * @param {Object} gameEnv - Current game environment
      * @returns {Object} - Updated game environment
@@ -376,9 +390,7 @@ class CardEffectManager {
 
         // Reset restrictions for both players
         players.forEach(playerId => {
-            if (!gameEnv[playerId].restrictions) {
-                gameEnv[playerId].restrictions = { summonRestrictions: [] };
-            }
+            this.initializeRestrictions(gameEnv, playerId);
             gameEnv[playerId].restrictions.summonRestrictions = [];
         });
 
@@ -393,7 +405,8 @@ class CardEffectManager {
                         if(rule.target.type === 'self'){
                             targetPlayerId = playerId;
                         }
-                        this.addSummonRestriction(gameEnv, targetPlayerId, rule.target);
+                        const ruleId =  playerId+'_'+summoner.id+'_'+summoner.effectRules.indexOf(rule);
+                        this.addSummonRestriction(gameEnv, targetPlayerId, rule.target, ruleId);
                     }
                 });
             }
@@ -407,30 +420,41 @@ class CardEffectManager {
      * @param {Object} gameEnv - Current game environment
      * @param {string} playerId - ID of the player to add restriction to
      * @param {Object} target - Target of the restriction
+     * @param {string} ruleId - ID of the rule that added the restriction
      */
-    addSummonRestriction(gameEnv, playerId, target) {
-        if (!gameEnv[playerId].restrictions) {
-            gameEnv[playerId].restrictions = { summonRestrictions: [] };
+    addSummonRestriction(gameEnv, playerId, target, ruleId) {
+        this.initializeRestrictions(gameEnv, playerId);
+        for(let i = 0; i < gameEnv[playerId].restrictions.summonRestrictions.length; i++){
+            if(gameEnv[playerId].restrictions.summonRestrictions[i].ruleId === ruleId){
+                return;
+            }
         }
-        if (!gameEnv[playerId].restrictions.summonRestrictions) {
-            gameEnv[playerId].restrictions.summonRestrictions = [];
-        }
-        if(target.scope === 'allMonster'){
-            // Add the restriction if it's not already there
-            if (!gameEnv[playerId].restrictions.summonRestrictions.includes(target.monsterType)) {
-                gameEnv[playerId].restrictions.summonRestrictions.push(target.monsterType);
+        let restriction ={}
+        if(target.scope === 'allField'){
+            restriction = {
+                ruleId: ruleId,
+                scope: target.scope,
+                target: target.monsterType,
+                type: ""
             }
         }else if(target.scope === 'sp' && target.modificationType === 'disable'){
             // Add the restriction if it's not already there
-            if (!gameEnv[playerId].restrictions.summonRestrictions.includes(target.scope)) {
-                gameEnv[playerId].restrictions.summonRestrictions.push(target.scope);
+            restriction = {
+                ruleId: ruleId,
+                scope: target.scope,
+                target: "disable",
+                type: ""
             }
         }else if(target.scope === 'sky' && target.modificationType === 'disable'){
             // Add the restriction if it's not already there
-            if (!gameEnv[playerId].restrictions.summonRestrictions.includes(target.scope)) {
-                gameEnv[playerId].restrictions.summonRestrictions.push(target.scope);
+            restriction = {
+                ruleId: ruleId,
+                scope: target.scope,
+                target: "disable",
+                type: "allMonster"
             }
         }
+        gameEnv[playerId].restrictions.summonRestrictions.push(restriction);
     }
 
     /**
@@ -439,17 +463,31 @@ class CardEffectManager {
      * @param {string} playerId - ID of the player attempting to summon
      * @param {Object} cardDetails - Details of the card being summoned
      * @param {boolean} isPlayInFaceDown - Whether the card is being played face down
+     * @param {string} playPos - Position of the card being played
      * @returns {Object|null} - Error object if restricted, null if allowed
      */
-    checkSummonRestriction(gameEnv, playerId, cardDetails, isPlayInFaceDown) {
-        if (!isPlayInFaceDown && 
-            cardDetails.type === "monster" && 
-            gameEnv[playerId].restrictions && 
-            gameEnv[playerId].restrictions.summonRestrictions && 
-            cardDetails.monsterType.some(type => 
-                gameEnv[playerId].restrictions.summonRestrictions.includes(type)
-            )) {
-                return  `Cannot summon ${cardDetails.monsterType.join(', ')} type monsters due to opponent summoner effect`
+    checkSummonRestriction(gameEnv, playerId, cardDetails, isPlayInFaceDown, playPos) {
+        if(isPlayInFaceDown){
+            return null;
+        }
+        for(let i = 0; i < gameEnv[playerId].restrictions.summonRestrictions.length; i++){
+            console.log("-----------cardDetails------------");
+            console.log(JSON.stringify(cardDetails, null, 2));
+            console.log(playPos);
+            console.log("--------------------------------");
+            if(cardDetails.type === "monster"){
+                let restriction = gameEnv[playerId].restrictions.summonRestrictions[i];
+                if(restriction.scope == "allField" &&
+                    cardDetails.monsterType.some(type => restriction.target.includes(type))
+                ){
+                    console.log("-----------return------------");
+                    return `Cannot summon ${cardDetails.monsterType.join(', ')} type monsters due to summoner effect`
+                }else if(restriction.scope == playPos && restriction.type == "allMonster"){
+                    return `Cannot summon ${cardDetails.monsterType.join(', ')} type monsters due to summoner effect type 2`
+                }
+            }else if(cardDetails.type === "sp"){
+                    return `Cannot summon sp due to summoner effect`
+            }
         }
         return null;
     }
