@@ -195,7 +195,9 @@
       "playerPoint": 0,
       "overallGamePoint": 0,
       "restrictions": {
-        "summonRestrictions": []
+        "summonRestrictions": [
+          "sky"
+        ]
       }
     },
     "firstPlayer": 1,
@@ -203,6 +205,6 @@
     "currentPlayer": "playerId_1",
     "currentTurn": 1.5
   },
-  "lastUpdate": "2025-06-09T17:05:42.132Z",
-  "updateUUID": "efce3554-d974-44ba-9a8f-41216d763532"
+  "lastUpdate": "2025-06-10T10:28:43.784Z",
+  "updateUUID": "00658041-a244-4d59-974e-7f3fe85dd7ed"
 }

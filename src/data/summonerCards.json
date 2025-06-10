@@ -146,6 +146,7 @@
                     "effectType": "summonRestriction",
                     "target": {
                         "type": "opponent",
+                        "scope": "allMonster",
                         "monsterType": "dragon"
                     },
                     "value": false
@@ -265,11 +266,12 @@
                     "effectType": "summonRestriction",
                     "target": {
                         "type": "self",
+                        "scope": "allMonster",
                         "monsterType": "dragon"
                     },
                     "value": false
                 }
-            ],          
+            ],
             "level": 7,
             "type": [
                 "wind"
@@ -277,6 +279,7 @@
             "initialPoint": 122
         },
         "S109": {
+            "name": "真巴扎治（災難之玉）",
             "id": "S109",
             "sky": [
                 "all"
@@ -289,6 +292,33 @@
             ],
             "age": -1,
             "gender": "male",
+            "effectRules": [
+                {
+                    "condition": {
+                        "type": "opponentSummonerHasLevel",
+                        "opponentLevel": 7,
+                        "operator": "OverOrEqual"
+                    },
+                    "effectType": "summonRestriction",
+                    "target": {
+                        "type": "self",
+                        "scope": "sp",
+                        "modificationType": "disable"
+                    }
+                },
+                {
+                    "condition": {
+                        "type": "opponentDontHasSummoner",
+                        "opponentName": "古列特拉圖"
+                    },
+                    "effectType": "summonRestriction",
+                    "target": {
+                        "type": "opponent",
+                        "scope": "sky",
+                        "modificationType": "disable"
+                    }
+                }
+            ],
             "nativeAddition": [
                 {
                     "type": "all",

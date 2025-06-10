@@ -41,7 +41,7 @@ class CardEffectManager {
     checkCondition(gameEnv, playerId, condition) {
         const players = getPlayerFromGameEnv(gameEnv);
         const opponentId = players.find(id => id !== playerId);
-
+        let opponentSummonerName = "";
         switch (condition.type) {
             case 'summoner':
                 return this.cardInfoUtils.getCurrentSummonerName(gameEnv, playerId).includes(condition.value);
@@ -59,13 +59,26 @@ class CardEffectManager {
                 return this.isHelpCardPlayed(gameEnv, playerId, condition.cardName);
             
             case 'opponentHasSummoner':
-                const opponentSummonerName = this.cardInfoUtils.getCurrentSummonerName(gameEnv, opponentId);
+                opponentSummonerName = this.cardInfoUtils.getCurrentSummonerName(gameEnv, opponentId);
                 return opponentSummonerName.includes(condition.opponentName);
             
             case 'opponentSummonerHasType':
                 const opponentSummonerType = this.cardInfoUtils.getCurrentSummonerType(gameEnv, opponentId);
                 return opponentSummonerType.includes(condition.opponentType);
             
+            case 'opponentSummonerHasLevel':
+                const opponentSummonerLevel = this.cardInfoUtils.getCurrentSummonerLevel(gameEnv, opponentId);
+                if(condition.operator === 'OverOrEqual'){
+                    return opponentSummonerLevel >= condition.opponentLevel;
+                }else if(condition.operator === 'UnderOrEqual'){
+                    return opponentSummonerLevel <= condition.opponentLevel;
+                }else if(condition.operator === 'Equal'){
+                    return opponentSummonerLevel === condition.opponentLevel;
+                }
+            case 'opponentDontHasSummoner':
+                opponentSummonerName = this.cardInfoUtils.getCurrentSummonerName(gameEnv, opponentId);
+                return !opponentSummonerName.includes(condition.opponentName);
+
             case 'always':
                 return true;
             
@@ -380,7 +393,7 @@ class CardEffectManager {
                         if(rule.target.type === 'self'){
                             targetPlayerId = playerId;
                         }
-                        this.addSummonRestriction(gameEnv, targetPlayerId, rule.target.monsterType);
+                        this.addSummonRestriction(gameEnv, targetPlayerId, rule.target);
                     }
                 });
             }
@@ -393,19 +406,30 @@ class CardEffectManager {
      * Add a monster type to player's summon restrictions
      * @param {Object} gameEnv - Current game environment
      * @param {string} playerId - ID of the player to add restriction to
-     * @param {string} monsterType - Type of monster to restrict
+     * @param {Object} target - Target of the restriction
      */
-    addSummonRestriction(gameEnv, playerId, monsterType) {
+    addSummonRestriction(gameEnv, playerId, target) {
         if (!gameEnv[playerId].restrictions) {
             gameEnv[playerId].restrictions = { summonRestrictions: [] };
         }
         if (!gameEnv[playerId].restrictions.summonRestrictions) {
             gameEnv[playerId].restrictions.summonRestrictions = [];
         }
-        
-        // Add the restriction if it's not already there
-        if (!gameEnv[playerId].restrictions.summonRestrictions.includes(monsterType)) {
-            gameEnv[playerId].restrictions.summonRestrictions.push(monsterType);
+        if(target.scope === 'allMonster'){
+            // Add the restriction if it's not already there
+            if (!gameEnv[playerId].restrictions.summonRestrictions.includes(target.monsterType)) {
+                gameEnv[playerId].restrictions.summonRestrictions.push(target.monsterType);
+            }
+        }else if(target.scope === 'sp' && target.modificationType === 'disable'){
+            // Add the restriction if it's not already there
+            if (!gameEnv[playerId].restrictions.summonRestrictions.includes(target.scope)) {
+                gameEnv[playerId].restrictions.summonRestrictions.push(target.scope);
+            }
+        }else if(target.scope === 'sky' && target.modificationType === 'disable'){
+            // Add the restriction if it's not already there
+            if (!gameEnv[playerId].restrictions.summonRestrictions.includes(target.scope)) {
+                gameEnv[playerId].restrictions.summonRestrictions.push(target.scope);
+            }
         }
     }
 

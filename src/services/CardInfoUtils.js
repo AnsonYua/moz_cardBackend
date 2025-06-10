@@ -20,6 +20,11 @@ class CardInfoUtils {
         const currentSummoner = this.getCurrentSummoner(gameEnv, playerId);
         return currentSummoner.type || [];
     }
+
+    getCurrentSummonerLevel(gameEnv, playerId) {
+        const currentSummoner = this.getCurrentSummoner(gameEnv, playerId);
+        return currentSummoner.level || 0;
+    }
 }
 
 module.exports = new CardInfoUtils();
