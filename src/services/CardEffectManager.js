@@ -430,7 +430,7 @@ class CardEffectManager {
             }
         }
         let restriction ={}
-        if(target.scope === 'allField'){
+        if(target.scope === 'all'){
             restriction = {
                 ruleId: ruleId,
                 scope: target.scope,
@@ -477,7 +477,7 @@ class CardEffectManager {
             console.log("--------------------------------");
             if(cardDetails.type === "monster"){
                 let restriction = gameEnv[playerId].restrictions.summonRestrictions[i];
-                if(restriction.scope == "allField" &&
+                if(restriction.scope == "all" &&
                     cardDetails.monsterType.some(type => restriction.target.includes(type))
                 ){
                     console.log("-----------return------------");

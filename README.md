@@ -75,56 +75,7 @@ The engine supports various effect types:
 - Zone-specific effects
 - Card type interactions
 
-### Effect Rules Structure
-```json
-{
-  "condition": {
-    "type": "condition_type",
-    "value": "condition_value"
-  },
-  "target": {
-    "type": "target_type",
-    "scope": "target_scope"
-  },
-  "effectType": "effect_type",
-  "value": effect_value
-}
-```
-
-## Summoner Effects System
-
-The engine supports various summoner effect types:
-- Native addition effects (base attribute bonuses)
-- Conditional effects based on opponent's summoner
-- Value modifications
-
-### Summoner Effect Rules Structure
-```json
-{
-  "condition": {
-    "type": "opponentHasSummoner",
-    "opponentName": "summoner_name"
-  },
-  "effectType": "valueModification",
-  "target": {
-    "type": "self",
-    "scope": "all",
-    "modificationType": "nativeAddition"
-  },
-  "value": 0
-}
-```
-
-### Effect Processing
-1. Summoner effects are processed when calculating card values
-2. Effects can modify the summoner's native addition values
-3. Modified values are then applied to cards on the field
-
-### Example
-When a summoner has an effect that checks for opponent's summoner:
-- If the condition is met (opponent has specified summoner)
-- The summoner's native addition values are modified
-- These modified values are used when calculating card values
+For detailed information about effect rules, please refer to [Effect Rules Documentation](docs/effectRules.md).
 
 ## Game Flow
 
@@ -193,4 +144,135 @@ The game initialization follows these steps:
 - Card IDs starting with 'S' are summoner cards
 - Card IDs starting with 's' are regular cards
 - Effects are processed in order of play
-- Zone restrictions are enforced based on summoner attributes 
+- Zone restrictions are enforced based on summoner attributes
+
+# Summoner Effect Rules Schema
+
+## Overview
+Summoner effect rules define special abilities and restrictions that summoners can apply during the game. Each rule consists of a condition, effect type, target, and value.
+
+## Rule Structure
+```json
+{
+    "condition": {
+        "type": string,        // Type of condition
+        // Additional condition-specific fields
+    },
+    "effectType": string,      // Type of effect
+    "target": {
+        "type": string,        // Who is affected
+        "scope": string,       // Where the effect applies
+        // Additional target-specific fields
+    },
+    "value": any              // Effect value
+}
+```
+
+## Condition Types
+1. `opponentHasSummoner`
+   ```json
+   {
+       "type": "opponentHasSummoner",
+       "opponentName": string  // Name of the summoner to check for
+   }
+   ```
+
+2. `opponentSummonerHasType`
+   ```json
+   {
+       "type": "opponentSummonerHasType",
+       "opponentType": string  // Type to check for (e.g., "mechanic")
+   }
+   ```
+
+3. `opponentSummonerHasLevel`
+   ```json
+   {
+       "type": "opponentSummonerHasLevel",
+       "opponentLevel": number,
+       "operator": string      // "OverOrEqual", "UnderOrEqual", "Equal"
+   }
+   ```
+
+4. `opponentDontHasSummoner`
+   ```json
+   {
+       "type": "opponentDontHasSummoner",
+       "opponentName": string  // Name of the summoner to check for
+   }
+   ```
+
+## Effect Types
+1. `valueModification`
+   - Modifies values of cards
+   - Used with `modificationType: "nativeAddition"` to modify summoner's native addition values
+
+2. `summonRestriction`
+   - Restricts what cards can be summoned
+   - Can target specific positions or card types
+
+## Target Types
+1. `self`
+   - Affects the summoner's own cards/field
+
+2. `opponent`
+   - Affects the opponent's cards/field
+
+## Target Scopes
+1. `all`
+   - For valueModification: Affects all valid targets
+   - For summonRestriction: Affects all field positions and can include monster type restrictions
+
+2. `sp`
+   - Affects special cards
+   - Used with `modificationType: "disable"` to prevent playing special cards
+
+3. `sky`
+   - Affects sky position only
+   - Used with `modificationType: "disable"` to prevent playing cards in sky position
+
+## Example Rules
+
+### Value Modification Example
+```json
+{
+    "condition": {
+        "type": "opponentHasSummoner",
+        "opponentName": "顧寧特"
+    },
+    "effectType": "valueModification",
+    "target": {
+        "type": "self",
+        "scope": "all",
+        "modificationType": "nativeAddition"
+    },
+    "value": 0
+}
+```
+
+### Summon Restriction Example
+```json
+{
+    "condition": {
+        "type": "opponentSummonerHasLevel",
+        "opponentLevel": 7,
+        "operator": "OverOrEqual"
+    },
+    "effectType": "summonRestriction",
+    "target": {
+        "type": "self",
+        "scope": "sp",
+        "modificationType": "disable"
+    }
+}
+```
+
+## Notes
+- Conditions are checked before effects are applied
+- Effects can be either positive (value increases) or negative (restrictions)
+- Some effects may have multiple conditions
+- Target scope determines where the effect applies
+- Monster type restrictions can be applied to specific card types
+- The `all` scope has different meanings depending on the effect type:
+  - For valueModification: affects all valid targets
+  - For summonRestriction: affects all field positions 

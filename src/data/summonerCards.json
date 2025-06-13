@@ -146,7 +146,7 @@
                     "effectType": "summonRestriction",
                     "target": {
                         "type": "opponent",
-                        "scope": "allField",
+                        "scope": "all",
                         "monsterType": "dragon"
                     },
                     "value": false
@@ -266,7 +266,7 @@
                     "effectType": "summonRestriction",
                     "target": {
                         "type": "self",
-                        "scope": "allField",
+                        "scope": "all",
                         "monsterType": "dragon"
                     },
                     "value": false

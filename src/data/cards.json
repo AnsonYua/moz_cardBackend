@@ -13,12 +13,12 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "summoner",
+						"type": "selfHasSummoner",
 						"value": "柏古蘭巴杜"
 					},
 					"target": {
 						"type": "self",
-						"scope": "single"
+						"scope": "selfCard"
 					},
 					"effectType": "valueModification",
 					"value": 500
@@ -40,12 +40,12 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "summoner",
-						"value": "雷巴古"
+						"type": "selfHasSummoner",
+						"value": "柏古蘭巴杜"
 					},
 					"target": {
 						"type": "self",
-						"scope": "single"
+						"scope": "selfCard"
 					},
 					"effectType": "valueModification",
 					"value": 100
@@ -70,8 +70,7 @@
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "monster",
-						"monsterName": "食草貝"
+						"scope": "selfCard"
 					},
 					"effectType": "valueModification",
 					"value": 0
@@ -96,7 +95,7 @@
 						"type": "always"
 					},
 					"target": {
-						"type": "component",
+						"type": "opponent",
 						"scope": "all",
 						"monsterType": "fish"
 					},
@@ -134,12 +133,11 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "opponentHasMonster",
-						"monsterName": "天龍"
+						"type": "always"
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "monster",
+						"scope": "all",
 						"monsterName": "天龍"
 					},
 					"effectType": "valueModification",
@@ -162,27 +160,37 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "helpCardUsed",
+						"type": "selfHasHelpCardOnField",
 						"cardName": "1000年"
 					},
 					"target": {
 						"type": "self",
-						"scope": "single"
+						"scope": "selfCard"
 					},
 					"effectType": "valueModification",
 					"value": 100
 				},
 				{
 					"condition": {
-						"type": "helpCardUsed",
+						"type": "selfHasHelpCardOnField",
 						"cardName": "1000年"
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "adjacent"
+                        "scope": "left"
 					},
-					"effectType": "valueModification",
-					"value": 0
+					"effectType": "summonRestriction"
+				},
+				{
+					"condition": {
+						"type": "selfHasHelpCardOnField",
+						"cardName": "1000年"
+					},
+					"target": {
+						"type": "opponent",
+                        "scope": "right"
+					},
+					"effectType": "summonRestriction"
 				}
 			]
 		},
@@ -220,7 +228,7 @@
 					},
 					"target": {
 						"type": "self",
-						"scope": "single"
+						"scope": "selfCard"
 					},
 					"effectType": "valueModification",
 					"value": 400
@@ -343,7 +351,7 @@
 					},
 					"target": {
 						"type": "self",
-						"scope": "single"
+						"scope": "selfCard"
 					},
 					"effectType": "valueModification",
 					"value": 180
@@ -379,12 +387,12 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "summoner",
+						"type": "selfHasSummoner",
 						"value": "柏古蘭巴杜"
 					},
 					"target": {
 						"type": "self",
-						"scope": "single"
+						"scope": "selfCard"
 					},
 					"effectType": "valueModification",
 					"value": 500
@@ -420,12 +428,11 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "opponentHasMonster",
-						"monsterName": "天龍"
+						"type": "always"
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "monster",
+						"scope": "all",
 						"monsterName": "天龍"
 					},
 					"effectType": "valueModification",
@@ -453,7 +460,7 @@
 					},
 					"target": {
 						"type": "self",
-						"scope": "single"
+						"scope": "selfCard"
 					},
 					"effectType": "valueModification",
 					"value": 400
@@ -548,7 +555,7 @@
 					},
 					"target": {
 						"type": "self",
-						"scope": "single"
+						"scope": "selfCard"
 					},
 					"effectType": "valueModification",
 					"value": 400
@@ -568,7 +575,7 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "helpCardUsed",
+						"type": "selfHasHelpCardOnField",
 						"cardName": "貝獸仙人之咒语"
 					},
 					"target": {
@@ -593,7 +600,7 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "summoner",
+						"type": "selfHasSummoner",
 						"value": "波尤"
 					},
 					"target": {
@@ -638,7 +645,7 @@
 					},
 					"target": {
 						"type": "self",
-						"scope": "single"
+						"scope": "selfCard"
 					},
 					"effectType": "valueModification",
 					"value": 400
