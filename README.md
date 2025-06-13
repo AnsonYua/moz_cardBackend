@@ -42,7 +42,7 @@ Monster cards have the following properties:
 - `type`: Card type (e.g., "monster")
 - `cardName`: Name of the card
 - `effects`: Text description of effects
-- `effectRules`: Array of effect rules with conditions and targets
+- `effectRules`: Array of effect rules (see [Effect Rules Documentation](docs/effectRules.md))
 
 #### Summoner Cards
 Summoner cards have additional properties:
@@ -65,17 +65,7 @@ Summoner cards have additional properties:
 2. **MAIN_PHASE**
    - Players can play cards from their hand
    - Cards can be played face-up or face-down
-   - Effects are resolved based on card rules
-
-## Card Effects System
-
-The engine supports various effect types:
-- Value modifications
-- Conditional effects
-- Zone-specific effects
-- Card type interactions
-
-For detailed information about effect rules, please refer to [Effect Rules Documentation](docs/effectRules.md).
+   - Effects are resolved based on card rules (see [Effect Rules Documentation](docs/effectRules.md))
 
 ## Game Flow
 
@@ -110,14 +100,10 @@ The game initialization follows these steps:
      ```
    - When both players are ready:
      - Game phase changes to `MAIN_PHASE`
-     - Summoner effects are applied (e.g., summon restrictions)
+     - Summoner effects are applied
      - First player's turn begins
 
-3. **Summoner Effects**
-   - Effects are checked and applied when both players are ready
-   - Example: 杜吉亞(檔案大師)'s effect prevents opponent from summoning dragon-type monsters if opponent"s summoner is 顧寧特
-
-4. **Game Flow**
+3. **Game Flow**
    - After initialization, game follows normal turn structure
    - Players can perform actions based on current phase and restrictions
 
@@ -129,6 +115,8 @@ The game initialization follows these steps:
   - `summonerCards.json`: Summoner card definitions
   - `decks.json`: Predefined deck configurations
   - `spCard.json`: Special card definitions
+- `docs/`: Documentation files
+  - `effectRules.md`: Detailed documentation of effect rules
 
 ## Usage
 
@@ -143,136 +131,5 @@ The game initialization follows these steps:
 
 - Card IDs starting with 'S' are summoner cards
 - Card IDs starting with 's' are regular cards
-- Effects are processed in order of play
 - Zone restrictions are enforced based on summoner attributes
-
-# Summoner Effect Rules Schema
-
-## Overview
-Summoner effect rules define special abilities and restrictions that summoners can apply during the game. Each rule consists of a condition, effect type, target, and value.
-
-## Rule Structure
-```json
-{
-    "condition": {
-        "type": string,        // Type of condition
-        // Additional condition-specific fields
-    },
-    "effectType": string,      // Type of effect
-    "target": {
-        "type": string,        // Who is affected
-        "scope": string,       // Where the effect applies
-        // Additional target-specific fields
-    },
-    "value": any              // Effect value
-}
-```
-
-## Condition Types
-1. `opponentHasSummoner`
-   ```json
-   {
-       "type": "opponentHasSummoner",
-       "opponentName": string  // Name of the summoner to check for
-   }
-   ```
-
-2. `opponentSummonerHasType`
-   ```json
-   {
-       "type": "opponentSummonerHasType",
-       "opponentType": string  // Type to check for (e.g., "mechanic")
-   }
-   ```
-
-3. `opponentSummonerHasLevel`
-   ```json
-   {
-       "type": "opponentSummonerHasLevel",
-       "opponentLevel": number,
-       "operator": string      // "OverOrEqual", "UnderOrEqual", "Equal"
-   }
-   ```
-
-4. `opponentDontHasSummoner`
-   ```json
-   {
-       "type": "opponentDontHasSummoner",
-       "opponentName": string  // Name of the summoner to check for
-   }
-   ```
-
-## Effect Types
-1. `valueModification`
-   - Modifies values of cards
-   - Used with `modificationType: "nativeAddition"` to modify summoner's native addition values
-
-2. `summonRestriction`
-   - Restricts what cards can be summoned
-   - Can target specific positions or card types
-
-## Target Types
-1. `self`
-   - Affects the summoner's own cards/field
-
-2. `opponent`
-   - Affects the opponent's cards/field
-
-## Target Scopes
-1. `all`
-   - For valueModification: Affects all valid targets
-   - For summonRestriction: Affects all field positions and can include monster type restrictions
-
-2. `sp`
-   - Affects special cards
-   - Used with `modificationType: "disable"` to prevent playing special cards
-
-3. `sky`
-   - Affects sky position only
-   - Used with `modificationType: "disable"` to prevent playing cards in sky position
-
-## Example Rules
-
-### Value Modification Example
-```json
-{
-    "condition": {
-        "type": "opponentHasSummoner",
-        "opponentName": "顧寧特"
-    },
-    "effectType": "valueModification",
-    "target": {
-        "type": "self",
-        "scope": "all",
-        "modificationType": "nativeAddition"
-    },
-    "value": 0
-}
-```
-
-### Summon Restriction Example
-```json
-{
-    "condition": {
-        "type": "opponentSummonerHasLevel",
-        "opponentLevel": 7,
-        "operator": "OverOrEqual"
-    },
-    "effectType": "summonRestriction",
-    "target": {
-        "type": "self",
-        "scope": "sp",
-        "modificationType": "disable"
-    }
-}
-```
-
-## Notes
-- Conditions are checked before effects are applied
-- Effects can be either positive (value increases) or negative (restrictions)
-- Some effects may have multiple conditions
-- Target scope determines where the effect applies
-- Monster type restrictions can be applied to specific card types
-- The `all` scope has different meanings depending on the effect type:
-  - For valueModification: affects all valid targets
-  - For summonRestriction: affects all field positions 
+- For detailed information about effect rules and their implementation, please refer to [Effect Rules Documentation](docs/effectRules.md) 
