@@ -13,15 +13,23 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "selfHasSummoner",
-						"value": "柏古蘭巴杜"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasSummoner",
+								"value": "柏古蘭巴杜"
+							}
+						]
 					},
 					"target": {
 						"type": "self",
-						"scope": "selfCard"
+						"scope": ["this"],
+						"subScope": ["all"]
 					},
-					"effectType": "valueModification",
-					"value": 500
+					"effectType": "modifyMonsterValue",
+					"value": "500",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -40,15 +48,23 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "selfHasSummoner",
-						"value": "柏古蘭巴杜"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasSummoner",
+								"value": "雷巴古"
+							}
+						]
 					},
 					"target": {
 						"type": "self",
-						"scope": "selfCard"
+						"scope": ["this"],
+						"subScope": ["all"]
 					},
-					"effectType": "valueModification",
-					"value": 100
+					"effectType": "modifyMonsterValue",
+					"value": "100",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -65,15 +81,23 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "opponentHasMonster",
-						"monsterName": "食草貝"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "opponentHasMonster",
+								"value": "食草貝"
+							}
+						]
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "selfCard"
+						"scope": ["sky", "left", "right"],
+						"subScope": ["name_食草貝"]
 					},
-					"effectType": "valueModification",
-					"value": 0
+					"effectType": "modifyMonsterValue",
+					"value": "0",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -92,15 +116,22 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "always"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "always"
+							}
+						]
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "all",
-						"monsterType": "fish"
+						"scope": ["sky", "left", "right"],
+						"subScope": ["attr_fish"]
 					},
-					"effectType": "valueModification",
-					"value": 0
+					"effectType": "modifyMonsterValue",
+					"value": "0",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -133,15 +164,22 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "always"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "always"
+							}
+						]
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "all",
-						"monsterName": "天龍"
+						"scope": ["sky", "left", "right"],
+						"subScope": ["name_天龍"]
 					},
-					"effectType": "valueModification",
-					"value": 0
+					"effectType": "modifyMonsterValue",
+					"value": "0",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -160,37 +198,43 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "selfHasHelpCardOnField",
-						"cardName": "1000年"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasHelpCardOnField",
+								"value": "1000年"
+							}
+						]
 					},
 					"target": {
 						"type": "self",
-						"scope": "selfCard"
+						"scope": ["this"],
+						"subScope": ["all"]
 					},
-					"effectType": "valueModification",
-					"value": 100
+					"effectType": "modifyMonsterValue",
+					"value": "100",
+					"operation": "set",
+					"span": "allTime"
 				},
 				{
 					"condition": {
-						"type": "selfHasHelpCardOnField",
-						"cardName": "1000年"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasHelpCardOnField",
+								"value": "1000年"
+							}
+						]
 					},
 					"target": {
 						"type": "opponent",
-                        "scope": "left"
+						"scope": ["left", "right"],
+						"subScope": ["all"]
 					},
-					"effectType": "summonRestriction"
-				},
-				{
-					"condition": {
-						"type": "selfHasHelpCardOnField",
-						"cardName": "1000年"
-					},
-					"target": {
-						"type": "opponent",
-                        "scope": "right"
-					},
-					"effectType": "summonRestriction"
+					"effectType": "modifyMonsterValue",
+					"value": "0",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -223,15 +267,23 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "selfHasMonster",
-						"monsterName": "天馬"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasMonster",
+								"value": "天馬"
+							}
+						]
 					},
 					"target": {
 						"type": "self",
-						"scope": "selfCard"
+						"scope": ["this"],
+						"subScope": ["all"]
 					},
-					"effectType": "valueModification",
-					"value": 400
+					"effectType": "modifyMonsterValue",
+					"value": "400",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -278,15 +330,22 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "always"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "always"
+							}
+						]
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "all",
-						"monsterType": "worm"
+						"scope": ["sky", "left", "right"],
+						"subScope": ["attr_worm"]
 					},
-					"effectType": "valueModification",
-					"value": 0
+					"effectType": "modifyMonsterValue",
+					"value": "0",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -319,15 +378,22 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "always"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "always"
+							}
+						]
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "all",
-						"monsterType": "beast"
+						"scope": ["sky", "left", "right"],
+						"subScope": ["attr_beast"]
 					},
-					"effectType": "valueModification",
-					"value": 0
+					"effectType": "modifyMonsterValue",
+					"value": "0",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -346,15 +412,23 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "selfHasMonster",
-						"monsterName": "波尤"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasMonster",
+								"value": "波尤"
+							}
+						]
 					},
 					"target": {
 						"type": "self",
-						"scope": "selfCard"
+						"scope": ["this"],
+						"subScope": ["all"]
 					},
-					"effectType": "valueModification",
-					"value": 180
+					"effectType": "modifyMonsterValue",
+					"value": "180",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -387,15 +461,23 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "selfHasSummoner",
-						"value": "柏古蘭巴杜"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasSummoner",
+								"value": "柏古蘭巴杜"
+							}
+						]
 					},
 					"target": {
 						"type": "self",
-						"scope": "selfCard"
+						"scope": ["this"],
+						"subScope": ["all"]
 					},
-					"effectType": "valueModification",
-					"value": 500
+					"effectType": "modifyMonsterValue",
+					"value": "500",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -428,15 +510,22 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "always"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "always"
+							}
+						]
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "all",
-						"monsterName": "天龍"
+						"scope": ["sky", "left", "right"],
+						"subScope": ["name_天龍"]
 					},
-					"effectType": "valueModification",
-					"value": 0
+					"effectType": "modifyMonsterValue",
+					"value": "0",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -455,15 +544,23 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "selfHasMonster",
-						"monsterName": "白獅精"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasMonster",
+								"value": "白獅精"
+							}
+						]
 					},
 					"target": {
 						"type": "self",
-						"scope": "selfCard"
+						"scope": ["this"],
+						"subScope": ["all"]
 					},
-					"effectType": "valueModification",
-					"value": 400
+					"effectType": "modifyMonsterValue",
+					"value": "400",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -496,15 +593,22 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "always"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "always"
+							}
+						]
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "all",
-						"value": 50
+						"scope": ["sky", "left", "right"],
+						"subScope": ["all"]
 					},
-					"effectType": "valueModification",
-					"value": 0
+					"effectType": "modifyMonsterValue",
+					"value": "0",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -523,15 +627,22 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "always"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "always"
+							}
+						]
 					},
 					"target": {
 						"type": "opponent",
-						"scope": "all",
-						"monsterType": "male"
+						"scope": ["sky", "left", "right"],
+						"subScope": ["attr_male"]
 					},
-					"effectType": "valueModification",
-					"value": 0
+					"effectType": "modifyMonsterValue",
+					"value": "0",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -550,15 +661,23 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "selfHasMonsterType",
-						"monsterType": "shell"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasMonsterWithAttribute",
+								"attribute": "shell"
+							}
+						]
 					},
 					"target": {
 						"type": "self",
-						"scope": "selfCard"
+						"scope": ["this"],
+						"subScope": ["all"]
 					},
-					"effectType": "valueModification",
-					"value": 400
+					"effectType": "modifyMonsterValue",
+					"value": "400",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -575,15 +694,23 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "selfHasHelpCardOnField",
-						"cardName": "貝獸仙人之咒语"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasHelpCardOnField",
+								"value": "貝獸仙人之咒语"
+							}
+						]
 					},
 					"target": {
 						"type": "self",
-						"scope": "single"
+						"scope": ["this"],
+						"subScope": ["all"]
 					},
-					"effectType": "valueModification",
-					"value": 300
+					"effectType": "modifyMonsterValue",
+					"value": "300",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -600,14 +727,23 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "selfHasSummoner",
-						"value": "波尤"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasSummoner",
+								"value": "波尤"
+							}
+						]
 					},
 					"target": {
 						"type": "self",
-						"scope": "single"
+						"scope": ["this"],
+						"subScope": ["all"]
 					},
-					"effectType": "summonCondition"
+					"effectType": "ableToSummon",
+					"value": "0",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		},
@@ -640,15 +776,23 @@
 			"effectRules": [
 				{
 					"condition": {
-						"type": "selfHasMonsterType",
-						"monsterType": "shell"
+						"type": "and",
+						"conditions": [
+							{
+								"type": "selfHasMonsterWithAttribute",
+								"attribute": "shell"
+							}
+						]
 					},
 					"target": {
 						"type": "self",
-						"scope": "selfCard"
+						"scope": ["this"],
+						"subScope": ["all"]
 					},
-					"effectType": "valueModification",
-					"value": 400
+					"effectType": "modifyMonsterValue",
+					"value": "400",
+					"operation": "set",
+					"span": "allTime"
 				}
 			]
 		}

@@ -52,6 +52,7 @@
             ],
             "age": 20,
             "gender": "male",
+            "effectRules": [],
             "nativeAddition": [
                 {
                     "type": "wind",
@@ -86,6 +87,7 @@
             ],
             "age": 20,
             "gender": "male",
+            "effectRules": [],
             "nativeAddition": [
                 {
                     "type": "wind",
@@ -124,32 +126,49 @@
                     "value": 60
                 }
             ],
+            "effects":[
+                "如對手召喚師是顧寧特，她的召喚師修正值變成 0",
+                "如對手是機械召喚師，對方不能召喚龍。"
+            ],
             "effectRules": [
                 {
                     "condition": {
-                        "type": "opponentHasSummoner",
-                        "opponentName": "顧寧特"
+                        "type": "and",
+                        "conditions": [
+                            {
+                                "type": "opponentHasSummoner",
+                                "value": "顧寧特"
+                            }
+                        ]
                     },
-                    "effectType": "valueModification",
                     "target": {
                         "type": "self",
-                        "scope": "all",
-                        "modificationType": "nativeAddition"
+                        "scope": ["sky","left","right"],
+                        "subScope": ["all"]
                     },
-                    "value": 0
+                    "effectType": "modifyNativeAddition",
+                    "value": "0",
+                    "operation": "set",
+                    "span": "allTime"
                 },
                 {
                     "condition": {
-                        "type": "opponentHasSummoner",
-                        "opponentName": "顧寧特"
+                        "type": "and",
+                        "conditions": [
+                            {
+                                "type": "opponentHasSummoner",
+                                "value": "顧寧特"
+                            }
+                        ]
                     },
-                    "effectType": "summonRestriction",
                     "target": {
                         "type": "opponent",
-                        "scope": "all",
-                        "monsterType": "dragon"
+                        "scope": ["monster"],
+                        "subScope": ["attr_dragon"]
                     },
-                    "value": false
+                    "effectType": "blockSummonCard",
+                    "value": "0",
+                    "span": "allTime"
                 }
             ],
             "level": 6,
@@ -208,6 +227,8 @@
             ],
             "age": -1,
             "gender": "male",
+            "effects":[
+            ],
             "nativeAddition": [
                 {
                     "type": "shell",
@@ -244,32 +265,49 @@
                     "value": 70
                 }
             ],
+            "effects":[
+                "如對手是機械召喚師，自己的召喚師修正由＋70變成0",
+                "如對手是機械召喚師，自己不能打出龍。"
+            ],
             "effectRules": [
                 {
                     "condition": {
-                        "type": "opponentSummonerHasType",
-                        "opponentType": "mechanic"
+                        "type": "and",
+                        "conditions": [
+                            {
+                                "type": "opponentSummonerHasType",
+                                "value": "mechanic"
+                            }
+                        ]
                     },
-                    "effectType": "valueModification",
                     "target": {
                         "type": "self",
-                        "scope": "all",
-                        "modificationType": "nativeAddition"
+                        "scope": ["sky","left","right"],
+                        "subScope": ["all"]
                     },
-                    "value": 0
+                    "effectType": "modifyNativeAddition",
+                    "value": "0",
+                    "operation": "set",
+                    "span": "allTime"
                 },
                 {
                     "condition": {
-                        "type": "opponentSummonerHasType",
-                        "opponentType": "mechanic"
+                        "type": "and",
+                        "conditions": [
+                            {
+                                "type": "opponentSummonerHasType",
+                                "value": "mechanic"
+                            }
+                        ]
                     },
-                    "effectType": "summonRestriction",
                     "target": {
                         "type": "self",
-                        "scope": "all",
-                        "monsterType": "dragon"
+                        "scope": ["sky","left","right"],
+                        "subScope": ["attr_dragon"]
                     },
-                    "value": false
+                    "effectType": "blockSummonCard",
+                    "value": "0",
+                    "span": "allTime"
                 }
             ],
             "level": 7,
@@ -292,31 +330,49 @@
             ],
             "age": -1,
             "gender": "male",
+            "effects":[
+                    "如對手星LV7 或以上的召喚師、自己就不能打出SP卡",
+                    "如對手召喚師不是古列特拉圖，對手的天，會被封截。"
+                ],
             "effectRules": [
                 {
                     "condition": {
-                        "type": "opponentSummonerHasLevel",
-                        "opponentLevel": 7,
-                        "operator": "OverOrEqual"
+                        "type": "and",
+                        "conditions": [
+                            {
+                                "type": "opponentSummonerHasLevel",
+                                "value": "7",
+                                "operator": "OverOrEqual"
+                            }
+                        ]
                     },
-                    "effectType": "summonRestriction",
                     "target": {
                         "type": "self",
-                        "scope": "sp",
-                        "modificationType": "disable"
-                    }
+                        "scope": ["sp"],
+                        "subScope": ["all"]
+                    },
+                    "effectType": "invalidCardEffect",
+                    "value": "0",
+                    "span": "allTime"
                 },
                 {
                     "condition": {
-                        "type": "opponentDontHasSummoner",
-                        "opponentName": "古列特拉圖"
+                        "type": "and",
+                        "conditions": [
+                            {
+                                "type": "opponentDontHasSummoner",
+                                "value": "古列特拉圖"
+                            }
+                        ]
                     },
-                    "effectType": "summonRestriction",
                     "target": {
                         "type": "opponent",
-                        "scope": "sky",
-                        "modificationType": "disable"
-                    }
+                        "scope": ["sky"],
+                        "subScope": ["all"]
+                    },
+                    "effectType": "invalidCardEffect",
+                    "value": "0",
+                    "span": "allTime"
                 }
             ],
             "nativeAddition": [

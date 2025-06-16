@@ -1,352 +1,279 @@
 # Effect Rules Documentation
 
 ## Overview
-Effect rules define special abilities and restrictions that can be applied during the game. These rules are used by both summoners and cards to modify game mechanics and card interactions.
+Effect rules define the behavior and interactions of cards in the game. Each card can have multiple effect rules that determine when and how its effects are applied. The rules system supports various card types including monsters, summoners, help cards, and special cards (SP).
 
-## Rule Structure
-```json
-{
-    "condition": {
-        "type": string,        // Type of condition
-        // Additional condition-specific fields
-    },
-    "effectType": string,      // Type of effect
-    "target": {
-        "type": string,        // Who is affected
-        "scope": string,       // Where the effect applies
-        // Additional target-specific fields
-    },
-    "value": any              // Effect value
+## Schema Structure
+
+### Root Structure
+```typescript
+interface EffectRule {
+    condition: Condition;
+    target: Target;
+    effectType: EffectType;
+    value: string | number;
+    operation?: Operation;
+    span: Span;
+    priority?: number;
 }
 ```
 
-## Condition Types
+### Condition Types
+```typescript
+interface Condition {
+    type: "and" | "or" | "not" | "always" | BasicConditionType;
+    conditions?: Condition[];  // For composite conditions (and/or)
+    condition?: Condition;     // For not condition
+    value?: string | number;   // For basic conditions
+    operator?: Operator;       // For level comparison
+    attribute?: string;        // For attribute checks
+    cardName?: string;        // For card name checks
+}
 
-### 1. selfHasSummoner
-Checks if your own summoner matches a specific name.
-```json
-{
-    "type": "selfHasSummoner",
-    "value": string  // Name of the summoner to check for
-}
-```
-Example:
-```json
-{
-    "type": "selfHasSummoner",
-    "value": "柏古蘭巴杜"
-}
-```
+type BasicConditionType = 
+    // Self Conditions
+    | "selfHasMonster"              // Check if self has specific monster
+    | "selfHasSummoner"             // Check if self has specific summoner
+    | "selfHasMonsterWithAttribute" // Check if self has monster with attribute
+    | "selfSummonerHasLevel"        // Check summoner's level
+    | "selfHasHelpCardOnField"      // Check if help card is on field
+    | "handCardLessThan"            // Check hand card count
+    
+    // Opponent Conditions
+    | "opponentHasMonster"          // Check if opponent has specific monster
+    | "opponentHasHelpCardOnField"  // Check if opponent has help card
+    | "opponentHasSummoner"         // Check if opponent has specific summoner
+    | "opponentSummonerHasType"     // Check opponent summoner's type
+    | "opponentSummonerHasLevel"    // Check opponent summoner's level
+    | "opponentDontHasSummoner"     // Check if opponent doesn't have summoner
+    | "always";                     // Always true condition
 
-### 2. opponentHasSummoner
-Checks if the opponent has a specific summoner.
-```json
-{
-    "type": "opponentHasSummoner",
-    "opponentName": string  // Name of the summoner to check for
-}
-```
-Example:
-```json
-{
-    "type": "opponentHasSummoner",
-    "opponentName": "顧寧特"
-}
-```
-
-### 3. opponentSummonerHasType
-Checks if the opponent's summoner has a specific type.
-```json
-{
-    "type": "opponentSummonerHasType",
-    "opponentType": string  // Type to check for (e.g., "mechanic")
-}
-```
-Example:
-```json
-{
-    "type": "opponentSummonerHasType",
-    "opponentType": "mechanic"
-}
+type Operator = "BelowOrEqual" | "OverOrEqual" | "Equal";
 ```
 
-### 4. opponentSummonerHasLevel
-Checks if the opponent's summoner level meets certain criteria.
-```json
-{
-    "type": "opponentSummonerHasLevel",
-    "opponentLevel": number,
-    "operator": string      // "OverOrEqual", "UnderOrEqual", "Equal"
+### Target Structure
+```typescript
+interface Target {
+    type: "self" | "opponent";
+    scope: Scope[];
+    subScope: SubScope[];
+    action?: string[];  // Optional, used for specific actions
 }
-```
-Example:
-```json
-{
-    "type": "opponentSummonerHasLevel",
-    "opponentLevel": 7,
-    "operator": "OverOrEqual"
-}
+
+type Scope = 
+    // Field Positions
+    | "sky"
+    | "left"
+    | "right"
+    // Card Types
+    | "monster"
+    | "help"
+    | "sp"
+    | "summoner";
+
+type SubScope = 
+    | "all"
+    | `name_${string}`    // e.g., "name_天災"
+    | `attr_${string}`;   // e.g., "attr_all"
 ```
 
-### 5. opponentDontHasSummoner
-Checks if the opponent does not have a specific summoner.
-```json
-{
-    "type": "opponentDontHasSummoner",
-    "opponentName": string  // Name of the summoner to check for
-}
-```
-Example:
-```json
-{
-    "type": "opponentDontHasSummoner",
-    "opponentName": "古列特拉圖"
-}
-```
-
-### 6. selfHasMonster
-Checks if you have a specific monster on the field.
-```json
-{
-    "type": "selfHasMonster",
-    "monsterName": string  // Name of the monster to check for
-}
-```
-Example:
-```json
-{
-    "type": "selfHasMonster",
-    "monsterName": "天馬"
-}
+### Effect Types
+```typescript
+type EffectType = 
+    // Monster Effects
+    | "modifyMonsterValue"      // Modify monster's current value
+    | "resetToOriginalValue"    // Reset monster to original value
+    
+    // Summoner Effects
+    | "modifyNativeAddition"    // Modify summoner's native addition value
+    | "blockSummonCard"         // Prevent summoning specific card types
+    | "ableToSummon"           // Control ability to summon cards
+    
+    // Card Effects
+    | "invalidCardEffect"       // Make card effects invalid after summon
+    | "drawCardToLimit"         // Draw cards up to limit
+    | "swapMonsterPosition"     // Swap monster positions
+    | "swapSummonerCard"        // Swap summoner card
+    
+    // Special Effects
+    | "removeAllEffectFromOpponent"  // Remove all opponent effects
+    | "finalPointReduction";         // Reduce final points
 ```
 
-### 7. opponentHasMonster
-Checks if the opponent has a specific monster on the field.
-```json
-{
-    "type": "opponentHasMonster",
-    "monsterName": string  // Name of the monster to check for
-}
-```
-Example:
-```json
-{
-    "type": "opponentHasMonster",
-    "monsterName": "食草貝"
-}
+### Operations
+```typescript
+type Operation = 
+    | "set"      // Set value directly
+    | "multiply" // Multiply current value
+    | "add"      // Add to current value
+    | "";        // No operation
 ```
 
-### 8. selfHasMonsterType
-Checks if you have a monster of a specific type on the field.
+### Spans
+```typescript
+type Span = 
+    | "allTime"  // Effect lasts until removed
+    | "oneOff";  // Effect occurs once
+```
+
+## Effect Type Details
+
+### 1. Monster Value Effects
+
+#### modifyMonsterValue
+- Modifies the current value of monsters on the field
+- Can use operations: set, multiply, add
+- Example (Setting value to 0):
 ```json
 {
-    "type": "selfHasMonsterType",
-    "monsterType": string  // Type of monster to check for
+    "effectType": "modifyMonsterValue",
+    "value": "0",
+    "operation": "set",
+    "span": "allTime"
 }
 ```
-Example:
+- Example (Multiplying value):
 ```json
 {
-    "type": "selfHasMonsterType",
-    "monsterType": "shell"
+    "effectType": "modifyMonsterValue",
+    "value": "10",
+    "operation": "multiply",
+    "span": "allTime"
 }
 ```
 
-### 9. selfHasHelpCardOnField
-Checks if you have a specific help card on the field.
+#### resetToOriginalValue
+- Resets monster's value to its original value
+- Ignores operation field
+- Example:
 ```json
 {
-    "type": "selfHasHelpCardOnField",
-    "cardName": string  // Name of the help card to check for
-}
-```
-Example:
-```json
-{
-    "type": "selfHasHelpCardOnField",
-    "cardName": "1000年"
+    "effectType": "resetToOriginalValue",
+    "value": "0",
+    "span": "allTime"
 }
 ```
 
-### 10. always
-Always returns true, used for effects that should always be active.
+### 2. Summoner Effects
+
+#### modifyNativeAddition
+- Modifies the summoner's native addition value
+- Affects all valid positions (sky, left, right)
+- Example:
 ```json
 {
-    "type": "always"
+    "effectType": "modifyNativeAddition",
+    "value": "0",
+    "operation": "set",
+    "span": "allTime"
 }
 ```
 
-## Effect Types
-
-### 1. valueModification
-Modifies values of cards or summoner abilities.
-- Used with `modificationType: "nativeAddition"` to modify summoner's native addition values
-- Can affect all valid targets or specific positions
-- Can modify specific card values or all cards of a type
-
-Example:
+#### blockSummonCard
+- Prevents summoning specific types of cards
+- Applied before card placement
+- Example:
 ```json
 {
-    "effectType": "valueModification",
-    "target": {
-        "type": "self",
-        "scope": "selfCard"
-    },
-    "value": 500
+    "effectType": "blockSummonCard",
+    "value": "0",
+    "span": "allTime"
 }
 ```
 
-### 2. summonRestriction
-Restricts what cards can be summoned or where they can be played.
-- Can target specific positions or card types
-- Can disable entire card types or positions
-- Can be used as a summon condition
-
-Example:
+#### ableToSummon
+- Controls whether a card can be summoned
+- Used for conditional summoning restrictions
+- Example:
 ```json
 {
-    "effectType": "summonRestriction",
-    "target": {
-        "type": "self",
-        "scope": "sp",
-        "modificationType": "disable"
-    }
+    "effectType": "ableToSummon",
+    "value": "0",
+    "operation": "set",
+    "span": "allTime"
 }
 ```
 
-### 3. summonCondition
-Specifies conditions that must be met to summon a card.
-- Used to restrict when a card can be played
-- Often used with selfHasSummoner condition
+### 3. Card Effects
 
-Example:
+#### invalidCardEffect
+- Makes card effects invalid after they are summoned
+- Different from blockSummonCard as it affects already summoned cards
+- Example:
 ```json
 {
-    "effectType": "summonCondition",
-    "target": {
-        "type": "self",
-        "scope": "single"
-    }
+    "effectType": "invalidCardEffect",
+    "value": "0",
+    "span": "allTime"
 }
 ```
 
-## Target Types
-
-### 1. self
-Affects the summoner's own cards/field.
-- Used when the effect should apply to the rule owner's cards
-- Common in value modifications and self-imposed restrictions
-
-### 2. opponent
-Affects the opponent's cards/field.
-- Used when the effect should apply to the opponent's cards
-- Common in restrictions that limit opponent's options
-
-## Target Scopes
-
-### 1. all
-Has different meanings based on effect type:
-- For valueModification: affects all valid targets
-- For summonRestriction: affects all field positions and can include monster type restrictions
-
-### 2. selfCard
-Affects only the card that has the effect:
-- Used for self-modifying effects
-- Common in conditional value modifications
-
-### 3. single
-Affects a single target:
-- Used for specific card effects
-- Common in summon conditions
-
-### 4. sp
-Affects special cards:
-- Used with `modificationType: "disable"` to prevent playing special cards
-- Applies to all special cards regardless of position
-
-### 5. sky
-Affects sky position only:
-- Used with `modificationType: "disable"` to prevent playing cards in sky position
-- Specific to the sky position on the field
-
-### 6. left/right
-Affects specific side positions:
-- Used to target left or right field positions
-- Can be used for position-specific effects
-
-## Complete Examples
-
-### Example 1: Self-Modifying Card
+#### drawCardToLimit
+- Draws cards until reaching specified limit
+- Example:
 ```json
 {
-    "condition": {
-        "type": "selfHasSummoner",
-        "value": "柏古蘭巴杜"
-    },
-    "effectType": "valueModification",
-    "target": {
-        "type": "self",
-        "scope": "selfCard"
-    },
-    "value": 500
+    "effectType": "drawCardToLimit",
+    "value": "7",
+    "span": "oneOff"
 }
 ```
 
-### Example 2: Opponent Monster Effect
-```json
-{
-    "condition": {
-        "type": "opponentHasMonster",
-        "monsterName": "食草貝"
-    },
-    "effectType": "valueModification",
-    "target": {
-        "type": "opponent",
-        "scope": "selfCard"
-    },
-    "value": 0
-}
-```
+## Implementation Guidelines
 
-### Example 3: Help Card Triggered Effect
-```json
-{
-    "condition": {
-        "type": "selfHasHelpCardOnField",
-        "cardName": "1000年"
-    },
-    "effectType": "valueModification",
-    "target": {
-        "type": "self",
-        "scope": "selfCard"
-    },
-    "value": 100
-}
-```
+### 1. Condition Evaluation
+- Composite conditions ("and", "or", "not") should be evaluated recursively
+- Basic conditions should be evaluated based on the current game state
+- The "always" condition always returns true
+- Level comparisons should use the specified operator
 
-### Example 4: Summon Condition
-```json
-{
-    "condition": {
-        "type": "selfHasSummoner",
-        "value": "波尤"
-    },
-    "effectType": "summonCondition",
-    "target": {
-        "type": "self",
-        "scope": "single"
-    }
-}
-```
+### 2. Target Resolution
+- Scope arrays can contain multiple positions/types
+- SubScope provides additional filtering:
+  - "all": affects all targets in scope
+  - "name_X": affects targets with name X
+  - "attr_X": affects targets with attribute X
+- When targeting self card, use "this" scope instead of "all"
 
-## Implementation Notes
-1. Conditions are checked before effects are applied
-2. Effects can be either positive (value increases) or negative (restrictions)
-3. Some effects may have multiple conditions
-4. Target scope determines where the effect applies
-5. Monster type restrictions can be applied to specific card types
-6. The `all` scope has different meanings depending on the effect type
-7. Effects are processed in order of play
-8. Restrictions are enforced based on the current game state
-9. Card effects can modify their own values or affect other cards
-10. Summoner effects can modify native additions and apply field-wide restrictions 
+### 3. Effect Application
+- Effects are applied based on their type and operation
+- Value modifications should respect the operation type
+- Some effects may require priority handling
+- String values should be used for consistency
+
+## Best Practices
+
+1. **Effect Type Selection**
+   - Use modifyMonsterValue for changing monster values
+   - Use modifyNativeAddition for changing summoner additions
+   - Use blockSummonCard to prevent summoning
+   - Use invalidCardEffect to disable existing cards
+   - Use ableToSummon for conditional summoning
+
+2. **Target Selection**
+   - Use "this" scope when effect targets the card itself
+   - Use "all" scope when effect targets all cards in a category
+   - Use specific subScopes for targeted effects
+   - Validate scope and subScope combinations
+
+3. **Effect Application**
+   - Use string values for consistency
+   - Specify operation type for value modifications
+   - Set appropriate span based on effect duration
+   - Handle operation edge cases
+
+4. **Error Handling**
+   - Validate all input parameters
+   - Handle missing or invalid values
+   - Provide meaningful error messages
+
+5. **Performance**
+   - Optimize condition evaluation
+   - Cache target lists when possible
+   - Batch effect applications when appropriate
+
+6. **Card-Specific Considerations**
+   - Monster cards: Focus on value modifications
+   - Summoner cards: Handle native additions and summoning restrictions
+   - Help cards: Implement one-off effects
+   - SP cards: Manage special game mechanics
