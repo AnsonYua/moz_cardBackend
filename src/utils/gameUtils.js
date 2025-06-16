@@ -17,6 +17,23 @@ function getPlayerFromGameEnv(gameEnv) {
     return playerArr;
 }
 
+function getOpponentPlayer(gameEnv) {
+    const currentPlayer = gameEnv["currentPlayer"];
+    const playerIds = getPlayerFromGameEnv(gameEnv).filter(playerId => playerId !== currentPlayer);
+    return playerIds[0];
+}
+
+
+function isConditionMatch(condition, gameEnv, 
+                        currentPlayerId, opponentPlayerId) {
+    if (condition.type === "opponentSummonerHasLevel" && condition.value === "7") {
+        return true;
+    }
+    return false;
+}
+
 module.exports = {
-    getPlayerFromGameEnv
+    getPlayerFromGameEnv,
+    getOpponentPlayer,
+    isConditionMatch
 }; 

@@ -67,15 +67,14 @@ class mozGamePlay {
                 allReady = false;
             } 
         }
+
+
         if (allReady && gameEnv["phase"] == TurnPhase.START_REDRAW){
            var hand = gameEnv[playerList[gameEnv["firstPlayer"]]].deck.hand
            var mainDeck = gameEnv[playerList[gameEnv["firstPlayer"]]].deck.mainDeck
            const result = mozDeckHelper.drawToHand(hand,mainDeck);
            gameEnv[playerList[gameEnv["firstPlayer"]]].deck.hand = result["hand"];
            gameEnv[playerList[gameEnv["firstPlayer"]]].deck.mainDeck = result["mainDeck"];
-           
-           // Update summon restrictions before changing phase
-           gameEnv = this.cardEffectManager.updateSummonRestrictions(gameEnv);
            
            mozPhaseManager.setCurrentPhase(TurnPhase.MAIN_PHASE)
            gameEnv["phase"] = mozPhaseManager.currentPhase;
@@ -93,13 +92,14 @@ class mozGamePlay {
                gameEnv[playerList[playerId]]["Field"]["help"] = [];
                gameEnv[playerList[playerId]]["Field"]["sp"] = [];
             }
+
+         
         }
         return gameEnv;
     }
 
     async processAction(gameEnvInput,playerId,action){ 
         var gameEnv = gameEnvInput;
-        gameEnv = this.cardEffectManager.updateSummonRestrictions(gameEnv);
         if(action["type"] == "PlayCard" || action["type"] == "PlayCardBack"){
             var isPlayInFaceDown = false;
             if(action["type"] == "PlayCardBack"){
@@ -120,11 +120,7 @@ class mozGamePlay {
             if (!cardDetails){
                 return this.throwError("Card not found");
             }
-            // Check summon restrictions
-            const restrictionError = this.cardEffectManager.checkSummonRestriction(gameEnv, playerId, cardDetails, isPlayInFaceDown, playPos);
-            if (restrictionError) {
-                return this.throwError(restrictionError);
-            }
+    
 
             if(isPlayInFaceDown){
                 // handle card play face down
@@ -161,6 +157,8 @@ class mozGamePlay {
                     return this.throwError("Condition not handling");
                 }
             }
+
+            
            
             var cardObj = {
                 "card": hand.splice(action["card_idx"],1),
@@ -168,6 +166,8 @@ class mozGamePlay {
                 "isBack": [isPlayInFaceDown],
                 "valueOnField": cardDetails["value"]
             }
+
+
 
             if(isPlayInFaceDown){
                 cardObj["valueOnField"] = 0;
@@ -390,51 +390,7 @@ class mozGamePlay {
         let totalPoints = 0;
         const fields = ['sky', 'left', 'right'];
 
-        const currentSummoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, playerId);
-        for (const field of fields) {
-            const fieldCards = gameEnv[playerId].Field[field];
-            for (const cardObj of fieldCards) {
-                if (!cardObj.isBack[0] && cardObj.cardDetails[0].type === "monster") {
-                    // Apply card effects before calculating points
-                    gameEnv = this.cardEffectManager.applyCardEffect(gameEnv, playerId, cardObj.cardDetails[0], gameEnv[playerId].Field);
-                    // Apply summoner effects
-                    gameEnv = await this.cardEffectManager.applySummonerEffect(gameEnv, playerId, cardObj, currentSummoner);
-                    // Sum up the valueOnField
-                    totalPoints += cardObj.valueOnField || cardObj.cardDetails[0].value;
-                }
-            }
-        }
-
         return totalPoints;
-    }
-
-    /**
-     * Apply summoner's native addition effects to a single value
-     * @param {number} baseValue - The base value to apply effects to
-     * @param {Array} cardAttr - Card's attributes
-     * @param {Object} summonerNativeAddition - Summoner's native addition object
-     * @returns {number} - The total value after applying native addition effects
-     */
-    applySummonerNativeAddition(baseValue, cardAttr, summonerNativeAddition) {
-        let totalValue = baseValue;
-
-        // Check for "all" type in summoner's native addition
-        for (let key in summonerNativeAddition) {
-            if (summonerNativeAddition[key].type === "all") {
-                totalValue += summonerNativeAddition[key].value;
-                return totalValue; // Return immediately after applying "all" bonus
-            }
-        }
-
-        // If no "all" type in summoner, check for matching attributes
-        for (let key in summonerNativeAddition) {
-            const additionType = summonerNativeAddition[key].type;
-            if (cardAttr.includes(additionType)) {
-                totalValue += summonerNativeAddition[key].value;
-            }
-        }
-
-        return totalValue;
     }
 
     async getMonsterPoint(card,summoner){

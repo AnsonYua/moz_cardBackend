@@ -45,15 +45,28 @@
                 "effectRules": [
                   {
                     "condition": {
-                      "type": "always"
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "always"
+                        }
+                      ]
                     },
                     "target": {
                       "type": "opponent",
-                      "scope": "all",
-                      "monsterType": "worm"
+                      "scope": [
+                        "sky",
+                        "left",
+                        "right"
+                      ],
+                      "subScope": [
+                        "attr_worm"
+                      ]
                     },
-                    "effectType": "valueModification",
-                    "value": 0
+                    "effectType": "modifyMonsterValue",
+                    "value": "0",
+                    "operation": "set",
+                    "span": "allTime"
                   }
                 ]
               }
@@ -61,7 +74,7 @@
             "isBack": [
               false
             ],
-            "valueOnField": 130
+            "valueOnField": 60
           },
           "turn": 1
         }
@@ -113,15 +126,28 @@
                 "effectRules": [
                   {
                     "condition": {
-                      "type": "always"
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "always"
+                        }
+                      ]
                     },
                     "target": {
                       "type": "opponent",
-                      "scope": "all",
-                      "monsterType": "worm"
+                      "scope": [
+                        "sky",
+                        "left",
+                        "right"
+                      ],
+                      "subScope": [
+                        "attr_worm"
+                      ]
                     },
-                    "effectType": "valueModification",
-                    "value": 0
+                    "effectType": "modifyMonsterValue",
+                    "value": "0",
+                    "operation": "set",
+                    "span": "allTime"
                   }
                 ]
               }
@@ -129,13 +155,13 @@
             "isBack": [
               false
             ],
-            "valueOnField": 130
+            "valueOnField": 60
           }
         ],
         "help": [],
         "sp": []
       },
-      "playerPoint": 130,
+      "playerPoint": 0,
       "overallGamePoint": 0,
       "restrictions": {
         "summonRestrictions": []
@@ -195,14 +221,7 @@
       "playerPoint": 0,
       "overallGamePoint": 0,
       "restrictions": {
-        "summonRestrictions": [
-          {
-            "ruleId": "playerId_1_S109_1",
-            "scope": "sky",
-            "target": "disable",
-            "type": "allMonster"
-          }
-        ]
+        "summonRestrictions": []
       }
     },
     "firstPlayer": 1,
@@ -210,6 +229,6 @@
     "currentPlayer": "playerId_1",
     "currentTurn": 1.5
   },
-  "lastUpdate": "2025-06-11T15:59:14.573Z",
-  "updateUUID": "ab7ef5a7-6e17-4f90-b32a-a3eb9c7b5faa"
+  "lastUpdate": "2025-06-16T07:42:22.145Z",
+  "updateUUID": "730c8c81-fa28-4ef5-a91d-8452dae66a48"
 }

@@ -241,6 +241,170 @@ type Span =
 - Some effects may require priority handling
 - String values should be used for consistency
 
+### 4. Opponent Handling
+When dealing with opponent-related effects, follow these guidelines:
+
+1. **Target Type**
+   - Use `"type": "opponent"` in the target structure to affect opponent's cards
+   - Use `"type": "self"` for effects on your own cards
+
+2. **Common Opponent Scopes**
+   ```typescript
+   // Opponent's monster field positions
+   scope: ["sky", "left", "right"]
+   
+   // Opponent's card types
+   scope: ["monster", "help", "sp", "summoner"]
+   ```
+
+3. **Opponent Conditions**
+   ```typescript
+   // Check opponent's summoner
+   {
+       "type": "opponentHasSummoner",
+       "value": "summonerName"
+   }
+   
+   // Check opponent's monster
+   {
+       "type": "opponentHasMonster",
+       "value": "monsterName"
+   }
+   
+   // Check opponent's help card
+   {
+       "type": "opponentHasHelpCardOnField",
+       "value": "helpCardName"
+   }
+   ```
+
+4. **Example: Opponent Monster Value Modification**
+   ```json
+   {
+       "condition": {
+           "type": "and",
+           "conditions": [
+               {
+                   "type": "always"
+               }
+           ]
+       },
+       "target": {
+           "type": "opponent",
+           "scope": ["sky", "left", "right"],
+           "subScope": ["attr_dragon"]
+       },
+       "effectType": "modifyMonsterValue",
+       "value": "0",
+       "operation": "set",
+       "span": "allTime"
+   }
+   ```
+
+5. **Example: Opponent Card Effect Invalidation**
+   ```json
+   {
+       "condition": {
+           "type": "and",
+           "conditions": [
+               {
+                   "type": "opponentSummonerHasLevel",
+                   "value": "7",
+                   "operator": "OverOrEqual"
+               }
+           ]
+       },
+       "target": {
+           "type": "opponent",
+           "scope": ["sp"],
+           "subScope": ["all"]
+       },
+       "effectType": "invalidCardEffect",
+       "value": "0",
+       "span": "allTime"
+   }
+   ```
+
+6. **Best Practices for Opponent Effects**
+   - Always verify opponent's game state before applying effects
+   - Use appropriate scope combinations for targeting
+   - Consider using subScope for more specific targeting
+   - Handle cases where opponent might not have the target card
+   - Use priority when multiple opponent effects might conflict
+
+### 5. Player Filtering
+When working with player-related effects, the game environment provides player filtering functionality:
+
+1. **Player Environment**
+   ```typescript
+   // Game environment contains current player information
+   const currentPlayer = gameEnv["currentPlayer"];
+   
+   // Filter players from game environment
+   const players = getPlayerFromGameEnv(gameEnv);
+   const currentPlayerData = players.filter(player => player === currentPlayer);
+   ```
+
+2. **Player Targeting**
+   - Use `"type": "self"` to target the current player
+   - Use `"type": "opponent"` to target the other player
+   - The game environment automatically handles player switching
+
+3. **Example: Current Player Effect**
+   ```json
+   {
+       "condition": {
+           "type": "and",
+           "conditions": [
+               {
+                   "type": "selfHasSummoner",
+                   "value": "summonerName"
+               }
+           ]
+       },
+       "target": {
+           "type": "self",
+           "scope": ["this"],
+           "subScope": ["all"]
+       },
+       "effectType": "modifyMonsterValue",
+       "value": "500",
+       "operation": "set",
+       "span": "allTime"
+   }
+   ```
+
+4. **Example: Opponent Player Effect**
+   ```json
+   {
+       "condition": {
+           "type": "and",
+           "conditions": [
+               {
+                   "type": "opponentHasSummoner",
+                   "value": "summonerName"
+               }
+           ]
+       },
+       "target": {
+           "type": "opponent",
+           "scope": ["sky", "left", "right"],
+           "subScope": ["all"]
+       },
+       "effectType": "modifyMonsterValue",
+       "value": "0",
+       "operation": "set",
+       "span": "allTime"
+   }
+   ```
+
+5. **Best Practices for Player Filtering**
+   - Always use the game environment to determine current player
+   - Use player filtering to ensure effects target the correct player
+   - Consider player switching when designing effects
+   - Handle cases where player data might be undefined
+   - Use appropriate target types based on the current player
+
 ## Best Practices
 
 1. **Effect Type Selection**
