@@ -32,7 +32,7 @@ describe('Leader Restrictions', () => {
             const result = await performPlayerAction(gameId, 'playerId_2', {
                 type: "PlayCard",
                 card_idx: 0,  // d001 is the first card in hand
-                field_idx: 0  // sky position
+                field_idx: 0  // top position
             });
            
             console.log("-----------result------------");
@@ -64,7 +64,7 @@ describe('Leader Restrictions', () => {
             const result = await performPlayerAction(gameId, 'playerId_2', {
                 type: "PlayCard",
                 card_idx: 0,  // d001 is the first card in hand
-                field_idx: 0  // sky position
+                field_idx: 0  // top position
             });
            
             console.log("-----------result------------");
@@ -85,7 +85,7 @@ describe('Leader Restrictions', () => {
         //
         //  given S073E, when opponent having mechanic type
         //  S073E will not have nativeAddition
-        //  test case : when play monster card when wind type
+        //  test case : when play character card when wind type
         //  expect nativeAddition should be 0
         //
         it('should not have any native addition when opponent has mechanic type for S073E', async () => {
@@ -100,10 +100,10 @@ describe('Leader Restrictions', () => {
             const result = await performPlayerAction(gameId, 'playerId_2', {
                 type: "PlayCard",
                 card_idx: 0,  // d001 is the first card in hand
-                field_idx: 0  // sky position
+                field_idx: 0  // top position
             });
-            expect(result.gameEnv.playerId_2.Field.sky[0].card[0]).toBe('s52');
-            expect(result.gameEnv.playerId_2.Field.sky[0].cardDetails[0].value).toBe(70);
+            expect(result.gameEnv.playerId_2.Field.top[0].card[0]).toBe('s52');
+            expect(result.gameEnv.playerId_2.Field.top[0].cardDetails[0].power).toBe(70);
         });
     });
    
@@ -127,7 +127,7 @@ describe('Leader Restrictions', () => {
             const result = await performPlayerAction(gameId, 'playerId_2', {
                 type: "PlayCard",
                 card_idx: 0,  // d001 is the first card in hand
-                field_idx: 4  // sky position
+                field_idx: 4  // sp position
             });
            
             console.log("-----------result------------");
@@ -141,7 +141,7 @@ describe('Leader Restrictions', () => {
     
     describe('Dragon Summon Type Restriction', () => {
         beforeEach(async () => {
-            const scenario = await loadTestScenario('summonerRestriction_SummonerTypeBlockSky');
+            const scenario = await loadTestScenario('summonerRestriction_SummonerTypeBlockTop');
             const result = await injectGameState(scenario);
             gameId = result.gameId;
         });
@@ -158,7 +158,7 @@ describe('Leader Restrictions', () => {
             const result = await performPlayerAction(gameId, 'playerId_1', {
                 type: "PlayCard",
                 card_idx: 0,  // d001 is the first card in hand
-                field_idx: 0  // sky position
+                field_idx: 0  // top position
             });
            
             console.log("-----------result------------");

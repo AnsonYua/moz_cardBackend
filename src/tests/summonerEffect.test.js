@@ -32,10 +32,10 @@ describe('Summoner Effects', () => {
             console.log("--------------------------------");
 
             // Check if the card was played correctly and effect was applied
-            expect(result.gameEnv.playerId_1.Field.sky[0].card[0]).toBe('s47');
-            expect(result.gameEnv.playerId_1.Field.sky[0].cardDetails[0].value).toBe(50);
+            expect(result.gameEnv.playerId_1.Field.top[0].card[0]).toBe('s47');
+            expect(result.gameEnv.playerId_1.Field.top[0].cardDetails[0].power).toBe(50);
             // Since opponent has 師顧寧特, wind bonus should be 0 instead of 50+60 110
-            expect(result.gameEnv.playerId_1.Field.sky[0].valueOnField).toBe(50);
+            expect(result.gameEnv.playerId_1.Field.top[0].valueOnField).toBe(50);
         });
 
     });

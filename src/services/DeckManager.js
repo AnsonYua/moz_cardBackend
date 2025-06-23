@@ -4,10 +4,10 @@ const path = require('path');
 
 class DeckManager {
     constructor() {
-        this.cardsPath = path.join(__dirname, '../data/cards.json');
+        this.cardsPath = path.join(__dirname, '../data/characterCards.json');
         this.leaderCardPath = path.join(__dirname, '../data/leaderCards.json');
         this.decksPath = path.join(__dirname, '../data/decks.json');
-        this.spCardPath = path.join(__dirname, '../data/spCard.json');
+        this.spCardPath = path.join(__dirname, '../data/utilityCards.json');
         this.cards = null;
         this.decks = null;
     }
@@ -30,7 +30,7 @@ class DeckManager {
             if (this.cards && this.cards.cards) {
                 this.cards.cards = {
                     ...this.cards.cards,
-                    ...spCards.spCards
+                    ...spCards.cards
                 };
             }
         } catch (error) {
@@ -44,7 +44,7 @@ class DeckManager {
         return playerData;
     }
     getLeaderCards(cardId){
-        const leaderCards = this.leaderCards.cards[cardId];
+        const leaderCards = this.leaderCards.leaders[cardId];
         return leaderCards;
     }
 

@@ -77,7 +77,7 @@ class mozDeckLogic{
     monsterInField(fieldArea){
         var monsterInField = false
         for(let i = 0; i < fieldArea.length; i++){
-            if(fieldArea[i]["cardDetails"][0]["type"] == "monster"){
+            if(fieldArea[i]["cardDetails"][0]["cardType"] == "character"){
                 monsterInField = true;
                 break;
             }
@@ -86,7 +86,7 @@ class mozDeckLogic{
     }
 
     getFieldIdx(field){
-        const fieldArr = ["sky","left","right","help","sp"];
+        const fieldArr = ["top","left","right","help","sp"];
         for(let i = 0; i < fieldArr.length; i++){
             if(fieldArr[i] == field){
                 return i;
@@ -96,8 +96,8 @@ class mozDeckLogic{
     }
     isCardEligibleForField(card, leader, area){
         var returnValue = false;
-        for (let idx in card["attribute"]){
-            if(card["attribute"][idx] == "all"){
+        for (let idx in card["traits"]){
+            if(card["traits"][idx] == "all"){
                 returnValue = true;
                 return returnValue;
             }
@@ -109,8 +109,8 @@ class mozDeckLogic{
                 return returnValue;
             }
             var isAttrMatch = false;
-            for (let key in card["attribute"]){
-                if(card["attribute"][key] == attr){
+            for (let key in card["traits"]){
+                if(card["traits"][key] == attr){
                     isAttrMatch = true;
                 }
             }

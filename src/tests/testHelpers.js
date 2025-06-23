@@ -91,7 +91,7 @@ function createTestGameEnv() {
                 leader: []
             },
             Field: {
-                sky: [],
+                top: [],
                 left: [],
                 right: [],
                 help: [],
@@ -105,7 +105,7 @@ function createTestGameEnv() {
                 leader: []
             },
             Field: {
-                sky: [],
+                top: [],
                 left: [],
                 right: [],
                 help: [],

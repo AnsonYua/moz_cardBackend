@@ -3,16 +3,17 @@
   "gameEnv": {
     "playerId_1": {
       "deck": {
-        "currentSummonerIdx": 0,
+        "currentLeaderIdx": 0,
         "summoner": [
           "S109"
         ],
         "hand": [
+          "s109",
           "s110",
-          "s111",
-          "s112"
+          "s111"
         ],
         "mainDeck": [
+          "s112",
           "s113",
           "s114",
           "s115",
@@ -20,65 +21,7 @@
         ]
       },
       "redraw": 0,
-      "turnAction": [
-        {
-          "type": "PlayCard",
-          "card_idx": 0,
-          "field_idx": 0,
-          "selectedCard": {
-            "card": [
-              "s109"
-            ],
-            "cardDetails": [
-              {
-                "id": "s109",
-                "attribute": [
-                  "shell"
-                ],
-                "monsterType": [
-                  "bird"
-                ],
-                "value": 60,
-                "type": "monster",
-                "cardName": "叭叭鳥",
-                "effects": "all your opponent's monster with monsterType 'worm' 's value become 0",
-                "effectRules": [
-                  {
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "always"
-                        }
-                      ]
-                    },
-                    "target": {
-                      "type": "opponent",
-                      "scope": [
-                        "sky",
-                        "left",
-                        "right"
-                      ],
-                      "subScope": [
-                        "attr_worm"
-                      ]
-                    },
-                    "effectType": "modifyMonsterValue",
-                    "value": "0",
-                    "operation": "set",
-                    "span": "allTime"
-                  }
-                ]
-              }
-            ],
-            "isBack": [
-              false
-            ],
-            "valueOnField": 60
-          },
-          "turn": 1
-        }
-      ],
+      "turnAction": [],
       "Field": {
         "summonner": {
           "id": "S109",
@@ -105,71 +48,16 @@
         },
         "right": [],
         "left": [],
-        "sky": [
-          {
-            "card": [
-              "s109"
-            ],
-            "cardDetails": [
-              {
-                "id": "s109",
-                "attribute": [
-                  "shell"
-                ],
-                "monsterType": [
-                  "bird"
-                ],
-                "value": 60,
-                "type": "monster",
-                "cardName": "叭叭鳥",
-                "effects": "all your opponent's monster with monsterType 'worm' 's value become 0",
-                "effectRules": [
-                  {
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "always"
-                        }
-                      ]
-                    },
-                    "target": {
-                      "type": "opponent",
-                      "scope": [
-                        "sky",
-                        "left",
-                        "right"
-                      ],
-                      "subScope": [
-                        "attr_worm"
-                      ]
-                    },
-                    "effectType": "modifyMonsterValue",
-                    "value": "0",
-                    "operation": "set",
-                    "span": "allTime"
-                  }
-                ]
-              }
-            ],
-            "isBack": [
-              false
-            ],
-            "valueOnField": 60
-          }
-        ],
+        "sky": [],
         "help": [],
         "sp": []
       },
       "playerPoint": 0,
-      "overallGamePoint": 0,
-      "restrictions": {
-        "summonRestrictions": []
-      }
+      "overallGamePoint": 0
     },
     "playerId_2": {
       "deck": {
-        "currentSummonerIdx": 0,
+        "currentLeaderIdx": 0,
         "summoner": [
           "S045"
         ],
@@ -219,16 +107,12 @@
         "sp": []
       },
       "playerPoint": 0,
-      "overallGamePoint": 0,
-      "restrictions": {
-        "summonRestrictions": []
-      }
+      "overallGamePoint": 0
     },
     "firstPlayer": 1,
     "phase": "MAIN_PHASE",
     "currentPlayer": "playerId_1",
-    "currentTurn": 1.5
+    "currentTurn": 1
   },
-  "lastUpdate": "2025-06-16T07:42:22.145Z",
-  "updateUUID": "730c8c81-fa28-4ef5-a91d-8452dae66a48"
+  "lastUpdate": "2025-06-23T16:05:53.252Z"
 }

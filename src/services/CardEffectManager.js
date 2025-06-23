@@ -17,12 +17,12 @@ class CardEffectManager {
      */
     async checkSummonRestriction(gameEnv, currentPlayerId, cardDetails, playPos) {
         // 1. Basic position validation
-        if (cardDetails.type === 'monster') {
-            // Monsters can only be placed in sky, left, or right
+        if (cardDetails.cardType === 'character') {
+            // Characters can only be placed in top, left, or right
             if (playPos === 'help' || playPos === 'sp') {
                 return {
                     canPlace: false,
-                    reason: `Monster cards cannot be placed in ${playPos} position`
+                    reason: `Character cards cannot be placed in ${playPos} position`
                 };
             }
         }
@@ -31,10 +31,10 @@ class CardEffectManager {
         const leader = gameEnv[currentPlayerId].Field.leader;
         if (leader) {
             const allowedFields = leader[playPos] || [];
-            if (!allowedFields.includes('all') && !allowedFields.includes(cardDetails.attribute[0])) {
+            if (!allowedFields.includes('all') && !allowedFields.includes(cardDetails.traits[0])) {
                 return {
                     canPlace: false,
-                    reason: `Leader does not allow ${cardDetails.attribute[0]} type cards in ${playPos} field`
+                    reason: `Leader does not allow ${cardDetails.traits[0]} type cards in ${playPos} field`
                 };
             }
         }
@@ -138,7 +138,7 @@ class CardEffectManager {
             let subScope = target.subScope;
             if(subScope.includes("attr_")){
                 let attribute = subScope.split("_")[1];
-                returnValue = cardDetails.attribute.includes(attribute);
+                returnValue = cardDetails.traits.includes(attribute);
             }else if(subScope.includes("monsterType_")){
                 let monsterType = subScope.split("_")[1];
                 returnValue = cardDetails.monsterType.includes(monsterType);
@@ -241,7 +241,7 @@ class CardEffectManager {
     }
 
     checkSelfHasMonster(gameEnv, playerId, monsterName) {
-        return ['sky', 'left', 'right'].some(field => {
+        return ['top', 'left', 'right'].some(field => {
             return gameEnv[playerId].Field[field].some(monster => 
                 monster.cardDetails[0].cardName === monsterName
             );
@@ -249,15 +249,15 @@ class CardEffectManager {
     }
 
     checkSelfHasMonsterWithAttribute(gameEnv, playerId, attribute) {
-        return ['sky', 'left', 'right'].some(field => {
+        return ['top', 'left', 'right'].some(field => {
             return gameEnv[playerId].Field[field].some(monster => 
-                monster.cardDetails[0].attribute.includes(attribute)
+                monster.cardDetails[0].traits.includes(attribute)
             );
         });
     }
 
     checkCardHasAttribute(card, attribute) {
-        return card.attribute.includes(attribute);
+        return card.traits.includes(attribute);
     }
 
     checkCardHasMonsterType(card, monsterType) {
@@ -272,7 +272,7 @@ class CardEffectManager {
      * Helper method to check if a monster is on the field
      */
     hasMonsterOnField(gameEnv, playerId, monsterName) {
-        const fields = ['sky', 'left', 'right'];
+        const fields = ['top', 'left', 'right'];
         return fields.some(field => {
             return gameEnv[playerId].Field[field].some(cardObj => {
                 return !cardObj.isBack[0] && cardObj.cardDetails[0].cardName === monsterName;
@@ -284,7 +284,7 @@ class CardEffectManager {
      * Helper method to check if a monster type is on the field
      */
     hasMonsterTypeOnField(gameEnv, playerId, monsterType) {
-        const fields = ['sky', 'left', 'right'];
+        const fields = ['top', 'left', 'right'];
         return fields.some(field => {
             return gameEnv[playerId].Field[field].some(cardObj => {
                 return !cardObj.isBack[0] && 
@@ -298,7 +298,7 @@ class CardEffectManager {
      * Helper method to set a card's value
      */
     setCardValue(gameEnv, playerId, target, value) {
-        const fields = ['sky', 'left', 'right'];
+        const fields = ['top', 'left', 'right'];
         fields.forEach(field => {
             gameEnv[playerId].Field[field].forEach(cardObj => {
                 if (!cardObj.isBack[0] && cardObj.cardDetails[0].id === target.cardId) {
@@ -312,11 +312,11 @@ class CardEffectManager {
      * Helper method to set opponent's monster value
      */
     setOpponentMonsterValue(gameEnv, opponentId, monsterName, value) {
-        const fields = ['sky', 'left', 'right'];
+        const fields = ['top', 'left', 'right'];
         fields.forEach(field => {
             gameEnv[opponentId].Field[field].forEach(cardObj => {
                 if (!cardObj.isBack[0] && cardObj.cardDetails[0].cardName === monsterName) {
-                    cardObj.cardDetails[0].value = value;
+                    cardObj.cardDetails[0].power = value;
                 }
             });
         });
@@ -338,7 +338,7 @@ class CardEffectManager {
         ['left', 'right'].forEach(field => {
             gameEnv[opponentId].Field[field].forEach(cardObj => {
                 if (!cardObj.isBack[0]) {
-                    cardObj.cardDetails[0].value = value;
+                    cardObj.cardDetails[0].power = value;
                 }
             });
         });
@@ -348,13 +348,13 @@ class CardEffectManager {
      * Helper method to set value for all monsters of a specific type
      */
     setMonsterTypeValue(gameEnv, playerId, monsterType, value) {
-        const fields = ['sky', 'left', 'right'];
+        const fields = ['top', 'left', 'right'];
         fields.forEach(field => {
             gameEnv[playerId].Field[field].forEach(cardObj => {
                 if (!cardObj.isBack[0] && 
                     cardObj.cardDetails[0].monsterType && 
                     cardObj.cardDetails[0].monsterType.includes(monsterType)) {
-                    cardObj.cardDetails[0].value = value;
+                    cardObj.cardDetails[0].power = value;
                 }
             });
         });
@@ -364,11 +364,11 @@ class CardEffectManager {
      * Helper method to set value for monsters with specific value
      */
     setValueBasedMonsterValue(gameEnv, playerId, targetValue, newValue) {
-        const fields = ['sky', 'left', 'right'];
+        const fields = ['top', 'left', 'right'];
         fields.forEach(field => {
             gameEnv[playerId].Field[field].forEach(cardObj => {
-                if (!cardObj.isBack[0] && cardObj.cardDetails[0].value === targetValue) {
-                    cardObj.cardDetails[0].value = newValue;
+                if (!cardObj.isBack[0] && cardObj.cardDetails[0].power === targetValue) {
+                    cardObj.cardDetails[0].power = newValue;
                 }
             });
         });
@@ -378,11 +378,11 @@ class CardEffectManager {
      * Helper method to set value for all opponent's monsters
      */
     setAllOpponentMonsterValue(gameEnv, opponentId, value) {
-        const fields = ['sky', 'left', 'right'];
+        const fields = ['top', 'left', 'right'];
         fields.forEach(field => {
             gameEnv[opponentId].Field[field].forEach(cardObj => {
                 if (!cardObj.isBack[0]) {
-                    cardObj.cardDetails[0].value = value;
+                    cardObj.cardDetails[0].power = value;
                 }
             });
         });

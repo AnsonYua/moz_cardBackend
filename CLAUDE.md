@@ -21,7 +21,10 @@ npm test
 # Run tests in watch mode
 npm test:watch
 
-# Run custom test scenarios
+# Run specific test file
+npm test -- --testNamePattern="cardEffects"
+
+# Run custom test scenarios (full game flow validation)
 npm run run-test
 npm run run-testcase1
 ```
@@ -70,14 +73,87 @@ The game follows a specific battle flow managed by `mozGamePlay.js`:
 
 ### Testing Structure
 
-Tests are located in `src/tests/` with Jest configuration. Test scenarios in `src/tests/scenarios/` contain JSON definitions for various game situations. The test system includes setup/teardown scripts and helper utilities.
+Tests are located in `src/tests/` with Jest configuration. The test system uses:
+- **Jest tests** (`*.test.js`) - Unit tests for game logic components
+- **Test scenarios** (`src/tests/scenarios/`) - JSON definitions for complex game situations
+- **Setup/teardown** - Automatic server start/stop for integration tests (`setup.js`, `teardown.js`)
+- **Test helpers** (`testHelpers.js`) - Utilities for API calls and test data management
+- **Custom test scripts** (`test.cjs`, `test_case1.cjs`) - Full game flow validation and debugging tools
 
 ### Data Files
 
-Game data is stored in JSON format:
-- `src/data/cards.json` - Character card definitions
-- `src/data/decks.json` - Predefined deck configurations  
-- `src/data/summonerCards.json` - Leader/summoner card definitions
+Game data is stored in JSON format with a new extensible structure:
+- `src/data/characterCards.json` - Character card definitions with combo rules
+- `src/data/leaderCards.json` - Leader/summoner card definitions with zone compatibility  
+- `src/data/utilityCards.json` - Help and SP card definitions
+- `src/data/decks.json` - Predefined deck configurations
 - `src/gameData/` - Test scenario data files
 
-When modifying game logic, ensure compatibility with the phase-based system and validate against existing test scenarios.
+#### New JSON Structure Features
+**Unified Effect System:**
+- Effect types: `continuous`, `triggered`
+- Trigger events: `always`, `onSummon`, `onPlay`, `spPhase`, `finalCalculation`
+- Advanced targeting with filters for game types and traits
+- Priority system and unremovable effects for complex interactions
+
+**Card Structure:**
+- **Character Cards**: `gameType` (single), `traits` (array), `power`, `effects.rules[]`
+- **Leader Cards**: `zoneCompatibility` object, `initialPoint`, `level`, `effects.rules[]`
+- **Utility Cards**: Help and SP cards with unified effect system
+
+**Combo System:**
+Character card JSON includes combo rules:
+- All same type: +250 points
+- Two same type: +50 points  
+- Freedom + Economy: +170 points
+- Right-wing + Patriot: +150 points
+- Left-wing + Economy: +120 points
+
+#### Migration Notes
+The previous JSON structure has been replaced:
+- `cards.json` → `characterCards.json` (enhanced with combo rules)
+- `summonerCards.json` → `leaderCards.json` (enhanced with zone compatibility)
+- `spCard.json` → `utilityCards.json` (combined help and SP cards)
+
+The new structure provides better type safety, extensibility, and programmer-friendly effect definitions.
+
+## Recent Major Updates (January 2025)
+
+### Card Structure Migration
+- **Completed:** Full migration from old card structure to new extensible JSON format
+- **Updated field mappings:**
+  - `card["type"]` → `card["cardType"]` 
+  - `card["value"]` → `card["power"]`
+  - `card["attribute"]` → `card["traits"]`
+  - `"monster"` → `"character"`
+  - `"sky"` → `"top"`
+
+### New Game Features Implemented
+- **SP_PHASE:** Added to TurnPhase enum for special card execution
+- **Card Effect System:** Complete implementation with continuous and triggered effects
+- **Combo System:** 5 different combo types with point calculations
+- **Priority System:** SP cards execute based on leader initial points (highest first)
+- **Victory Conditions:** Round-based scoring with 50 victory points to win
+- **Character Effects:** Process immediately on summon
+- **Leader Effects:** Apply continuously throughout game
+
+### Effect System
+The game now supports complex card effects with:
+- **Continuous effects:** Always active (e.g., power modifications)
+- **Triggered effects:** Activate on specific events (e.g., onSummon, spPhase)
+- **Targeting system:** Can target self, opponent, or both players' cards
+- **Filtering system:** Target cards by type, traits, power, etc.
+- **Priority system:** Effects execute in order of leader initial points
+
+### Test Suite Status
+⚠️ **Note:** Test scenarios require updating to use new card IDs and structure
+- Old test scenarios use deprecated card IDs (s47, S051, etc.)
+- Test field references need updating from "sky" to "top"
+- Card structure in test scenarios needs migration to new JSON format
+
+### Data Structure
+- **characterCards.json:** Character cards with combo rules and effects
+- **leaderCards.json:** Leader cards with zone compatibility and continuous effects  
+- **utilityCards.json:** Combined help/SP cards with priority and effect rules
+
+When modifying game logic, ensure compatibility with the phase-based system and validate against existing test scenarios after updating them to the new structure.

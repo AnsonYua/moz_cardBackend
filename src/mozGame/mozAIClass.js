@@ -68,7 +68,7 @@ class mozAIClass {
         "action":{
             "type": "PlayCard",// PlayCard, PlayCardBack
             "card_idx": 1, //0 -20
-            "field_idx": 0// 0 =sky , 1 = left , 2 = right, 3 = help , 4 = sp
+            "field_idx": 0// 0 =top , 1 = left , 2 = right, 3 = help , 4 = sp
         }
     */ 
     async getPossibleMoves(gameState, playerId) {
@@ -81,7 +81,7 @@ class mozAIClass {
                 const cardDetails = mozDeckHelper.getDeckCardDetails(playerHand[i]);
                 const canPlayToField = mozDeckHelper.isCardEligibleForField(
                     cardDetails,leader,availableField[j]);
-                if(canPlayToField && cardDetails["type"] == "monster"){
+                if(canPlayToField && cardDetails["cardType"] == "character"){
                     moves.push({
                         type: "PlayCard",
                         card_idx: i,
@@ -106,7 +106,7 @@ class mozAIClass {
         var playerField = gameState[playerId].Field;
         var availableField = [];
         for(let key in playerField){
-            if(key == "sky" || key == "left" || key == "right" ){
+            if(key == "top" || key == "left" || key == "right" ){
                 const isMonster = mozDeckHelper.monsterInField(playerField[key]);
                 if(!isMonster){
                     availableField.push(key);

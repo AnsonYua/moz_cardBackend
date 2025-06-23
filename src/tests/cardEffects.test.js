@@ -29,8 +29,8 @@ describe('Card Effects', () => {
             });
 
             // Check if the card was played correctly
-            expect(result.gameEnv.playerId_1.Field.sky[0].card[0]).toBe('s47');
-            expect(result.gameEnv.playerId_1.Field.sky[0].cardDetails[0].value).toBe(50);
+            expect(result.gameEnv.playerId_1.Field.top[0].card[0]).toBe('s47');
+            expect(result.gameEnv.playerId_1.Field.top[0].cardDetails[0].power).toBe(50);
         });
     });
 
@@ -49,9 +49,9 @@ describe('Card Effects', () => {
                 field_idx: 0
             });
             // Check if the card was played correctly
-            expect(result.gameEnv.playerId_1.Field.sky[0].card[0]).toBe('s109');
-            expect(result.gameEnv.playerId_1.Field.sky[0].cardDetails[0].value).toBe(60);
-            expect(result.gameEnv.playerId_1.Field.sky[0].valueOnField).toBe(130);
+            expect(result.gameEnv.playerId_1.Field.top[0].card[0]).toBe('s109');
+            expect(result.gameEnv.playerId_1.Field.top[0].cardDetails[0].power).toBe(60);
+            expect(result.gameEnv.playerId_1.Field.top[0].valueOnField).toBe(130);
         });
     });
 

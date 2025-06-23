@@ -12,8 +12,8 @@ describe('Game Setup Tests', () => {
     beforeAll(async () => {
         // Load test data
         [cardsData, summonerCards, decksData] = await Promise.all([
-            require('../data/cards.json'),
-            require('../data/summonerCards.json'),
+            require('../data/characterCards.json'),
+            require('../data/utilityCards.json'),
             require('../data/decks.json')
         ]);
     });

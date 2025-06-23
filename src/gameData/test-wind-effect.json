@@ -3,16 +3,17 @@
   "gameEnv": {
     "playerId_1": {
       "deck": {
-        "currentSummonerIdx": 0,
-        "summoner": [
+        "currentLeaderIdx": 0,
+        "leader": [
           "S051"
         ],
         "hand": [
+          "s47",
           "s45",
-          "s46",
-          "s48"
+          "s46"
         ],
         "mainDeck": [
+          "s48",
           "s49",
           "s50",
           "s51",
@@ -20,41 +21,9 @@
         ]
       },
       "redraw": 0,
-      "turnAction": [
-        {
-          "type": "PlayCard",
-          "card_idx": 0,
-          "field_idx": 0,
-          "selectedCard": {
-            "card": [
-              "s47"
-            ],
-            "cardDetails": [
-              {
-                "id": "s47",
-                "attribute": [
-                  "wind"
-                ],
-                "monsterType": [
-                  "beast"
-                ],
-                "value": 50,
-                "type": "monster",
-                "cardName": "天馬",
-                "effects": "",
-                "effectRules": []
-              }
-            ],
-            "isBack": [
-              false
-            ],
-            "valueOnField": 50
-          },
-          "turn": 1
-        }
-      ],
+      "turnAction": [],
       "Field": {
-        "summonner": {
+        "leader": {
           "id": "S051",
           "sky": [
             "fire",
@@ -83,46 +52,17 @@
         },
         "right": [],
         "left": [],
-        "sky": [
-          {
-            "card": [
-              "s47"
-            ],
-            "cardDetails": [
-              {
-                "id": "s47",
-                "attribute": [
-                  "wind"
-                ],
-                "monsterType": [
-                  "beast"
-                ],
-                "value": 50,
-                "type": "monster",
-                "cardName": "天馬",
-                "effects": "",
-                "effectRules": []
-              }
-            ],
-            "isBack": [
-              false
-            ],
-            "valueOnField": 50
-          }
-        ],
+        "sky": [],
         "help": [],
         "sp": []
       },
       "playerPoint": 0,
-      "overallGamePoint": 0,
-      "restrictions": {
-        "summonRestrictions": []
-      }
+      "overallGamePoint": 0
     },
     "playerId_2": {
       "deck": {
-        "currentSummonerIdx": 0,
-        "summoner": [
+        "currentLeaderIdx": 0,
+        "leader": [
           "S045"
         ],
         "hand": [],
@@ -131,7 +71,7 @@
       "redraw": 0,
       "turnAction": [],
       "Field": {
-        "summonner": {
+        "leader": {
           "id": "S045",
           "sky": [
             "all",
@@ -171,16 +111,12 @@
         "sp": []
       },
       "playerPoint": 0,
-      "overallGamePoint": 0,
-      "restrictions": {
-        "summonRestrictions": []
-      }
+      "overallGamePoint": 0
     },
     "firstPlayer": 1,
     "phase": "MAIN_PHASE",
     "currentPlayer": "playerId_1",
-    "currentTurn": 1.5
+    "currentTurn": 1
   },
-  "lastUpdate": "2025-06-16T07:42:22.126Z",
-  "updateUUID": "bef6c1fa-7592-4a62-b38b-0bfe6e5cd863"
+  "lastUpdate": "2025-06-23T16:05:53.244Z"
 }
