@@ -5,7 +5,7 @@ const path = require('path');
 class DeckManager {
     constructor() {
         this.cardsPath = path.join(__dirname, '../data/cards.json');
-        this.summonerCardPath = path.join(__dirname, '../data/summonerCards.json');
+        this.leaderCardPath = path.join(__dirname, '../data/leaderCards.json');
         this.decksPath = path.join(__dirname, '../data/decks.json');
         this.spCardPath = path.join(__dirname, '../data/spCard.json');
         this.cards = null;
@@ -14,15 +14,15 @@ class DeckManager {
 
     async initialize() {
         try {
-            const [cardsData, summonerCards, decksData, spCardData] = await Promise.all([
+            const [cardsData, leaderCards, decksData, spCardData] = await Promise.all([
                 fs.readFile(this.cardsPath, 'utf8'),
-                fs.readFile(this.summonerCardPath, 'utf8'),
+                fs.readFile(this.leaderCardPath, 'utf8'),
                 fs.readFile(this.decksPath, 'utf8'),
                 fs.readFile(this.spCardPath, 'utf8')
             ]);
 
             this.cards = JSON.parse(cardsData);
-            this.summonerCards = JSON.parse(summonerCards);
+            this.leaderCards = JSON.parse(leaderCards);
             this.decks = JSON.parse(decksData);
             const spCards = JSON.parse(spCardData);
             
@@ -43,9 +43,9 @@ class DeckManager {
         const playerData = this.decks.playerDecks[playerId];
         return playerData;
     }
-    getSummonerCards(cardId){
-        const summonerCards = this.summonerCards.cards[cardId];
-        return summonerCards;
+    getLeaderCards(cardId){
+        const leaderCards = this.leaderCards.cards[cardId];
+        return leaderCards;
     }
 
 

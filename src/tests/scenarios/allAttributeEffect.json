@@ -3,7 +3,7 @@
     "gameEnv": {
         "playerId_1": {
             "deck": {
-                "currentSummonerIdx": 0,
+                "currentLeaderIdx": 0,
                 "summoner": ["S109"],
                 "hand": ["s109", "s110", "s111"],
                 "mainDeck": ["s112", "s113", "s114", "s115", "s116"]
@@ -39,7 +39,7 @@
         },
         "playerId_2": {
             "deck": {
-                "currentSummonerIdx": 0,
+                "currentLeaderIdx": 0,
                 "summoner": ["S045"],
                 "hand": [],
                 "mainDeck": []

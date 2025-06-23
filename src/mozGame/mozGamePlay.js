@@ -12,7 +12,8 @@ const TurnPhase = {
     BATTLE_PHASE: 'BATTLE_PHASE',
     MAIN_PHASE_2: 'MAIN_PHASE_2',
     END_PHASE: 'END_PHASE',
-    GAME_END: 'GAME_END'
+    GAME_END: 'GAME_END',
+    END_LEADER_BATTLE: 'END_LEADER_BATTLE'
 };
 
 class mozGamePlay {
@@ -174,7 +175,7 @@ class mozGamePlay {
             if (!isSummonBattleReady) {
                 gameEnv = await this.shouldUpdateTurn(gameEnv, playerId);
             } else {
-                gameEnv = await this.concludeSummonerBattleAndNewStart(gameEnv, playerId);
+                gameEnv = await this.concludeLeaderBattleAndNewStart(gameEnv, playerId);
             }
         }
         return gameEnv;
@@ -182,7 +183,7 @@ class mozGamePlay {
 
     
 
-    async concludeSummonerBattleAndNewStart(gameEnvInput,playerId){
+    async concludeLeaderBattleAndNewStart(gameEnvInput,playerId){
         var gameEnv = gameEnvInput;
         const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
         var crtPlayer = playerId;
@@ -212,7 +213,7 @@ class mozGamePlay {
         if(!gameEnv[opponent].hasOwnProperty("overallGamePoint")){
             gameEnv[opponent]["overallGamePoint"] = 0;
         }
-        var summonerBattleWinner = crtPlayer;
+        var leaderBattleWinner = crtPlayer;
         if(gameEnv[crtPlayer]["playerPoint"] > gameEnv[opponent]["playerPoint"]){
             gameEnv[crtPlayer]["overallGamePoint"] += gameEnv[crtPlayer]["playerPoint"]-gameEnv[opponent]["playerPoint"];
             if(gameEnv[crtPlayer]["overallGamePoint"]>50){
@@ -223,7 +224,7 @@ class mozGamePlay {
         } 
         if(gameEnv[opponent]["playerPoint"] > gameEnv[crtPlayer]["playerPoint"]){
             gameEnv[opponent]["overallGamePoint"] += gameEnv[opponent]["playerPoint"]-gameEnv[crtPlayer]["playerPoint"];
-            summonerBattleWinner = opponent;
+            leaderBattleWinner = opponent;
             if(gameEnv[opponent]["overallGamePoint"]>50){
                 gameEnv["phase"] = TurnPhase.GAME_END;
                 gameEnv["winner"] = opponent;
@@ -231,12 +232,12 @@ class mozGamePlay {
             }
         } 
         if(gameEnv[opponent]["playerPoint"] == gameEnv[crtPlayer]["playerPoint"]){
-            summonerBattleWinner = "";
+            leaderBattleWinner = "";
         }
         gameEnv[opponent]['turnAction'].push(
-            this.endBattleObject(summonerBattleWinner,gameEnv["currentTurn"]));
+            this.endBattleObject(leaderBattleWinner,gameEnv["currentTurn"]));
         gameEnv[crtPlayer]['turnAction'].push(
-            this.endBattleObject(summonerBattleWinner,gameEnv["currentTurn"]));
+            this.endBattleObject(leaderBattleWinner,gameEnv["currentTurn"]));
         gameEnv[opponent].Field["sky"] = [];
         gameEnv[opponent].Field["right"] = [];
         gameEnv[opponent].Field["left"] = [];
@@ -246,7 +247,7 @@ class mozGamePlay {
         gameEnv[crtPlayer]["playerPoint"] = 0;
         gameEnv[opponent]["playerPoint"] = 0;
 
-        if(gameEnv[opponent].deck.currentSummonerIdx == gameEnv[opponent].deck.summoner.length-1){
+        if(gameEnv[opponent].deck.currentLeaderIdx == gameEnv[opponent].deck.leader.length-1){
             if(gameEnv[opponent]["playerPoint"] > gameEnv[crtPlayer]["playerPoint"]){
                 gameEnv["phase"] = TurnPhase.GAME_END;
                 gameEnv["winner"] = opponent;
@@ -258,13 +259,13 @@ class mozGamePlay {
             }
         }else{
 
-            gameEnv[opponent].deck.currentSummonerIdx = gameEnv[opponent].deck.currentSummonerIdx + 1;
-            let opponentSummoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, opponent);
-            gameEnv[opponent].Field["summonner"] = opponentSummoner
+            gameEnv[opponent].deck.currentLeaderIdx = gameEnv[opponent].deck.currentLeaderIdx + 1;
+            let opponentLeader = this.cardInfoUtils.getCurrentLeader(gameEnv, opponent);
+            gameEnv[opponent].Field["leader"] = opponentLeader
             
-            gameEnv[crtPlayer].deck.currentSummonerIdx = gameEnv[crtPlayer].deck.currentSummonerIdx + 1; 
-            let crtSummoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, crtPlayer);
-            gameEnv[crtPlayer].Field["summonner"] = crtSummoner
+            gameEnv[crtPlayer].deck.currentLeaderIdx = gameEnv[crtPlayer].deck.currentLeaderIdx + 1; 
+            let crtLeader = this.cardInfoUtils.getCurrentLeader(gameEnv, crtPlayer);
+            gameEnv[crtPlayer].Field["leader"] = crtLeader
         }
         gameEnv = await this.startNewTurn(gameEnv);
         return gameEnv;
@@ -283,13 +284,13 @@ class mozGamePlay {
        if (winner == ""){
             return  {
                 "turn": turn,
-                "type": "EndSummonerBattle",
+                "type": "EndLeaderBattle",
                 "winner": "draw"
             }
        }
        return  {
             "turn": turn,
-            "type": "EndSummonerBattle",
+            "type": "EndLeaderBattle",
             "winner": winner
         }
     }
@@ -381,13 +382,13 @@ class mozGamePlay {
         return totalPoints;
     }
 
-    async getMonsterPoint(card,summoner){
+    async getMonsterPoint(card,leader){
         var returnValue = card["value"];
         const cardAttr = card["attribute"];
-        const summonerNativeAddition = summoner["nativeAddition"];
+        const leaderNativeAddition = leader["nativeAddition"];
         var addVal = {}
-        for(let key in summonerNativeAddition){
-            addVal[summonerNativeAddition[key]["type"]] = summonerNativeAddition[key]["value"];
+        for(let key in leaderNativeAddition){
+            addVal[leaderNativeAddition[key]["type"]] = leaderNativeAddition[key]["value"];
         }
         for(let key in cardAttr){
             if (addVal.hasOwnProperty(cardAttr[key])){
@@ -405,7 +406,7 @@ class mozGamePlay {
     }
 
     
-    isCardMatchingSummoner(card, summoner, area ){
+    isCardMatchingLeader(card, leader, area ){
         var returnValue = false;
         for (let idx in card["attribute"]){
             if(card["attribute"][idx] == "all"){
@@ -416,7 +417,7 @@ class mozGamePlay {
         if(area == "help" || area == "sp"){
             return true;
         }
-        summoner[area].forEach(function(attr){
+        leader[area].forEach(function(attr){
             if(attr == "all"){
                 returnValue = true;
                 return returnValue;
@@ -448,7 +449,7 @@ class mozGamePlay {
 
     isSummonBattleEnd(gameEnv){
         var returnValue = false;
-        if(gameEnv["phase"] == TurnPhase.END_SUMMONER_BATTLE){
+        if(gameEnv["phase"] == TurnPhase.END_LEADER_BATTLE){
             returnValue = true;
         }
         return returnValue;

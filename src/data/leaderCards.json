@@ -136,7 +136,7 @@
                         "type": "and",
                         "conditions": [
                             {
-                                "type": "opponentHasSummoner",
+                                "type": "leaderHasSummoner",
                                 "value": "顧寧特"
                             }
                         ]
@@ -156,7 +156,7 @@
                         "type": "and",
                         "conditions": [
                             {
-                                "type": "opponentHasSummoner",
+                                "type": "leaderHasSummoner",
                                 "value": "顧寧特"
                             }
                         ]
@@ -275,7 +275,7 @@
                         "type": "and",
                         "conditions": [
                             {
-                                "type": "opponentSummonerHasType",
+                                "type": "leaderSummonerHasType",
                                 "value": "mechanic"
                             }
                         ]
@@ -295,7 +295,7 @@
                         "type": "and",
                         "conditions": [
                             {
-                                "type": "opponentSummonerHasType",
+                                "type": "leaderSummonerHasType",
                                 "value": "mechanic"
                             }
                         ]
@@ -340,7 +340,7 @@
                         "type": "and",
                         "conditions": [
                             {
-                                "type": "opponentSummonerHasLevel",
+                                "type": "leaderSummonerHasLevel",
                                 "value": "7",
                                 "operator": "OverOrEqual"
                             }
@@ -360,7 +360,7 @@
                         "type": "and",
                         "conditions": [
                             {
-                                "type": "opponentDontHasSummoner",
+                                "type": "leaderDontHasSummoner",
                                 "value": "古列特拉圖"
                             }
                         ]

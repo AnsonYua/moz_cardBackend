@@ -1,11 +1,11 @@
 {
-    "gameId": "test-summoner-restriction-type-effect",
+    "gameId": "test-summoner-restriction-name-effect",
     "gameEnv": {
         "playerId_1": {
             "deck": {
-                "currentSummonerIdx": 0,
-                "summoner": [
-                    "TEST002",
+                "currentLeaderIdx": 0,
+                "leader": [
+                    "S051",
                     "S109",
                     "S045",
                     "S056B",
@@ -48,16 +48,16 @@
         },
         "playerId_2": {
             "deck": {
-                "currentSummonerIdx": 0,
-                "summoner": [
-                    "S109",
+                "currentLeaderIdx": 0,
+                "leader": [
+                    "TEST001",
                     "S051",
                     "S109",
                     "S056B",
                     "S058"
                 ],
                 "hand": [
-                    "sp159",
+                    "s110",
                     "s125",
                     "s44",
                     "s46",
@@ -91,7 +91,7 @@
             },
             "redraw": 1
         },
-        "firstPlayer": 0,
+        "firstPlayer": 1,
         "phase": "START_REDRAW"
     },
     "lastUpdate": "2025-06-09T09:17:18.320Z"

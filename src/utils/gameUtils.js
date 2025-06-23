@@ -26,7 +26,7 @@ function getOpponentPlayer(gameEnv) {
 
 function isConditionMatch(condition, gameEnv, 
                         currentPlayerId, opponentPlayerId) {
-    if (condition.type === "opponentSummonerHasLevel" && condition.value === "7") {
+    if (condition.type === "opponentLeaderHasLevel" && condition.value === "7") {
         return true;
     }
     return false;

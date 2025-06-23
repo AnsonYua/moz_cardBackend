@@ -9,14 +9,14 @@
 			"value": 10,
 			"type": "monster",
 			"cardName": "吸血蝙蝠",
-			"effects": "if your current summoner is 柏古蘭巴杜, this card's value become 500",
+			"effects": "if your current leader is 柏古蘭巴杜, this card's value become 500",
 			"effectRules": [
 				{
 					"condition": {
 						"type": "and",
 						"conditions": [
 							{
-								"type": "selfHasSummoner",
+								"type": "selfHasLeader",
 								"value": "柏古蘭巴杜"
 							}
 						]
@@ -44,14 +44,14 @@
 			"value": 10,
 			"type": "monster",
 			"cardName": "刀翼鳥",
-			"effects": "if your current summoner is 雷巴古, this card's value become 100",
+			"effects": "if your current leader is 雷巴古, this card's value become 100",
 			"effectRules": [
 				{
 					"condition": {
 						"type": "and",
 						"conditions": [
 							{
-								"type": "selfHasSummoner",
+								"type": "selfHasLeader",
 								"value": "雷巴古"
 							}
 						]
@@ -457,14 +457,14 @@
 			"value": 10,
 			"type": "monster",
 			"cardName": "哺",
-			"effects": "if your current summoner is 柏古蘭巴杜, this card's value become 500",
+			"effects": "if your current leader is 柏古蘭巴杜, this card's value become 500",
 			"effectRules": [
 				{
 					"condition": {
 						"type": "and",
 						"conditions": [
 							{
-								"type": "selfHasSummoner",
+								"type": "selfHasLeader",
 								"value": "柏古蘭巴杜"
 							}
 						]
@@ -723,14 +723,14 @@
 			"value": 70,
 			"type": "monster",
 			"cardName": "絲拉",
-			"effects": "this card can only be summoned when your summoner is 波尤",
+			"effects": "this card can only be summoned when your leader is 波尤",
 			"effectRules": [
 				{
 					"condition": {
 						"type": "and",
 						"conditions": [
 							{
-								"type": "selfHasSummoner",
+								"type": "selfHasLeader",
 								"value": "波尤"
 							}
 						]

@@ -3,15 +3,15 @@
     "gameEnv": {
         "playerId_1": {
             "deck": {
-                "currentSummonerIdx": 0,
-                "summoner": ["S051"],
+                "currentLeaderIdx": 0,
+                "leader": ["S051"],
                 "hand": ["s47", "s45", "s46"],
                 "mainDeck": ["s48", "s49", "s50", "s51", "s52"]
             },
             "redraw": 0,
             "turnAction": [],
             "Field": {
-                "summonner": {
+                "leader": {
                     "id": "S051",
                     "sky": ["fire", "wind", "mountain"],
                     "left": ["all"],
@@ -39,15 +39,15 @@
         },
         "playerId_2": {
             "deck": {
-                "currentSummonerIdx": 0,
-                "summoner": ["S045"],
+                "currentLeaderIdx": 0,
+                "leader": ["S045"],
                 "hand": [],
                 "mainDeck": []
             },
             "redraw": 0,
             "turnAction": [],
             "Field": {
-                "summonner": {
+                "leader": {
                     "id": "S045",
                     "sky": ["all", "mountain", "tree"],
                     "left": ["wind", "water"],

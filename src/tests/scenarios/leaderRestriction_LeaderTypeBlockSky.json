@@ -3,8 +3,8 @@
     "gameEnv": {
         "playerId_1": {
             "deck": {
-                "currentSummonerIdx": 0,
-                "summoner": [
+                "currentLeaderIdx": 0,
+                "leader": [
                     "TEST002",
                     "S109",
                     "S045",
@@ -48,16 +48,16 @@
         },
         "playerId_2": {
             "deck": {
-                "currentSummonerIdx": 0,
-                "summoner": [
-                    "S073E",
+                "currentLeaderIdx": 0,
+                "leader": [
+                    "S109",
                     "S051",
                     "S109",
                     "S056B",
                     "S058"
                 ],
                 "hand": [
-                    "s52",
+                    "sp159",
                     "s125",
                     "s44",
                     "s46",
@@ -91,7 +91,7 @@
             },
             "redraw": 1
         },
-        "firstPlayer": 1,
+        "firstPlayer": 0,
         "phase": "START_REDRAW"
     },
     "lastUpdate": "2025-06-09T09:17:18.320Z"

@@ -4,26 +4,26 @@ class CardInfoUtils {
         this.deckManager = DeckManager;
     }
 
-    getCurrentSummonerName(gameEnv, playerId) {
+    getCurrentLeaderName(gameEnv, playerId) {
         const deck = gameEnv[playerId].deck;
-        const currentSummonerCard = deck.summoner[deck.currentSummonerIdx];
-        return this.deckManager.getSummonerCards(currentSummonerCard).name;
+        const currentLeaderCard = deck.leader[deck.currentLeaderIdx];
+        return this.deckManager.getLeaderCards(currentLeaderCard).name;
     }
 
-    getCurrentSummoner(gameEnv, playerId){
+    getCurrentLeader(gameEnv, playerId){
         const deck = gameEnv[playerId].deck;
-        const crtSummonCard = deck.summoner[deck.currentSummonerIdx]
-        return this.deckManager.getSummonerCards(crtSummonCard);
+        const crtLeaderCard = deck.leader[deck.currentLeaderIdx]
+        return this.deckManager.getLeaderCards(crtLeaderCard);
     }
 
-    getCurrentSummonerType(gameEnv, playerId) {
-        const currentSummoner = this.getCurrentSummoner(gameEnv, playerId);
-        return currentSummoner.type || [];
+    getCurrentLeaderType(gameEnv, playerId) {
+        const currentLeader = this.getCurrentLeader(gameEnv, playerId);
+        return currentLeader.type || [];
     }
 
-    getCurrentSummonerLevel(gameEnv, playerId) {
-        const currentSummoner = this.getCurrentSummoner(gameEnv, playerId);
-        return currentSummoner.level || 0;
+    getCurrentLeaderLevel(gameEnv, playerId) {
+        const currentLeader = this.getCurrentLeader(gameEnv, playerId);
+        return currentLeader.level || 0;
     }
 }
 

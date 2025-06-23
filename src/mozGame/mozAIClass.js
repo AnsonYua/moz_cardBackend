@@ -74,13 +74,13 @@ class mozAIClass {
     async getPossibleMoves(gameState, playerId) {
         var moves = [];
         const playerHand = gameState[playerId].deck.hand
-        const summoner = this.cardInfoUtils.getCurrentSummoner(gameState,playerId);
+        const leader = this.cardInfoUtils.getCurrentLeader(gameState,playerId);
         const availableField = this.getAvailableField(gameState,playerId);
         for (let i = 0; i < playerHand.length; i++) {
             for (let j = 0; j < availableField.length; j++) {
                 const cardDetails = mozDeckHelper.getDeckCardDetails(playerHand[i]);
                 const canPlayToField = mozDeckHelper.isCardEligibleForField(
-                    cardDetails,summoner,availableField[j]);
+                    cardDetails,leader,availableField[j]);
                 if(canPlayToField && cardDetails["type"] == "monster"){
                     moves.push({
                         type: "PlayCard",

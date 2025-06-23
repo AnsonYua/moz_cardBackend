@@ -27,14 +27,14 @@ class CardEffectManager {
             }
         }
 
-        // 2. Check summoner restrictions
-        const summoner = gameEnv[currentPlayerId].Field.summonner;
-        if (summoner) {
-            const allowedFields = summoner[playPos] || [];
+        // 2. Check leader restrictions
+        const leader = gameEnv[currentPlayerId].Field.leader;
+        if (leader) {
+            const allowedFields = leader[playPos] || [];
             if (!allowedFields.includes('all') && !allowedFields.includes(cardDetails.attribute[0])) {
                 return {
                     canPlace: false,
-                    reason: `Summoner does not allow ${cardDetails.attribute[0]} type cards in ${playPos} field`
+                    reason: `Leader does not allow ${cardDetails.attribute[0]} type cards in ${playPos} field`
                 };
             }
         }
@@ -159,11 +159,11 @@ class CardEffectManager {
         const condition = rule.condition;
         
         switch (condition.type) {
-            case 'opponentHasSummoner':
-                return this.checkOpponentHasSummoner(gameEnv, playerId, condition.value);
+            case 'opponentHasLeader':
+                return this.checkOpponentHasLeader(gameEnv, playerId, condition.value);
             
-            case 'opponentSummonerHasType':
-                return this.checkOpponentSummonerType(gameEnv, playerId, condition.value);
+            case 'opponentLeaderHasType':
+                return this.checkOpponentLeaderType(gameEnv, playerId, condition.value);
             
             case 'selfHasMonster':
                 return this.checkSelfHasMonster(gameEnv, playerId, condition.value);
@@ -228,16 +228,16 @@ class CardEffectManager {
     }
 
     // Helper methods for condition evaluation
-    checkOpponentHasSummoner(gameEnv, playerId, summonerName) {
+    checkOpponentHasLeader(gameEnv, playerId, leaderName) {
         const opponentId = this.getOpponentId(playerId);
-        const opponentSummoner = gameEnv[opponentId].Field.summonner;
-        return opponentSummoner && opponentSummoner.name === summonerName;
+        const opponentLeader = gameEnv[opponentId].Field.leader;
+        return opponentLeader && opponentLeader.name === leaderName;
     }
 
-    checkOpponentSummonerType(gameEnv, playerId, type) {
+    checkOpponentLeaderType(gameEnv, playerId, type) {
         const opponentId = this.getOpponentId(playerId);
-        const opponentSummoner = gameEnv[opponentId].Field.summonner;
-        return opponentSummoner && opponentSummoner.type.includes(type);
+        const opponentLeader = gameEnv[opponentId].Field.leader;
+        return opponentLeader && opponentLeader.type.includes(type);
     }
 
     checkSelfHasMonster(gameEnv, playerId, monsterName) {

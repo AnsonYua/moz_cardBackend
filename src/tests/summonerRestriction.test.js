@@ -1,6 +1,6 @@
 const { loadTestScenario, injectGameState, makePostRequest, performPlayerAction } = require('./testHelpers');
 
-describe('Summoner Restrictions', () => {
+describe('Leader Restrictions', () => {
     let gameId;
 
     beforeEach(() => {
@@ -40,7 +40,7 @@ describe('Summoner Restrictions', () => {
             console.log("--------------------------------");
             // Should return error
             expect(result.error).toBeDefined();
-            expect(result.error).toContain('Cannot summon dragon type monsters due to summoner effect');
+            expect(result.error).toContain('Cannot summon dragon type monsters due to leader effect');
         });
     });
 
@@ -72,7 +72,7 @@ describe('Summoner Restrictions', () => {
             console.log("--------------------------------");
             // Should return error
             expect(result.error).toBeDefined();
-            expect(result.error).toContain('Cannot summon dragon type monsters due to summoner effect');
+            expect(result.error).toContain('Cannot summon dragon type monsters due to leader effect');
         });
     });
 
@@ -135,7 +135,7 @@ describe('Summoner Restrictions', () => {
             console.log("--------------------------------");
             // Should return error
             expect(result.error).toBeDefined();
-            expect(result.error).toContain('Cannot summon sp due to summoner effect');
+            expect(result.error).toContain('Cannot summon sp due to leader effect');
         });
     });
     
@@ -166,7 +166,7 @@ describe('Summoner Restrictions', () => {
             console.log("--------------------------------");
             // Should return error
             expect(result.error).toBeDefined();
-            expect(result.error).toContain('Cannot summon beast type monsters due to summoner effect type 2');
+            expect(result.error).toContain('Cannot summon beast type monsters due to leader effect type 2');
         });
     });
 }); 

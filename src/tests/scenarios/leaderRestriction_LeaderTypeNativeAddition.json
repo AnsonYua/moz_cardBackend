@@ -1,11 +1,11 @@
 {
-    "gameId": "test-summoner-restriction-name-effect",
+    "gameId": "test-summoner-restriction-type-effect",
     "gameEnv": {
         "playerId_1": {
             "deck": {
-                "currentSummonerIdx": 0,
-                "summoner": [
-                    "S051",
+                "currentLeaderIdx": 0,
+                "leader": [
+                    "TEST002",
                     "S109",
                     "S045",
                     "S056B",
@@ -48,16 +48,16 @@
         },
         "playerId_2": {
             "deck": {
-                "currentSummonerIdx": 0,
-                "summoner": [
-                    "TEST001",
+                "currentLeaderIdx": 0,
+                "leader": [
+                    "S073E",
                     "S051",
                     "S109",
                     "S056B",
                     "S058"
                 ],
                 "hand": [
-                    "s110",
+                    "s52",
                     "s125",
                     "s44",
                     "s46",

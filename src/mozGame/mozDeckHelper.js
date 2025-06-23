@@ -7,15 +7,15 @@ class mozDeckLogic{
     async prepareDeckForPlayer(playerId) {
         var playerDeck = await deckManager.getPlayerDecks(playerId);
         playerDeck = JSON.parse(JSON.stringify(playerDeck));
-        const sumCardList = this.possessSummonnerCard(playerDeck.decks["deck001"]);
+        const sumCardList = this.possessLeaderCard(playerDeck.decks["deck001"]);
         const mainDeckCard = this.possesesMainDeckCard(playerDeck.decks["deck001"]);
         
         const { drawnCards, mainDeck } = this.drawCards(mainDeckCard, 7);
         const hand = drawnCards;
         
         return {
-            currentSummonerIdx: 0,
-            summoner: sumCardList,
+            currentLeaderIdx: 0,
+            leader: sumCardList,
             hand: hand,
             mainDeck: mainDeck,
         };
@@ -58,8 +58,8 @@ class mozDeckLogic{
     possesesMainDeckCard(decks){
         return this.shuffle(decks.cards);
     }
-    possessSummonnerCard(decks){
-        return this.shuffle(decks.summoner).slice(0, 5);
+    possessLeaderCard(decks){
+        return this.shuffle(decks.leader).slice(0, 5);
     }
     shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -94,7 +94,7 @@ class mozDeckLogic{
         }
         return -1;
     }
-    isCardEligibleForField(card, summoner, area){
+    isCardEligibleForField(card, leader, area){
         var returnValue = false;
         for (let idx in card["attribute"]){
             if(card["attribute"][idx] == "all"){
@@ -103,7 +103,7 @@ class mozDeckLogic{
             }
         }
         
-        summoner[area].forEach(function(attr){
+        leader[area].forEach(function(attr){
             if(attr == "all"){
                 returnValue = true;
                 return returnValue;

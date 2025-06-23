@@ -22,7 +22,7 @@
         "deck001": {
           "id": "deck001",
           "name": "Starter Deck",
-          "summoner": [
+          "leader": [
             "S045","S051","S056B","S058","S073E","S109"
           ],
           "cards": [
@@ -40,7 +40,7 @@
         "deck001": {
           "id": "deck001",
           "name": "Starter Deck",
-          "summoner": [
+          "leader": [
             "S045","S051","S056B","S058","S073E","S109"
           ],
           "cards": [

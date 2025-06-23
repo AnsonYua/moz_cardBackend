@@ -88,7 +88,7 @@ function createTestGameEnv() {
             deck: {
                 hand: [],
                 mainDeck: [],
-                summoner: []
+                leader: []
             },
             Field: {
                 sky: [],
@@ -102,7 +102,7 @@ function createTestGameEnv() {
             deck: {
                 hand: [],
                 mainDeck: [],
-                summoner: []
+                leader: []
             },
             Field: {
                 sky: [],
