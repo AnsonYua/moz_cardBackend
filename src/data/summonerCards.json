@@ -163,8 +163,8 @@
                     },
                     "target": {
                         "type": "opponent",
-                        "scope": ["monster"],
-                        "subScope": ["attr_dragon"]
+                        "scope": ["sky","left","right"],
+                        "subScope": ["monsterType_dragon"]
                     },
                     "effectType": "blockSummonCard",
                     "value": "0",
@@ -303,7 +303,7 @@
                     "target": {
                         "type": "self",
                         "scope": ["sky","left","right"],
-                        "subScope": ["attr_dragon"]
+                        "subScope": ["monsterType_dragon"]
                     },
                     "effectType": "blockSummonCard",
                     "value": "0",

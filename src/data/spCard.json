@@ -486,7 +486,7 @@
                         "target": {
                             "type": "opponent",
                             "scope": ["sky","left","right"],
-                            "subScope": ["attr_all"]
+                            "subScope": ["monsterType_all"]
                         },
                         "effectType": "modifyMonsterValue",
                         "value": "0",

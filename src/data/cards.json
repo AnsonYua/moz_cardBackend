@@ -126,7 +126,7 @@
 					"target": {
 						"type": "opponent",
 						"scope": ["sky", "left", "right"],
-						"subScope": ["attr_fish"]
+						"subScope": ["monsterType_fish"]
 					},
 					"effectType": "modifyMonsterValue",
 					"value": "0",
@@ -340,7 +340,7 @@
 					"target": {
 						"type": "opponent",
 						"scope": ["sky", "left", "right"],
-						"subScope": ["attr_worm"]
+						"subScope": ["monsterType_worm"]
 					},
 					"effectType": "modifyMonsterValue",
 					"value": "0",
@@ -388,7 +388,7 @@
 					"target": {
 						"type": "opponent",
 						"scope": ["sky", "left", "right"],
-						"subScope": ["attr_beast"]
+						"subScope": ["monsterType_beast"]
 					},
 					"effectType": "modifyMonsterValue",
 					"value": "0",
@@ -637,7 +637,7 @@
 					"target": {
 						"type": "opponent",
 						"scope": ["sky", "left", "right"],
-						"subScope": ["attr_male"]
+						"subScope": ["monsterType_male"]
 					},
 					"effectType": "modifyMonsterValue",
 					"value": "0",
