@@ -23,16 +23,16 @@ class mozGamePlay {
 
     updateInitialGameEnvironment(gameEnv){
         // decide who goes first
-        const summonerList = []
+        const leaderList = []
         const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
         for (let playerId in playerList){
-            let summoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, playerList[playerId]);
-            summonerList.push(summoner);
+            let leader = this.cardInfoUtils.getCurrentLeader(gameEnv, playerList[playerId]);
+            leaderList.push(leader);
         }
         var firstPlayer = 0; 
-        if (summonerList[1].initialPoint>summonerList[0].initialPoint){
+        if (leaderList[1].initialPoint>leaderList[0].initialPoint){
             firstPlayer = 1;
-        }else if (summonerList[1].initialPoint===summonerList[0].initialPoint){
+        }else if (leaderList[1].initialPoint===leaderList[0].initialPoint){
             firstPlayer = Math.floor(Math.random() * 2);
         }
         gameEnv["firstPlayer"] = firstPlayer;
@@ -82,13 +82,13 @@ class mozGamePlay {
            gameEnv["currentTurn"] = 0;
           
            for (let playerId in playerList){
-               let summoner = this.cardInfoUtils.getCurrentSummoner(gameEnv, playerList[playerId]);
+               let leader = this.cardInfoUtils.getCurrentLeader(gameEnv, playerList[playerId]);
                gameEnv[playerList[playerId]]["turnAction"] = []
                gameEnv[playerList[playerId]]["Field"] = {};
-               gameEnv[playerList[playerId]]["Field"]["summonner"] = summoner;
+               gameEnv[playerList[playerId]]["Field"]["leader"] = leader;
                gameEnv[playerList[playerId]]["Field"]["right"] = [];
                gameEnv[playerList[playerId]]["Field"]["left"] = [];
-               gameEnv[playerList[playerId]]["Field"]["sky"] = [];
+               gameEnv[playerList[playerId]]["Field"]["top"] = [];
                gameEnv[playerList[playerId]]["Field"]["help"] = [];
                gameEnv[playerList[playerId]]["Field"]["sp"] = [];
             }
