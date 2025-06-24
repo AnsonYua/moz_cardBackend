@@ -374,9 +374,15 @@ The game follows a strict phase-based system:
 
 ### Card Types:
 - **Leader Cards**: Determine zone compatibility and provide bonuses (set at game start)
-- **Character Cards**: Combat units with power values
+- **Character Cards**: Combat units with power values  
 - **Help Cards**: Utility effects to support your strategy  
 - **SP Cards**: Special powerful effects that execute before battle resolution
+
+### Zone Compatibility Rules:
+- Character placement is validated using the card's `gameType` field against the leader's `zoneCompatibility`
+- **IMPORTANT**: Zone checking uses `cardDetails.gameType` (string), NOT `cardDetails.traits` (array)
+- `traits` are used for card effects and abilities; `gameType` determines placement restrictions
+- Leaders with `"all"` in their zone compatibility can place any character type in that zone
 
 Common action types:
 - `place_card`: Place a card from hand to field (phase-restricted)

@@ -1,0 +1,71 @@
+{
+  "gameId": "test-search-card-sp-filter",
+  "gameEnv": {
+    "playerId_1": {
+      "deck": {
+        "currentLeaderIdx": 0,
+        "leader": ["S002", "S003", "S004", "S005"],
+        "hand": ["54"],
+        "mainDeck": ["43", "44", "696", "45", "158", "46", "47"]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "leader": {
+          "id": "S002",
+          "name": "拜登",
+          "cardType": "leader",
+          "gameType": "左翼",
+          "initialPoint": 100,
+          "level": 7,
+          "zoneCompatibility": {
+            "top": ["all"],
+            "left": ["all"],
+            "right": ["all"]
+          }
+        },
+        "top": [],
+        "left": [],
+        "right": [],
+        "help": [],
+        "sp": []
+      },
+      "playerPoint": 0
+    },
+    "playerId_2": {
+      "deck": {
+        "currentLeaderIdx": 0,
+        "leader": ["S002", "S003", "S004", "S005"],
+        "hand": ["51", "52", "53"],
+        "mainDeck": ["54", "55", "56", "57", "58"]
+      },
+      "redraw": 1,
+      "turnAction": [],
+      "Field": {
+        "leader": {
+          "id": "S002",
+          "name": "拜登",
+          "cardType": "leader",
+          "gameType": "左翼",
+          "initialPoint": 100,
+          "level": 7,
+          "zoneCompatibility": {
+            "top": ["all"],
+            "left": ["all"],
+            "right": ["all"]
+          }
+        },
+        "top": [],
+        "left": [],
+        "right": [],
+        "help": [],
+        "sp": []
+      },
+      "playerPoint": 0
+    },
+    "firstPlayer": 0,
+    "phase": "MAIN_PHASE",
+    "currentPlayer": "playerId_1",
+    "currentTurn": 0
+  }
+}

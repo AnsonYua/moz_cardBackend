@@ -58,11 +58,22 @@ module.exports.stopServer = async () => {
     if (fs.existsSync(pidPath)) {
         const pid = parseInt(fs.readFileSync(pidPath, 'utf-8'), 10);
         try {
+            // Check if process exists before trying to kill it
+            process.kill(pid, 0); // This will throw if process doesn't exist
             process.kill(pid);
             console.log('Server stopped successfully');
         } catch (e) {
-            console.error('Error stopping server:', e);
+            if (e.code === 'ESRCH') {
+                console.log('Server process already terminated');
+            } else {
+                console.error('Error stopping server:', e);
+            }
         }
-        fs.unlinkSync(pidPath);
+        // Clean up PID file regardless of success
+        try {
+            fs.unlinkSync(pidPath);
+        } catch (e) {
+            // PID file might already be gone
+        }
     }
 }; 

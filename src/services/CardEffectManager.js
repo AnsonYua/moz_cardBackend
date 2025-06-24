@@ -31,10 +31,10 @@ class CardEffectManager {
         const leader = gameEnv[currentPlayerId].Field.leader;
         if (leader) {
             const allowedFields = leader[playPos] || [];
-            if (!allowedFields.includes('all') && !allowedFields.includes(cardDetails.traits[0])) {
+            if (!allowedFields.includes('all') && !allowedFields.includes(cardDetails.gameType)) {
                 return {
                     canPlace: false,
-                    reason: `Leader does not allow ${cardDetails.traits[0]} type cards in ${playPos} field`
+                    reason: `Leader does not allow ${cardDetails.gameType} type cards in ${playPos} field`
                 };
             }
         }
