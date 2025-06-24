@@ -30,7 +30,7 @@ describe('Search Card Effects - Comprehensive', () => {
             };
 
             const actionResult = await performPlayerAction(gameId, 'playerId_1', action);
-            console.log(actionResult);
+            console.log("actionResult", actionResult);
             /*
             // Should return card selection prompt
             expect(actionResult.requiresCardSelection).toBe(true);

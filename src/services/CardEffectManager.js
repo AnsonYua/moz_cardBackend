@@ -29,12 +29,12 @@ class CardEffectManager {
 
         // 2. Check leader restrictions
         const leader = gameEnv[currentPlayerId].Field.leader;
-        if (leader) {
-            const allowedFields = leader[playPos] || [];
+        if (leader && leader.zoneCompatibility) {
+            const allowedFields = leader.zoneCompatibility[playPos] || [];
             if (!allowedFields.includes('all') && !allowedFields.includes(cardDetails.gameType)) {
                 return {
                     canPlace: false,
-                    reason: `Leader does not allow ${cardDetails.gameType} type cards in ${playPos} field`
+                    reason: `Leader does not allow ${cardDetails.gameType} type cards in ${playPos} field. Allowed types: ${JSON.stringify(allowedFields)}`
                 };
             }
         }

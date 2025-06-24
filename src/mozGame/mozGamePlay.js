@@ -613,7 +613,8 @@ class mozGamePlay {
         if(area == "help" || area == "sp"){
             return true;
         }
-        leader[area].forEach(function(attr){
+        const allowedTypes = leader.zoneCompatibility && leader.zoneCompatibility[area] ? leader.zoneCompatibility[area] : [];
+        allowedTypes.forEach(function(attr){
             if(attr == "all"){
                 returnValue = true;
                 return returnValue;

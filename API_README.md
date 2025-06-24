@@ -384,6 +384,17 @@ The game follows a strict phase-based system:
 - `traits` are used for card effects and abilities; `gameType` determines placement restrictions
 - Leaders with `"all"` in their zone compatibility can place any character type in that zone
 
+### Correct Zone Compatibility Access Pattern:
+```javascript
+// CORRECT: Access via zoneCompatibility object
+const allowedTypes = leader.zoneCompatibility[zone]; // e.g., ["右翼", "自由", "經濟"]
+
+// INCORRECT: Direct leader property access
+const allowedTypes = leader[zone]; // This will be undefined
+```
+
+**Common Mistake Prevention**: Always access zone compatibility through `leader.zoneCompatibility[zone]`, never directly via `leader[zone]`. The leader object structure contains the zone rules under the `zoneCompatibility` property as defined in `leaderCards.json`.
+
 Common action types:
 - `place_card`: Place a card from hand to field (phase-restricted)
 - `activate_effect`: Activate a card's special effect
