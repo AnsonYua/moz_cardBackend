@@ -10,7 +10,6 @@ router.get('/health', (req, res) => {
 
 router.get('/player/:playerId', gameController.getPlayerData);
 router.put('/player/:playerId/score', gameController.updateScore);
-router.post('/player/:playerId/action', gameController.processAction);
 
 router.post('/player/:playerId/deck', gameController.getPlayerDecks);
 
@@ -18,6 +17,7 @@ router.post('/player/startGame', gameController.startGame);
 router.post('/player/startReady', gameController.startReady);
 router.post('/player/playerAction', gameController.playerAction);
 router.post('/player/playerAiAction', gameController.playerAIAction);
+router.post('/player/selectCard', gameController.selectCard);
 router.post('/test/setCase', gameController.setCase);
 
 // Test-only endpoint for injecting game environment

@@ -1,24 +1,14 @@
 // src/services/GameLogic.js
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
-const deckManager = require('../services/DeckManager');
 const mozDeckHelper = require('../mozGame/mozDeckHelper');
 const mozGamePlay = require('../mozGame/mozGamePlay');
-
 const path = require('path');
 const mozAIClass = require('../mozGame/mozAIClass');
-const { json } = require('stream/consumers');
 
 
 class GameLogic {
     constructor() {
-        // You can initialize game constants here
-        this.MAX_LEVEL = 100;
-        this.POINTS_PER_LEVEL = 1000;
-        this.MAX_HEALTH = 100;
-        
-        // You could store temporary game data here or use a database
-        this.activeGames = new Map();
         this.mozGamePlay = mozGamePlay;
     }
 
@@ -66,22 +56,18 @@ class GameLogic {
     }
     
     async processPlayerAction(req) {
-        console.log("---------processPlayerAction-------" + JSON.stringify(req.body));
         var {playerId ,gameId,action} = req.body;
         var gameData = await this.readJSONFileAsync(gameId);
         const result = await this.mozGamePlay.checkIsPlayOkForAction(gameData.gameEnv,playerId,action);
         if(!result){
-            console.log("---------processPlayerAction------- Not your turn");
             return this.mozGamePlay.throwError("Not your turn");
         }else{
             gameData.gameEnv = await this.mozGamePlay.processAction(gameData.gameEnv,playerId,action);
             if (gameData.gameEnv.hasOwnProperty('error')){
-                console.log("---------processPlayerAction------- attribute not match/other error");
                 return gameData.gameEnv;
             }else{
                 var gameData = this.addUpdateUUID(gameData) 
                 await this.saveOrCreateGame(gameData, gameId);
-                console.log("---------processPlayerAction------- normal");
                 return gameData;
             }
         }
@@ -168,32 +154,65 @@ class GameLogic {
         });
     }
 
-    getGameState(playerId) {
-        const game = this.activeGames.get(playerId);
-        if (!game) {
+    async getGameState(gameId) {
+        try {
+            const game = await this.readJSONFileAsync(gameId);
+            return game;
+        } catch (error) {
             return null;
         }
-
-        return {
-            ...game,
-            level: this.calculateLevel(game.score),
-            experience: this.calculateExperience(game.score)
-        };
     }
 
-    updateGameState(playerId, updates) {
-        const game = this.activeGames.get(playerId);
-        if (!game) {
+    async updateGameState(gameId, updates) {
+        try {
+            const game = await this.readJSONFileAsync(gameId);
+            
+            // Update game state
+            const updatedGame = {
+                ...game,
+                ...updates,
+                lastUpdate: new Date()
+            };
+            
+            await this.saveOrCreateGame(updatedGame, gameId);
+            return updatedGame;
+        } catch (error) {
+            throw new Error('Game not found');
+        }
+    }
+
+    async selectCard(req) {
+        const { selectionId, selectedCardIds, playerId, gameId } = req.body;
+        
+        if (!selectionId || !selectedCardIds || !playerId) {
+            throw new Error('Missing required parameters: selectionId, selectedCardIds, playerId');
+        }
+
+        const gameData = await this.readJSONFileAsync(gameId);
+        if (!gameData) {
             throw new Error('Game not found');
         }
 
-        // Update game state
-        Object.assign(game, {
-            ...updates,
-            lastUpdate: new Date()
-        });
+        // Complete the card selection in mozGamePlay
+        const updatedGameEnv = await this.mozGamePlay.completeCardSelection(
+            gameData.gameEnv, 
+            selectionId, 
+            selectedCardIds
+        );
 
-        return this.getGameState(playerId);
+        if (updatedGameEnv.error) {
+            throw new Error(updatedGameEnv.error);
+        }
+
+        // Update the stored game state
+        gameData.gameEnv = updatedGameEnv;
+        const updatedGameData = this.addUpdateUUID(gameData);
+        await this.saveOrCreateGame(updatedGameData, gameId);
+
+        return {
+            success: true,
+            gameEnv: updatedGameEnv
+        };
     }
 }
 

@@ -111,6 +111,23 @@ class mozGamePlay {
     async processAction(gameEnvInput, playerId, action) {
         var gameEnv = gameEnvInput;
         
+        // Check if there's a pending player action that blocks normal gameplay
+        if (gameEnv.pendingPlayerAction) {
+            const pendingAction = gameEnv.pendingPlayerAction;
+            
+            // If another player is waiting for card selection, block all other actions
+            if (pendingAction.type === 'cardSelection') {
+                if (pendingAction.playerId === playerId) {
+                    return this.throwError(`You must complete your card selection first. ${pendingAction.description}`);
+                } else {
+                    return this.throwError(`Waiting for ${pendingAction.playerId} to complete card selection. Please wait.`);
+                }
+            }
+            
+            // Add other pending action types here in the future
+            return this.throwError(`Game is waiting for player action: ${pendingAction.description}`);
+        }
+        
         // Handle card play actions (face up or face down)
         if (action["type"] == "PlayCard" || action["type"] == "PlayCardBack") {
             var isPlayInFaceDown = action["type"] == "PlayCardBack";
@@ -186,6 +203,10 @@ class mozGamePlay {
                         return this.throwError("Help zone already occupied");
                     }
                 } else if (cardDetails["cardType"] == "sp") {
+                    // SP cards can only be played during SP_PHASE
+                    if (gameEnv["phase"] != TurnPhase.SP_PHASE) {
+                        return this.throwError("SP cards can only be played during SP phase");
+                    }
                     // SP cards are special powerful effects, only one allowed
                     if (playPos != "sp") {
                         return this.throwError("SP cards can only be played in SP zone");
@@ -213,12 +234,22 @@ class mozGamePlay {
 
             // Process immediate card effects (triggered effects only if face up)
             if (!isPlayInFaceDown) {
+                let effectResult = null;
                 if (cardDetails["cardType"] == "character") {
                     // Character summon effects (e.g., draw cards, search deck)
-                    await this.processCharacterSummonEffects(gameEnv, playerId, cardDetails);
+                    effectResult = await this.processCharacterSummonEffects(gameEnv, playerId, cardDetails);
                 } else if (cardDetails["cardType"] == "help" || cardDetails["cardType"] == "sp") {
                     // Utility card play effects (e.g., discard opponent cards, boost power)
-                    await this.processUtilityCardEffects(gameEnv, playerId, cardDetails);
+                    effectResult = await this.processUtilityCardEffects(gameEnv, playerId, cardDetails);
+                }
+                
+                // Check if card effect requires user selection
+                if (effectResult && effectResult.requiresCardSelection) {
+                    return {
+                        requiresCardSelection: true,
+                        cardSelection: effectResult.cardSelection,
+                        gameEnv: effectResult.gameEnv || gameEnv
+                    };
                 }
             }
             
@@ -537,10 +568,36 @@ class mozGamePlay {
         return returnValue;
     }
     async checkIsPlayOkForAction(gameEnv,playerId,action){
-        var returnValue = false
-        if(gameEnv["phase"]== TurnPhase.MAIN_PHASE && gameEnv["currentPlayer"] == playerId){ 
-            returnValue = true;
+        var returnValue = false;
+        
+        // Get card details to check card type
+        const hand = gameEnv[playerId].deck.hand;
+        if (!hand || action["card_idx"] >= hand.length) {
+            return false;
         }
+        
+        const cardToPlay = hand[action["card_idx"]];
+        const cardDetails = mozDeckHelper.getDeckCardDetails(cardToPlay);
+        
+        if (!cardDetails) {
+            return false;
+        }
+        
+        // Check phase-based card placement rules
+        if (gameEnv["currentPlayer"] == playerId) {
+            if (gameEnv["phase"] == TurnPhase.MAIN_PHASE) {
+                // During MAIN_PHASE: only character and help cards allowed
+                if (cardDetails["cardType"] == "character" || cardDetails["cardType"] == "help") {
+                    returnValue = true;
+                }
+            } else if (gameEnv["phase"] == TurnPhase.SP_PHASE) {
+                // During SP_PHASE: only SP cards allowed
+                if (cardDetails["cardType"] == "sp") {
+                    returnValue = true;
+                }
+            }
+        }
+        
         return returnValue;
     }
 
@@ -804,7 +861,10 @@ class mozGamePlay {
             for (const rule of cardData.effects.rules) {
                 // Execute onSummon triggered effects (e.g., draw cards, search deck)
                 if (rule.type === 'triggered' && rule.trigger.event === 'onSummon') {
-                    await this.executeEffectRule(rule, gameEnv, playerId);
+                    const effectResult = await this.executeEffectRule(rule, gameEnv, playerId);
+                    if (effectResult && effectResult.requiresCardSelection) {
+                        return effectResult;
+                    }
                 }
             }
         }
@@ -827,7 +887,10 @@ class mozGamePlay {
             for (const rule of cardData.effects.rules) {
                 // Execute onPlay triggered effects (e.g., discard cards, force actions)
                 if (rule.type === 'triggered' && rule.trigger.event === 'onPlay') {
-                    await this.executeEffectRule(rule, gameEnv, playerId);
+                    const effectResult = await this.executeEffectRule(rule, gameEnv, playerId);
+                    if (effectResult && effectResult.requiresCardSelection) {
+                        return effectResult;
+                    }
                 }
                 // Note: Continuous effects are processed during calculatePlayerPoint
             }
@@ -844,7 +907,10 @@ class mozGamePlay {
     async executeEffectRule(rule, gameEnv, playerId) {
         // Check if effect conditions are met before executing
         if (!this.checkRuleConditions(rule.trigger.conditions, gameEnv[playerId].Field, gameEnv, playerId)) {
-            return;
+            return {
+                success: false,
+                reason: 'Effect conditions not met'
+            };
         }
         
         // Determine target player (self or opponent)
@@ -854,17 +920,98 @@ class mozGamePlay {
         if (rule.effect.type === 'drawCard') {
             // Force target to draw cards from deck
             await this.drawCardsForPlayer(gameEnv, targetPlayerId, rule.effect.value);
+            return {
+                success: true,
+                effectType: 'drawCard',
+                executed: true
+            };
         } else if (rule.effect.type === 'discardRandomCard') {
             // Force target to randomly discard cards from hand
             await this.discardRandomCards(gameEnv, targetPlayerId, rule.effect.value);
+            return {
+                success: true,
+                effectType: 'discardRandomCard',
+                executed: true
+            };
         } else if (rule.effect.type === 'searchCard') {
             // Search deck for specific cards and add to hand
-            await this.searchCardEffect(gameEnv, targetPlayerId, rule.effect);
+            const searchResult = await this.searchCardEffect(gameEnv, targetPlayerId, rule.effect);
+            if (searchResult && searchResult.requiresSelection) {
+                // Return selection prompt to frontend
+                return {
+                    success: true,
+                    requiresCardSelection: true,
+                    cardSelection: searchResult,
+                    gameEnv
+                };
+            } else {
+                // Search completed without user selection needed
+                return {
+                    success: true,
+                    effectType: 'searchCard',
+                    executed: true
+                };
+            }
         } else if (rule.effect.type === 'forcePlaySP') {
             // Force opponent to play SP card in next SP phase
             gameEnv[targetPlayerId]['forcedSpPlay'] = true;
+            return {
+                success: true,
+                effectType: 'forcePlaySP',
+                executed: true
+            };
         }
+        
+        // Unknown effect type
+        return {
+            success: false,
+            reason: `Unknown effect type: ${rule.effect.type}`
+        };
         // Note: Continuous effects (modifyPower, invalidateEffect, etc.) are handled in calculatePlayerPoint
+    }
+    
+    /**
+     * Check if the game is currently waiting for a specific player action
+     * @param {Object} gameEnv - Current game environment
+     * @returns {Object|null} Pending action info or null if no pending action
+     */
+    getPendingPlayerAction(gameEnv) {
+        return gameEnv.pendingPlayerAction || null;
+    }
+    
+    /**
+     * Check if a specific player can take actions right now
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} playerId - Player ID to check
+     * @returns {Object} Result with canAct boolean and reason if blocked
+     */
+    canPlayerAct(gameEnv, playerId) {
+        const pendingAction = this.getPendingPlayerAction(gameEnv);
+        
+        if (!pendingAction) {
+            return { canAct: true };
+        }
+        
+        if (pendingAction.type === 'cardSelection') {
+            if (pendingAction.playerId === playerId) {
+                return {
+                    canAct: false,
+                    reason: `Must complete card selection first: ${pendingAction.description}`,
+                    requiredAction: 'selectCard'
+                };
+            } else {
+                return {
+                    canAct: false,
+                    reason: `Waiting for ${pendingAction.playerId} to complete card selection`,
+                    waitingFor: pendingAction.playerId
+                };
+            }
+        }
+        
+        return {
+            canAct: false,
+            reason: `Unknown pending action: ${pendingAction.type}`
+        };
     }
     
     /**
@@ -889,7 +1036,7 @@ class mozGamePlay {
         const deck = gameEnv[playerId].deck.mainDeck;
         const hand = gameEnv[playerId].deck.hand;
         
-        if (deck.length === 0) return;
+        if (deck.length === 0) return null;
         
         // Look at top N cards from deck
         const searchCount = Math.min(effect.searchCount, deck.length);
@@ -909,18 +1056,88 @@ class mozGamePlay {
             });
         }
         
-        // Select cards to add to hand (random selection for AI simplicity)
+        // Return card selection data for frontend instead of auto-selecting
         const selectCount = Math.min(effect.selectCount, eligibleCards.length);
-        const selectedCards = [];
-        for (let i = 0; i < selectCount; i++) {
-            if (eligibleCards.length > 0) {
-                const randomIndex = Math.floor(Math.random() * eligibleCards.length);
-                selectedCards.push(eligibleCards.splice(randomIndex, 1)[0]);
+        
+        if (eligibleCards.length === 0) {
+            // No eligible cards found, put searched cards back to bottom
+            for (const cardId of topCards) {
+                const deckIndex = deck.indexOf(cardId);
+                if (deckIndex !== -1) {
+                    deck.splice(deckIndex, 1);
+                    deck.push(cardId);
+                }
+            }
+            return null;
+        }
+        
+        // Store card selection state for this player
+        if (!gameEnv.pendingCardSelections) {
+            gameEnv.pendingCardSelections = {};
+        }
+        
+        const selectionId = `${playerId}_${Date.now()}`;
+        gameEnv.pendingCardSelections[selectionId] = {
+            playerId,
+            eligibleCards,
+            searchedCards: topCards,
+            selectCount,
+            effect,
+            timestamp: Date.now()
+        };
+        
+        // Add player action indicator to gameEnv
+        gameEnv.pendingPlayerAction = {
+            type: 'cardSelection',
+            playerId: playerId,
+            selectionId: selectionId,
+            description: `Waiting for ${playerId} to select ${selectCount} card(s)`,
+            timestamp: Date.now()
+        };
+        
+        // Return selection prompt data
+        return {
+            requiresSelection: true,
+            selectionId,
+            eligibleCards,
+            selectCount,
+            cardTypeFilter: effect.cardTypeFilter || null,
+            prompt: `Select ${selectCount} card(s) from ${eligibleCards.length} available cards`
+        };
+    }
+    
+    /**
+     * Complete a pending card selection by the player
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} selectionId - ID of the pending selection
+     * @param {Array} selectedCardIds - Array of selected card IDs
+     * @returns {Object} Updated game environment or error
+     */
+    async completeCardSelection(gameEnv, selectionId, selectedCardIds) {
+        if (!gameEnv.pendingCardSelections || !gameEnv.pendingCardSelections[selectionId]) {
+            return this.throwError("Invalid or expired card selection");
+        }
+        
+        const selection = gameEnv.pendingCardSelections[selectionId];
+        const { playerId, eligibleCards, searchedCards, selectCount, effect } = selection;
+        
+        // Validate selection
+        if (selectedCardIds.length !== selectCount) {
+            return this.throwError(`Must select exactly ${selectCount} cards`);
+        }
+        
+        for (const cardId of selectedCardIds) {
+            if (!eligibleCards.includes(cardId)) {
+                return this.throwError(`Invalid card selection: ${cardId}`);
             }
         }
         
-        // Add selected cards to player's hand
-        for (const cardId of selectedCards) {
+        // Apply the selection
+        const deck = gameEnv[playerId].deck.mainDeck;
+        const hand = gameEnv[playerId].deck.hand;
+        
+        // Add selected cards to hand
+        for (const cardId of selectedCardIds) {
             hand.push(cardId);
             // Remove from deck
             const deckIndex = deck.indexOf(cardId);
@@ -929,8 +1146,8 @@ class mozGamePlay {
             }
         }
         
-        // Put remaining searched cards to bottom of deck (shuffle effect)
-        const remainingSearched = topCards.filter(cardId => !selectedCards.includes(cardId));
+        // Put remaining searched cards to bottom of deck
+        const remainingSearched = searchedCards.filter(cardId => !selectedCardIds.includes(cardId));
         for (const cardId of remainingSearched) {
             const deckIndex = deck.indexOf(cardId);
             if (deckIndex !== -1) {
@@ -938,6 +1155,12 @@ class mozGamePlay {
                 deck.push(cardId); // Add to bottom
             }
         }
+        
+        // Clean up the pending selection and player action indicator
+        delete gameEnv.pendingCardSelections[selectionId];
+        delete gameEnv.pendingPlayerAction;
+        
+        return gameEnv;
     }
     
     /**

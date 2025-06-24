@@ -1,7 +1,6 @@
 // src/controllers/gameController.js
 const gameLogic = require('../services/GameLogic');
 const deckManager = require('../services/DeckManager');
-const { stack } = require('../routes/gameRoutes');
 class GameController {
     async startGame(req, res) {
         try {
@@ -42,10 +41,16 @@ class GameController {
     async getPlayerData(req, res) {
         try {
             const { playerId } = req.params;
-            let gameState = gameLogic.getGameState(playerId);
+            const { gameId } = req.query; // Get gameId from query parameter
+            
+            if (!gameId) {
+                return res.status(400).json({ error: 'gameId query parameter is required' });
+            }
+            
+            let gameState = await gameLogic.getGameState(gameId);
             
             if (!gameState) {
-                gameState = gameLogic.createNewGame(playerId);
+                return res.status(404).json({ error: 'Game not found' });
             }
 
             res.json(gameState);
@@ -63,6 +68,15 @@ class GameController {
         }
     }
 
+    async selectCard(req, res) {
+        try {
+            const gameState = await gameLogic.selectCard(req);
+            res.json(gameState);
+        } catch (error) {
+            res.status(500).json({ error: error.message, stack: error.stack });
+        }
+    }
+
     async setCase(req, res) {
         try {
             const result = await gameLogic.setCaseInGameLogic(req);
@@ -76,26 +90,19 @@ class GameController {
     async updateScore(req, res) {
         try {
             const { playerId } = req.params;
-            const { score } = req.body;
+            const { score, gameId } = req.body;
             
-            const updatedState = gameLogic.updateGameState(playerId, { score });
+            if (!gameId) {
+                return res.status(400).json({ error: 'gameId is required' });
+            }
+            
+            const updatedState = await gameLogic.updateGameState(gameId, { score });
             res.json(updatedState);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
     }
 
-    async processAction(req, res) {
-        try {
-            const { playerId } = req.params;
-            const { action, targetId } = req.body;
-
-            const result = gameLogic.processPlayerAction(playerId, action, targetId);
-            res.json(result);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    }
 
     async injectGameState(req, res) {
         try {

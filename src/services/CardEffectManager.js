@@ -39,27 +39,9 @@ class CardEffectManager {
             }
         }
         let opponentPlayerId = getOpponentPlayer(gameEnv);
-        let playerIdArr = [currentPlayerId, opponentPlayerId];
-        // 3. Check SP card restrictions
-        for(let playerId of playerIdArr){
-            const spCards = gameEnv[playerId].Field.sp || [];
-            for (const spCard of spCards) {
-                const effectRules = spCard.cardDetails[0].effectRules || [];
-                for (const rule of effectRules) {
-                    if (rule.effectType === 'blockSummonCard') {
-                        let isOpponent = playerId === opponentPlayerId;
-                        const isTargetMatch = await this.checkIsTargetMatch(rule.effectType, rule.target, gameEnv, isOpponent, cardDetails, playPos);
-                        const canPlace = await this.evaluatePlacementCondition(rule, gameEnv, currentPlayerId, cardDetails);
-                        if (!canPlace && isTargetMatch) {
-                            return {
-                                canPlace: false,
-                                reason: rule.reason || 'SP card effect prevents card placement'
-                            };
-                        }
-                    }
-                }
-            }
-        }
+        
+        // 3. SP card restrictions are not needed during MAIN_PHASE since SP cards
+        // haven't executed their effects yet (they only execute during SP_PHASE)
 
         // 4. Check help card restrictions
         const helpCards = gameEnv[currentPlayerId].Field.help || [];
