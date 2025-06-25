@@ -291,20 +291,32 @@ describe('Search Card Effects - Comprehensive', () => {
         });
       
         it('should validate selection ID', async () => {
+            const scenario = await loadTestScenario('searchCard_basic');
+            const result = await injectGameState(scenario);
+            gameId = result.gameId;
+
+            // Play search card
+            const action = {
+                type: "PlayCard",
+                card_idx: 0,
+                field_idx: 0
+            };
+
+            const actionResult = await performPlayerAction(gameId, 'playerId_1', action);
             // Try to use invalid selection ID
             const invalidSelectionRequest = {
                 selectionId: 'invalid_selection_id',
                 selectedCardIds: ['c-1'],
                 playerId: 'playerId_1',
-                gameId: 'test-game'
+                gameId: gameId
             };
-
+            
             await expect(gameLogic.selectCard({ body: invalidSelectionRequest }))
                 .rejects
                 .toThrow('Invalid or expired card selection');
         });
     });
-   /*
+   
     describe('Game State Persistence', () => {
         it('should persist card selection state across requests', async () => {
             const scenario = await loadTestScenario('searchCard_basic');
@@ -332,5 +344,5 @@ describe('Search Card Effects - Comprehensive', () => {
             expect(persistedState.gameEnv.pendingPlayerAction.selectionId).toBe(selectionId);
         });
     });
-    */
+    
 });
