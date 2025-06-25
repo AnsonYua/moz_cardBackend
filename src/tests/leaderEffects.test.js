@@ -24,13 +24,13 @@ describe('Leader Card Effects', () => {
             // Play a right-wing character (特朗普總統 - 右翼)
             const result1 = await performPlayerAction(gameId, 'playerId_1', {
                 type: 'PlayCard',
-                card_idx: 0,  // Card "43" (特朗普總統) - gameType: "愛國者", power: 100
-                field_idx: 0  // top zone
+                card_idx: 0,  // Card "c-1" (特朗普總統) - gameType: "愛國者", power: 100
+                field_idx: 1  // left zone (allows patriot types)
             });
 
             // Check if card was played and power boosted
-            expect(result1.gameEnv.playerId_1.Field.top[0].card[0]).toBe('43');
-            expect(result1.gameEnv.playerId_1.Field.top[0].cardDetails[0].power).toBe(100);
+            expect(result1.gameEnv.playerId_1.Field.left[0].card[0]).toBe('c-1');
+            expect(result1.gameEnv.playerId_1.Field.left[0].cardDetails[0].power).toBe(100);
             
             // Check calculated points include Trump leader boost (+45 for patriot type)
             expect(result1.gameEnv.playerId_1.playerPoint).toBe(145); // 100 + 45

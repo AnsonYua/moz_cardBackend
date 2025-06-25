@@ -5,8 +5,8 @@
     "cardType": "leader"
   },
   "leaders": {
-    "S001": {
-      "id": "S001",
+    "l-1": {
+      "id": "l-1",
       "name": "特朗普",
       "cardType": "leader",
       "gameType": "右翼",
@@ -79,8 +79,8 @@
         ]
       }
     },
-    "S002": {
-      "id": "S002",
+    "l-2": {
+      "id": "l-2",
       "name": "拜登",
       "cardType": "leader",
       "gameType": "左翼",
@@ -118,8 +118,8 @@
         ]
       }
     },
-    "S003": {
-      "id": "S003",
+    "l-3": {
+      "id": "l-3",
       "name": "馬斯克",
       "cardType": "leader",
       "gameType": "自由",
@@ -186,8 +186,8 @@
         ]
       }
     },
-    "S004": {
-      "id": "S004",
+    "l-4": {
+      "id": "l-4",
       "name": "賀錦麗",
       "cardType": "leader",
       "gameType": "左翼",
@@ -278,8 +278,8 @@
         ]
       }
     },
-    "S005": {
-      "id": "S005",
+    "l-5": {
+      "id": "l-5",
       "name": "范斯",
       "cardType": "leader",
       "gameType": "右翼",
@@ -370,8 +370,8 @@
         ]
       }
     },
-    "S006": {
-      "id": "S006",
+    "l-6": {
+      "id": "l-6",
       "name": "鮑威爾",
       "cardType": "leader",
       "gameType": "經濟",

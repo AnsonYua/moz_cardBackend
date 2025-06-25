@@ -5,8 +5,8 @@
     "cardType": "character"
   },
   "cards": {
-    "43": {
-      "id": "43",
+    "c-1": {
+      "id": "c-1",
       "name": "總統特朗普",
       "cardType": "character",
       "gameType": "愛國者",
@@ -42,8 +42,8 @@
         ]
       }
     },
-    "44": {
-      "id": "44",
+    "c-2": {
+      "id": "c-2",
       "name": "前總統特朗普(YMCA)",
       "cardType": "character",
       "gameType": "右翼",
@@ -79,8 +79,8 @@
         ]
       }
     },
-    "45": {
-      "id": "45",
+    "c-3": {
+      "id": "c-3",
       "name": "拜登(Sleepy Joe)",
       "cardType": "character",
       "gameType": "左翼",
@@ -92,8 +92,8 @@
         "rules": []
       }
     },
-    "46": {
-      "id": "46",
+    "c-4": {
+      "id": "c-4",
       "name": "拜登 2020",
       "cardType": "character",
       "gameType": "左翼",
@@ -105,8 +105,8 @@
         "rules": []
       }
     },
-    "47": {
-      "id": "47",
+    "c-5": {
+      "id": "c-5",
       "name": "特朗普忠粉",
       "cardType": "character",
       "gameType": "左翼",
@@ -134,8 +134,8 @@
         ]
       }
     },
-    "49": {
-      "id": "49",
+    "c-6": {
+      "id": "c-6",
       "name": "拜登忠粉",
       "cardType": "character",
       "gameType": "右翼",
@@ -163,8 +163,8 @@
         ]
       }
     },
-    "50": {
-      "id": "50",
+    "c-7": {
+      "id": "c-7",
       "name": "特朗普(天選之人)",
       "cardType": "character",
       "gameType": "愛國者",
@@ -176,8 +176,8 @@
         "rules": []
       }
     },
-    "52": {
-      "id": "52",
+    "c-8": {
+      "id": "c-8",
       "name": "馬斯克 (Father Of Doge)",
       "cardType": "character",
       "gameType": "自由",
@@ -189,8 +189,8 @@
         "rules": []
       }
     },
-    "53": {
-      "id": "53",
+    "c-9": {
+      "id": "c-9",
       "name": "艾利茲 (Doge 六子）",
       "cardType": "character",
       "gameType": "自由",
@@ -222,8 +222,8 @@
         ]
       }
     },
-    "54": {
-      "id": "54",
+    "c-10": {
+      "id": "c-10",
       "name": "Edward Coristine (Doge 六子）",
       "cardType": "character",
       "gameType": "愛國者",
@@ -256,8 +256,8 @@
         ]
       }
     },
-    "56": {
-      "id": "56",
+    "c-11": {
+      "id": "c-11",
       "name": "Ethan Shaortran(Doge 六子）",
       "cardType": "character",
       "gameType": "愛國者",
@@ -269,8 +269,8 @@
         "rules": []
       }
     },
-    "109": {
-      "id": "109",
+    "c-12": {
+      "id": "c-12",
       "name": "Luke Farritor(Doge 六子）",
       "cardType": "character",
       "gameType": "自由",
@@ -308,8 +308,8 @@
         ]
       }
     },
-    "110": {
-      "id": "110",
+    "c-13": {
+      "id": "c-13",
       "name": "Gautier Cole Killian(Doge六子）",
       "cardType": "character",
       "gameType": "經濟",
@@ -321,8 +321,8 @@
         "rules": []
       }
     },
-    "111": {
-      "id": "111",
+    "c-14": {
+      "id": "c-14",
       "name": "Gavin Kliger(Doge六子）",
       "cardType": "character",
       "gameType": "自由",
@@ -334,8 +334,8 @@
         "rules": []
       }
     },
-    "122": {
-      "id": "122",
+    "c-15": {
+      "id": "c-15",
       "name": "Tik Tok難民",
       "cardType": "character",
       "gameType": "自由",
@@ -347,8 +347,8 @@
         "rules": []
       }
     },
-    "125": {
-      "id": "125",
+    "c-16": {
+      "id": "c-16",
       "name": "朱克伯格",
       "cardType": "character",
       "gameType": "自由",
@@ -360,8 +360,8 @@
         "rules": []
       }
     },
-    "186": {
-      "id": "186",
+    "c-17": {
+      "id": "c-17",
       "name": "貝索斯",
       "cardType": "character",
       "gameType": "經濟",
@@ -373,8 +373,8 @@
         "rules": []
       }
     },
-    "187": {
-      "id": "187",
+    "c-18": {
+      "id": "c-18",
       "name": "Tim Cook",
       "cardType": "character",
       "gameType": "自由",
@@ -386,8 +386,8 @@
         "rules": []
       }
     },
-    "189": {
-      "id": "189",
+    "c-19": {
+      "id": "c-19",
       "name": "Bill gates",
       "cardType": "character",
       "gameType": "經濟",
@@ -423,8 +423,8 @@
         ]
       }
     },
-    "190": {
-      "id": "190",
+    "c-20": {
+      "id": "c-20",
       "name": "巴飛特",
       "cardType": "character",
       "gameType": "經濟",
@@ -461,8 +461,8 @@
         ]
       }
     },
-    "191": {
-      "id": "191",
+    "c-21": {
+      "id": "c-21",
       "name": "奧巴馬",
       "cardType": "character",
       "gameType": "左翼",
@@ -494,8 +494,8 @@
         ]
       }
     },
-    "227": {
-      "id": "227",
+    "c-22": {
+      "id": "c-22",
       "name": "貝森特",
       "cardType": "character",
       "gameType": "愛國者",
@@ -507,8 +507,8 @@
         "rules": []
       }
     },
-    "228": {
-      "id": "228",
+    "c-23": {
+      "id": "c-23",
       "name": "Barron Trump",
       "cardType": "character",
       "gameType": "右翼",
@@ -520,8 +520,8 @@
         "rules": []
       }
     },
-    "229": {
-      "id": "229",
+    "c-24": {
+      "id": "c-24",
       "name": "佩洛西",
       "cardType": "character",
       "gameType": "經濟",
@@ -533,8 +533,8 @@
         "rules": []
       }
     },
-    "230": {
-      "id": "230",
+    "c-25": {
+      "id": "c-25",
       "name": "幣圈大佬",
       "cardType": "character",
       "gameType": "經濟",
@@ -546,8 +546,8 @@
         "rules": []
       }
     },
-    "231": {
-      "id": "231",
+    "c-26": {
+      "id": "c-26",
       "name": "熱血Reddit 網民",
       "cardType": "character",
       "gameType": "愛國者",
@@ -559,8 +559,8 @@
         "rules": []
       }
     },
-    "279": {
-      "id": "279",
+    "c-27": {
+      "id": "c-27",
       "name": "華爾街狼人",
       "cardType": "character",
       "gameType": "經濟",
@@ -572,8 +572,8 @@
         "rules": []
       }
     },
-    "688": {
-      "id": "688",
+    "c-28": {
+      "id": "c-28",
       "name": "美國農民眾",
       "cardType": "character",
       "gameType": "右翼",

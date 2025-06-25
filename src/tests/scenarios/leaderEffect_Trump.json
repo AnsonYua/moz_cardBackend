@@ -4,15 +4,15 @@
     "playerId_1": {
       "deck": {
         "currentLeaderIdx": 0,
-        "leader": ["S001", "S002", "S003", "S004"],
-        "hand": ["43", "44", "45"],
-        "mainDeck": ["46", "47", "48", "49", "50"]
+        "leader": ["l-1", "l-2", "l-3", "l-4"],
+        "hand": ["c-1", "c-2", "c-3"],
+        "mainDeck": ["c-4", "c-5", "48", "c-6", "c-7"]
       },
       "redraw": 1,
       "turnAction": [],
       "Field": {
         "leader": {
-          "id": "S001",
+          "id": "l-1",
           "name": "特朗普",
           "cardType": "leader",
           "gameType": "右翼",
@@ -67,15 +67,15 @@
     "playerId_2": {
       "deck": {
         "currentLeaderIdx": 0,
-        "leader": ["S002", "S003", "S004", "S005"],
-        "hand": ["51", "52", "53"],
-        "mainDeck": ["54", "55", "56", "57", "58"]
+        "leader": ["l-2", "l-3", "l-4", "l-5"],
+        "hand": ["51", "c-8", "c-9"],
+        "mainDeck": ["c-10", "55", "c-11", "57", "58"]
       },
       "redraw": 1,
       "turnAction": [],
       "Field": {
         "leader": {
-          "id": "S002",
+          "id": "l-2",
           "name": "拜登",
           "cardType": "leader",
           "gameType": "左翼",

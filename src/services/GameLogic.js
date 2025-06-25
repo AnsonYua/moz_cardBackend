@@ -62,14 +62,19 @@ class GameLogic {
         if(!result){
             return this.mozGamePlay.throwError("Not your turn");
         }else{
-            gameData.gameEnv = await this.mozGamePlay.processAction(gameData.gameEnv,playerId,action);
-            if (gameData.gameEnv.hasOwnProperty('error')){
-                return gameData.gameEnv;
-            }else{
-                var gameData = this.addUpdateUUID(gameData) 
-                await this.saveOrCreateGame(gameData, gameId);
-                return gameData;
+            const actionResult = await this.mozGamePlay.processAction(gameData.gameEnv,playerId,action);
+            
+            if (actionResult.hasOwnProperty('error')){
+                return actionResult;
             }
+            
+            // Always update gameEnv and save
+            gameData.gameEnv = actionResult.requiresCardSelection ? actionResult.gameEnv : actionResult;
+            const updatedGameData = this.addUpdateUUID(gameData);
+            await this.saveOrCreateGame(updatedGameData, gameId);
+            
+            // Return the updated game data - client can determine card selection from pendingPlayerAction
+            return updatedGameData;
         }
     }
 

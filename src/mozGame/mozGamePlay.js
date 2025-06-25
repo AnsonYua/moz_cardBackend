@@ -3,6 +3,7 @@ const mozPhaseManager = require('./mozPhaseManager');
 const CardEffectManager = require('../services/CardEffectManager');
 const { getPlayerFromGameEnv } = require('../utils/gameUtils');
 const CardInfoUtils = require('../services/CardInfoUtils');
+const { json } = require('express');
 const TurnPhase = {
     START_REDRAW: 'START_REDRAW',
     DRAW_PHASE: 'DRAW_PHASE',
@@ -115,17 +116,19 @@ class mozGamePlay {
         if (gameEnv.pendingPlayerAction) {
             const pendingAction = gameEnv.pendingPlayerAction;
             
-            // If another player is waiting for card selection, block all other actions
+            // If card selection is pending, block all other actions
             if (pendingAction.type === 'cardSelection') {
-                if (pendingAction.playerId === playerId) {
-                    return this.throwError(`You must complete your card selection first. ${pendingAction.description}`);
-                } else {
-                    return this.throwError(`Waiting for ${pendingAction.playerId} to complete card selection. Please wait.`);
+                const selection = gameEnv.pendingCardSelections[pendingAction.selectionId];
+                if (selection) {
+                    if (selection.playerId === playerId) {
+                        return this.throwError(`You must complete your card selection first. Select ${selection.selectCount} card(s).`);
+                    } else {
+                        return this.throwError(`Waiting for ${selection.playerId} to complete card selection. Please wait.`);
+                    }
                 }
             }
             
-            // Add other pending action types here in the future
-            return this.throwError(`Game is waiting for player action: ${pendingAction.description}`);
+            return this.throwError(`Game is waiting for player action.`);
         }
         
         // Handle card play actions (face up or face down)
@@ -245,11 +248,8 @@ class mozGamePlay {
                 
                 // Check if card effect requires user selection
                 if (effectResult && effectResult.requiresCardSelection) {
-                    return {
-                        requiresCardSelection: true,
-                        cardSelection: effectResult.cardSelection,
-                        gameEnv: effectResult.gameEnv || gameEnv
-                    };
+                    // Return the gameEnv directly - it contains pendingPlayerAction and pendingCardSelections
+                    return effectResult.gameEnv;
                 }
             }
             
@@ -572,13 +572,13 @@ class mozGamePlay {
         
         // Get card details to check card type
         const hand = gameEnv[playerId].deck.hand;
+        console.log("hand", JSON.stringify(hand));
         if (!hand || action["card_idx"] >= hand.length) {
             return false;
         }
         
         const cardToPlay = hand[action["card_idx"]];
         const cardDetails = mozDeckHelper.getDeckCardDetails(cardToPlay);
-        
         if (!cardDetails) {
             return false;
         }
@@ -937,12 +937,10 @@ class mozGamePlay {
         } else if (rule.effect.type === 'searchCard') {
             // Search deck for specific cards and add to hand
             const searchResult = await this.searchCardEffect(gameEnv, targetPlayerId, rule.effect);
-            if (searchResult && searchResult.requiresSelection) {
-                // Return selection prompt to frontend
+            if (searchResult) {
+                // Return indication that user selection is required with gameEnv
                 return {
-                    success: true,
                     requiresCardSelection: true,
-                    cardSelection: searchResult,
                     gameEnv
                 };
             } else {
@@ -1072,7 +1070,7 @@ class mozGamePlay {
             return null;
         }
         
-        // Store card selection state for this player
+        // Store card selection state (single source of truth)
         if (!gameEnv.pendingCardSelections) {
             gameEnv.pendingCardSelections = {};
         }
@@ -1084,21 +1082,18 @@ class mozGamePlay {
             searchedCards: topCards,
             selectCount,
             effect,
+            cardTypeFilter: effect.cardTypeFilter || null,
             timestamp: Date.now()
         };
         
-        // Add player action indicator to gameEnv
+        // Set simple pending action indicator
         gameEnv.pendingPlayerAction = {
             type: 'cardSelection',
-            playerId: playerId,
-            selectionId: selectionId,
-            description: `Waiting for ${playerId} to select ${selectCount} card(s)`,
-            timestamp: Date.now()
+            selectionId: selectionId
         };
         
         // Return selection prompt data
         return {
-            requiresSelection: true,
             selectionId,
             eligibleCards,
             selectCount,

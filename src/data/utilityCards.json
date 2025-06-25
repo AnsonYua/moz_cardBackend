@@ -5,8 +5,8 @@
     "cardType": "utility"
   },
   "cards": {
-    "696": {
-      "id": "696",
+    "sp-1": {
+      "id": "sp-1",
       "name": "「天選之人」",
       "cardType": "sp",
       "rarity": "legendary",
@@ -47,8 +47,8 @@
         ]
       }
     },
-    "140": {
-      "id": "140",
+    "h-1": {
+      "id": "h-1",
       "name": "Deep State",
       "cardType": "help",
       "rarity": "rare",
@@ -75,8 +75,8 @@
         ]
       }
     },
-    "141": {
-      "id": "141",
+    "h-2": {
+      "id": "h-2",
       "name": "Make America Great Again",
       "cardType": "help",
       "rarity": "uncommon",
@@ -105,8 +105,8 @@
         ]
       }
     },
-    "143B": {
-      "id": "143B",
+    "h-3": {
+      "id": "h-3",
       "name": "doge 全員集合",
       "cardType": "help",
       "rarity": "rare",
@@ -139,8 +139,8 @@
         ]
       }
     },
-    "145": {
-      "id": "145",
+    "h-4": {
+      "id": "h-4",
       "name": "「解放日」",
       "cardType": "help",
       "rarity": "uncommon",
@@ -167,8 +167,8 @@
         ]
       }
     },
-    "158": {
-      "id": "158",
+    "sp-2": {
+      "id": "sp-2",
       "name": "減息周期",
       "cardType": "sp",
       "rarity": "rare",
@@ -196,8 +196,8 @@
         ]
       }
     },
-    "256": {
-      "id": "256",
+    "sp-3": {
+      "id": "sp-3",
       "name": "加息周期",
       "cardType": "sp",
       "rarity": "rare",
@@ -225,8 +225,8 @@
         ]
       }
     },
-    "318": {
-      "id": "318",
+    "h-5": {
+      "id": "h-5",
       "name": "失智老人",
       "cardType": "help",
       "rarity": "legendary",
@@ -275,8 +275,8 @@
         ]
       }
     },
-    "690": {
-      "id": "690",
+    "h-6": {
+      "id": "h-6",
       "name": "You have no card",
       "cardType": "help",
       "rarity": "uncommon",
@@ -306,8 +306,8 @@
         ]
       }
     },
-    "159": {
-      "id": "159",
+    "sp-4": {
+      "id": "sp-4",
       "name": "關稅掃射",
       "cardType": "sp",
       "rarity": "rare",
@@ -341,8 +341,8 @@
         ]
       }
     },
-    "160": {
-      "id": "160",
+    "h-7": {
+      "id": "h-7",
       "name": "拜登退選",
       "cardType": "help",
       "rarity": "uncommon",
@@ -369,8 +369,8 @@
         ]
       }
     },
-    "162": {
-      "id": "162",
+    "sp-5": {
+      "id": "sp-5",
       "name": "破頂",
       "cardType": "sp",
       "rarity": "rare",
@@ -404,8 +404,8 @@
         ]
       }
     },
-    "163": {
-      "id": "163",
+    "h-8": {
+      "id": "h-8",
       "name": "破低",
       "cardType": "help",
       "rarity": "rare",
@@ -439,8 +439,8 @@
         ]
       }
     },
-    "266": {
-      "id": "266",
+    "h-9": {
+      "id": "h-9",
       "name": "bitcoin 真香",
       "cardType": "help",
       "rarity": "common",
@@ -465,8 +465,8 @@
         ]
       }
     },
-    "267": {
-      "id": "267",
+    "h-10": {
+      "id": "h-10",
       "name": "加洲大火",
       "cardType": "help",
       "rarity": "uncommon",
@@ -493,8 +493,8 @@
         ]
       }
     },
-    "268": {
-      "id": "268",
+    "h-11": {
+      "id": "h-11",
       "name": "海湖莊園",
       "cardType": "help",
       "rarity": "rare",
@@ -524,8 +524,8 @@
         ]
       }
     },
-    "298": {
-      "id": "298",
+    "h-12": {
+      "id": "h-12",
       "name": "美債危機",
       "cardType": "help",
       "rarity": "rare",
@@ -567,8 +567,8 @@
         ]
       }
     },
-    "299": {
-      "id": "299",
+    "h-13": {
+      "id": "h-13",
       "name": "TikTok下架",
       "cardType": "help",
       "rarity": "uncommon",
@@ -601,8 +601,8 @@
         ]
       }
     },
-    "166": {
-      "id": "166",
+    "sp-6": {
+      "id": "sp-6",
       "name": "DeepSeek風暴",
       "cardType": "sp",
       "rarity": "legendary",
@@ -627,8 +627,8 @@
         ]
       }
     },
-    "167": {
-      "id": "167",
+    "h-14": {
+      "id": "h-14",
       "name": "聯邦大法官",
       "cardType": "help",
       "rarity": "rare",
@@ -662,8 +662,8 @@
         ]
       }
     },
-    "170": {
-      "id": "170",
+    "h-15": {
+      "id": "h-15",
       "name": "天才法案",
       "cardType": "help",
       "rarity": "rare",
@@ -696,8 +696,8 @@
         ]
       }
     },
-    "171": {
-      "id": "171",
+    "sp-7": {
+      "id": "sp-7",
       "name": "No King Day (無國王日)",
       "cardType": "sp",
       "rarity": "rare",
@@ -730,8 +730,8 @@
         ]
       }
     },
-    "262": {
-      "id": "262",
+    "sp-8": {
+      "id": "sp-8",
       "name": "反特斯拉示威(Tesla Takedown)",
       "cardType": "sp",
       "rarity": "rare",
@@ -784,8 +784,8 @@
         ]
       }
     },
-    "263": {
-      "id": "263",
+    "sp-9": {
+      "id": "sp-9",
       "name": "國會山莊騷亂",
       "cardType": "sp",
       "rarity": "legendary",
@@ -824,8 +824,8 @@
         ]
       }
     },
-    "264": {
-      "id": "264",
+    "sp-10": {
+      "id": "sp-10",
       "name": "民主黨集結",
       "cardType": "sp",
       "rarity": "rare",

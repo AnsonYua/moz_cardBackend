@@ -4,15 +4,15 @@
     "playerId_1": {
       "deck": {
         "currentLeaderIdx": 0,
-        "leader": ["S002", "S003", "S004", "S005"],
-        "hand": ["53"],
-        "mainDeck": ["43", "44", "45", "696", "140", "46", "47"]
+        "leader": ["l-2", "l-3", "l-4", "l-5"],
+        "hand": ["c-9","c-1"],
+        "mainDeck": ["c-1", "c-2", "c-3", "sp-1", "h-1", "c-4", "c-5"]
       },
       "redraw": 1,
       "turnAction": [],
       "Field": {
         "leader": {
-          "id": "S002",
+          "id": "l-2",
           "name": "拜登",
           "cardType": "leader",
           "gameType": "左翼",
@@ -35,15 +35,15 @@
     "playerId_2": {
       "deck": {
         "currentLeaderIdx": 0,
-        "leader": ["S002", "S003", "S004", "S005"],
-        "hand": ["51", "52", "53"],
-        "mainDeck": ["54", "55", "56", "57", "58"]
+        "leader": ["l-2", "l-3", "l-4", "l-5"],
+        "hand": ["c-9","c-1"],
+        "mainDeck": ["c-1", "c-2", "c-3", "sp-1", "h-1", "c-4", "c-5"]
       },
       "redraw": 1,
       "turnAction": [],
       "Field": {
         "leader": {
-          "id": "S002",
+          "id": "l-2",
           "name": "拜登",
           "cardType": "leader",
           "gameType": "左翼",
