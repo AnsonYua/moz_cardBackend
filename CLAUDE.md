@@ -145,6 +145,25 @@ The game now supports complex card effects with:
 - **Filtering system:** Target cards by type, traits, power, etc.
 - **Priority system:** Effects execute in order of leader initial points
 
+### Card Selection System
+Interactive card selection for search effects:
+- **Search Effects**: Cards can search deck for specific cards and prompt player selection
+- **Destination Options**: 
+  - `"hand"` - Selected cards go to hand (default)
+  - `"spZone"` - Selected cards placed directly in SP zone
+  - `"helpZone"` - Selected cards placed directly in Help zone
+  - `"conditionalHelpZone"` - Conditional placement based on Help zone status
+- **Card Examples**: 
+  - **Edward Coristine (c-10)**: Search 7 cards, select 1 SP card to SP zone
+  - **Luke Farritor (c-12)**: Search 7 cards, select 1 Help card → Help zone if empty, otherwise hand
+  - **Elijah (c-9)**: Search 4 cards, select 1 card to hand
+- **Conditional Logic**: 
+  - Luke Farritor's effect always triggers the search
+  - Selected Help card placement depends on Help zone availability at completion time
+  - If Help zone empty → place in Help zone (triggers Help card effects)
+  - If Help zone occupied → place in hand (no zone effects)
+- **Implementation**: `completeCardSelection()` in `mozGamePlay.js` handles destination routing and conditional logic
+
 ### Test Suite Status
 ⚠️ **Note:** Test scenarios require updating to use new card IDs and structure
 - Old test scenarios use deprecated card IDs (s47, S051, etc.)

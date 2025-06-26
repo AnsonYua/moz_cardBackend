@@ -278,19 +278,14 @@
       "traits": [],
       "rarity": "uncommon",
       "effects": {
-        "description": "當這張卡登場時，從自己的卡組上面查看7張卡片，如HELP卡區為空，選出一張HELP卡打出到HELP卡區，其餘放到卡組底部",
+        "description": "當這張卡登場時，從自己的卡組上面查看7張卡片，選出一張HELP卡，如HELP卡區為空則打出到HELP卡區，否則加到手牌，其餘放到卡組底部",
         "rules": [
           {
             "id": "luke_search_help",
             "type": "triggered",
             "trigger": {
               "event": "onSummon",
-              "conditions": [
-                {
-                  "type": "zoneEmpty",
-                  "zone": "help"
-                }
-              ]
+              "conditions": []
             },
             "target": {
               "owner": "self"
@@ -301,7 +296,7 @@
               "selectCount": 1,
               "searchLocation": "deckTop",
               "cardTypeFilter": "help",
-              "destination": "helpZone",
+              "destination": "conditionalHelpZone",
               "remainingLocation": "deckBottom"
             }
           }

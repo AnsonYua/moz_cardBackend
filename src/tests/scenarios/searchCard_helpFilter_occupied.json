@@ -1,12 +1,12 @@
 {
-  "gameId": "test-search-card-empty-deck",
+  "gameId": "test-search-card-help-filter-occupied",
   "gameEnv": {
     "playerId_1": {
       "deck": {
         "currentLeaderIdx": 0,
         "leader": ["l-2", "l-3", "l-4", "l-5"],
-        "hand": ["c-9"],
-        "mainDeck": []
+        "hand": ["c-12"],
+        "mainDeck": ["c-1", "h-1", "c-2", "c-3", "h-2", "c-4", "c-5"]
       },
       "redraw": 1,
       "turnAction": [],
@@ -27,7 +27,21 @@
         "top": [],
         "left": [],
         "right": [],
-        "help": [],
+        "help": [
+          {
+            "card": ["h-3"],
+            "cardDetails": [
+              {
+                "id": "h-3",
+                "name": "Some Help Card",
+                "cardType": "help",
+                "power": 0
+              }
+            ],
+            "isBack": [false],
+            "valueOnField": 0
+          }
+        ],
         "sp": []
       },
       "playerPoint": 0

@@ -1132,13 +1132,75 @@ class mozGamePlay {
         const deck = gameEnv[playerId].deck.mainDeck;
         const hand = gameEnv[playerId].deck.hand;
         
-        // Add selected cards to hand
+        // Add selected cards to appropriate destination
         for (const cardId of selectedCardIds) {
-            hand.push(cardId);
-            // Remove from deck
+            // Remove from deck first
             const deckIndex = deck.indexOf(cardId);
             if (deckIndex !== -1) {
                 deck.splice(deckIndex, 1);
+            }
+            
+            // Add to destination based on effect
+            if (effect.destination === 'spZone') {
+                // Create card object for SP zone placement
+                const cardDetails = require('./mozDeckHelper').getDeckCardDetails(cardId);
+                const cardObj = {
+                    "card": [cardId],
+                    "cardDetails": [cardDetails],
+                    "isBack": [false],
+                    "valueOnField": cardDetails["power"] || 0
+                };
+                gameEnv[playerId].Field.sp.push(cardObj);
+            } else if (effect.destination === 'helpZone') {
+                // Always place in Help zone (original fixed destination)
+                const cardDetails = require('./mozDeckHelper').getDeckCardDetails(cardId);
+                if (!cardDetails || cardDetails.cardType !== 'help') {
+                    return this.throwError("Selected card is not a Help card");
+                }
+                
+                // Create card object for Help zone placement
+                const cardObj = {
+                    "card": [cardId],
+                    "cardDetails": [cardDetails],
+                    "isBack": [false],
+                    "valueOnField": cardDetails["power"] || 0
+                };
+                gameEnv[playerId].Field.help.push(cardObj);
+                
+                // Process Help card onPlay effects (since it's being "played" to the zone)
+                const effectResult = await this.processUtilityCardEffects(gameEnv, playerId, cardDetails);
+                if (effectResult && effectResult.requiresCardSelection) {
+                    return effectResult.gameEnv;
+                }
+            } else if (effect.destination === 'conditionalHelpZone') {
+                // Check Help zone status at placement time to determine destination
+                const cardDetails = require('./mozDeckHelper').getDeckCardDetails(cardId);
+                if (!cardDetails || cardDetails.cardType !== 'help') {
+                    return this.throwError("Selected card is not a Help card");
+                }
+                
+                if (gameEnv[playerId].Field.help.length === 0) {
+                    // Help zone is empty - place card in Help zone
+                    const cardObj = {
+                        "card": [cardId],
+                        "cardDetails": [cardDetails],
+                        "isBack": [false],
+                        "valueOnField": cardDetails["power"] || 0
+                    };
+                    gameEnv[playerId].Field.help.push(cardObj);
+                    
+                    // Process Help card onPlay effects (since it's being "played" to the zone)
+                    const effectResult = await this.processUtilityCardEffects(gameEnv, playerId, cardDetails);
+                    if (effectResult && effectResult.requiresCardSelection) {
+                        return effectResult.gameEnv;
+                    }
+                } else {
+                    // Help zone is occupied - place card in hand instead
+                    hand.push(cardId);
+                }
+            } else {
+                // Default to hand for backward compatibility
+                hand.push(cardId);
             }
         }
         

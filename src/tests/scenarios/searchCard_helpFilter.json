@@ -36,8 +36,8 @@
       "deck": {
         "currentLeaderIdx": 0,
         "leader": ["l-2", "l-3", "l-4", "l-5"],
-        "hand": ["51", "c-8", "c-9"],
-        "mainDeck": ["c-10", "55", "c-11", "57", "58"]
+        "hand": ["c-1", "c-8", "c-9"],
+        "mainDeck": ["c-10", "c-2", "c-11", "c-3", "c-4"]
       },
       "redraw": 1,
       "turnAction": [],

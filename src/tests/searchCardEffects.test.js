@@ -147,6 +147,224 @@ describe('Search Card Effects - Comprehensive', () => {
             
             expect(actionResult.gameEnv.pendingCardSelections[selectionId].eligibleCards.length).toBe(helpCardsInSearchRange.length);
         });
+        
+        it('should place SP card directly to SP zone', async () => {
+            const scenario = await loadTestScenario('searchCard_spFilter');
+            const result = await injectGameState(scenario);
+            gameId = result.gameId;
+
+            // Play the SP search card (Edward Coristine - search 7 cards for SP)
+            const action = {
+                type: "PlayCard",
+                card_idx: 0,  // card c-10 with SP search effect
+                field_idx: 0  // top zone
+            };
+
+            const actionResult = await performPlayerAction(gameId, 'playerId_1', action);
+            
+            // Complete the card selection
+            const selectionId = actionResult.gameEnv.pendingPlayerAction.selectionId;
+            const selectionData = actionResult.gameEnv.pendingCardSelections[selectionId];
+            
+            // Ensure we have at least one eligible SP card
+            expect(selectionData.eligibleCards.length).toBeGreaterThan(0);
+            
+            const selectionRequest = {
+                selectionId: selectionId,
+                selectedCardIds: [selectionData.eligibleCards[0]], // Select first SP card
+                playerId: 'playerId_1',
+                gameId: gameId
+            };
+
+            const selectionResult = await gameLogic.selectCard({ body: selectionRequest });
+
+            // Verify selection completed successfully
+            expect(selectionResult.success).toBe(true);
+            expect(selectionResult.gameEnv.pendingPlayerAction).toBeUndefined();
+            
+            // Verify selected SP card was placed directly in SP zone
+            const finalState = await gameLogic.getGameState(gameId);
+            expect(finalState.gameEnv.playerId_1.Field.sp.length).toBe(1);
+            expect(finalState.gameEnv.playerId_1.Field.sp[0].card[0]).toBe(selectionData.eligibleCards[0]);
+            
+            // Verify card was NOT added to hand
+            expect(finalState.gameEnv.playerId_1.deck.hand).not.toContain(selectionData.eligibleCards[0]);
+        });
+        
+        it('should place Help card directly to Help zone when zone is empty', async () => {
+            const scenario = await loadTestScenario('searchCard_helpFilter');
+            const result = await injectGameState(scenario);
+            gameId = result.gameId;
+
+            // Verify Help zone is initially empty
+            expect(result.gameEnv.playerId_1.Field.help.length).toBe(0);
+
+            // Play the Help search card (Luke Farritor - search 7 cards for Help)
+            const action = {
+                type: "PlayCard",
+                card_idx: 0,  // card c-12 with conditional Help search effect
+                field_idx: 0  // top zone
+            };
+
+            const actionResult = await performPlayerAction(gameId, 'playerId_1', action);
+            
+            // Complete the card selection
+            const selectionId = actionResult.gameEnv.pendingPlayerAction.selectionId;
+            const selectionData = actionResult.gameEnv.pendingCardSelections[selectionId];
+            
+            // Ensure we have at least one eligible Help card
+            expect(selectionData.eligibleCards.length).toBeGreaterThan(0);
+            
+            const selectionRequest = {
+                selectionId: selectionId,
+                selectedCardIds: [selectionData.eligibleCards[0]], // Select first Help card
+                playerId: 'playerId_1',
+                gameId: gameId
+            };
+
+            const selectionResult = await gameLogic.selectCard({ body: selectionRequest });
+
+            // Verify selection completed successfully
+            expect(selectionResult.success).toBe(true);
+            expect(selectionResult.gameEnv.pendingPlayerAction).toBeUndefined();
+            
+            // Verify selected Help card was placed directly in Help zone (since it was empty)
+            const finalState = await gameLogic.getGameState(gameId);
+            expect(finalState.gameEnv.playerId_1.Field.help.length).toBe(1);
+            expect(finalState.gameEnv.playerId_1.Field.help[0].card[0]).toBe(selectionData.eligibleCards[0]);
+            
+            // Verify card was NOT added to hand
+            expect(finalState.gameEnv.playerId_1.deck.hand).not.toContain(selectionData.eligibleCards[0]);
+        });
+    });
+
+    describe('Conditional Effects', () => {
+        it('should always trigger Luke Farritor search effect and place in Help zone when empty', async () => {
+            const scenario = await loadTestScenario('searchCard_helpFilter');
+            const result = await injectGameState(scenario);
+            gameId = result.gameId;
+
+            // Verify Help zone is initially empty
+            expect(result.gameEnv.playerId_1.Field.help.length).toBe(0);
+
+            // Play Luke Farritor (c-12) - should always trigger search effect
+            const action = {
+                type: "PlayCard",
+                card_idx: 0,  // card c-12 with conditional Help search effect
+                field_idx: 0  // top zone
+            };
+
+            const actionResult = await performPlayerAction(gameId, 'playerId_1', action);
+
+            // Should have pending card selection (always triggers)
+            expect(actionResult.gameEnv.pendingPlayerAction).toBeDefined();
+            expect(actionResult.gameEnv.pendingPlayerAction.type).toBe('cardSelection');
+            
+            const selectionId = actionResult.gameEnv.pendingPlayerAction.selectionId;
+            expect(actionResult.gameEnv.pendingCardSelections[selectionId].cardTypeFilter).toBe('help');
+            
+            // Complete the selection
+            const selectionData = actionResult.gameEnv.pendingCardSelections[selectionId];
+            const selectionRequest = {
+                selectionId: selectionId,
+                selectedCardIds: [selectionData.eligibleCards[0]],
+                playerId: 'playerId_1',
+                gameId: gameId
+            };
+
+            const selectionResult = await gameLogic.selectCard({ body: selectionRequest });
+            expect(selectionResult.success).toBe(true);
+            
+            // Card should be placed in Help zone since it was empty
+            const finalState = await gameLogic.getGameState(gameId);
+            expect(finalState.gameEnv.playerId_1.Field.help.length).toBe(1);
+            expect(finalState.gameEnv.playerId_1.Field.help[0].card[0]).toBe(selectionData.eligibleCards[0]);
+        });
+
+        it('should trigger Luke Farritor search effect and place in hand when Help zone occupied', async () => {
+            const scenario = await loadTestScenario('searchCard_helpFilter_occupied');
+            const result = await injectGameState(scenario);
+            gameId = result.gameId;
+
+            // Verify Help zone is NOT empty (has a card)
+            expect(result.gameEnv.playerId_1.Field.help.length).toBe(1);
+
+            // Play Luke Farritor (c-12) - should still trigger search effect
+            const action = {
+                type: "PlayCard",
+                card_idx: 0,  // card c-12 with conditional Help search effect
+                field_idx: 0  // top zone
+            };
+
+            const actionResult = await performPlayerAction(gameId, 'playerId_1', action);
+
+            // Should have pending card selection (always triggers regardless of Help zone status)
+            expect(actionResult.gameEnv.pendingPlayerAction).toBeDefined();
+            expect(actionResult.gameEnv.pendingPlayerAction.type).toBe('cardSelection');
+            
+            const selectionId = actionResult.gameEnv.pendingPlayerAction.selectionId;
+            expect(actionResult.gameEnv.pendingCardSelections[selectionId].cardTypeFilter).toBe('help');
+            
+            // Complete the selection
+            const selectionData = actionResult.gameEnv.pendingCardSelections[selectionId];
+            const selectionRequest = {
+                selectionId: selectionId,
+                selectedCardIds: [selectionData.eligibleCards[0]],
+                playerId: 'playerId_1',
+                gameId: gameId
+            };
+
+            const selectionResult = await gameLogic.selectCard({ body: selectionRequest });
+            expect(selectionResult.success).toBe(true);
+            
+            // Card should be placed in hand since Help zone was occupied
+            const finalState = await gameLogic.getGameState(gameId);
+            expect(finalState.gameEnv.playerId_1.Field.help.length).toBe(1); // Still 1 (original card)
+            expect(finalState.gameEnv.playerId_1.deck.hand).toContain(selectionData.eligibleCards[0]);
+        });
+
+        it('should handle Help zone becoming occupied during selection process', async () => {
+            const scenario = await loadTestScenario('searchCard_helpFilter');
+            const result = await injectGameState(scenario);
+            gameId = result.gameId;
+
+            // Play Luke Farritor to trigger search effect
+            const action = {
+                type: "PlayCard",
+                card_idx: 0,
+                field_idx: 0
+            };
+
+            const actionResult = await performPlayerAction(gameId, 'playerId_1', action);
+            const selectionId = actionResult.gameEnv.pendingPlayerAction.selectionId;
+            const selectionData = actionResult.gameEnv.pendingCardSelections[selectionId];
+
+            // Manually occupy the Help zone between trigger and completion
+            const gameState = await gameLogic.getGameState(gameId);
+            gameState.gameEnv.playerId_1.Field.help.push({
+                "card": ["h-3"],
+                "cardDetails": [{ "id": "h-3", "cardType": "help" }],
+                "isBack": [false],
+                "valueOnField": 0
+            });
+            await gameLogic.updateGameState(gameId, gameState.gameEnv);
+
+            // Complete selection - should succeed and place in hand instead
+            const selectionRequest = {
+                selectionId: selectionId,
+                selectedCardIds: [selectionData.eligibleCards[0]],
+                playerId: 'playerId_1',
+                gameId: gameId
+            };
+
+            const selectionResult = await gameLogic.selectCard({ body: selectionRequest });
+            expect(selectionResult.success).toBe(true);
+            
+            // Card should be placed in hand since Help zone became occupied
+            const finalState = await gameLogic.getGameState(gameId);
+            expect(finalState.gameEnv.playerId_1.Field.help.length).toBe(1); // The manually added card
+            expect(finalState.gameEnv.playerId_1.deck.hand).toContain(selectionData.eligibleCards[0]);
+        });
     });
 
     describe('Edge Cases', () => {
@@ -311,9 +529,8 @@ describe('Search Card Effects - Comprehensive', () => {
                 gameId: gameId
             };
             
-            await expect(gameLogic.selectCard({ body: invalidSelectionRequest }))
-                .rejects
-                .toThrow('Invalid or expired card selection');
+            const selectionResult = await gameLogic.selectCard({ body: invalidSelectionRequest });
+            expect(selectionResult.error).toContain('Invalid or expired card selection');
         });
     });
    
