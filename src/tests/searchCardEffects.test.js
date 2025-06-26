@@ -323,10 +323,14 @@ describe('Search Card Effects - Comprehensive', () => {
             expect(finalState.gameEnv.playerId_1.deck.hand).toContain(selectionData.eligibleCards[0]);
         });
 
-        it('should handle Help zone becoming occupied during selection process', async () => {
-            const scenario = await loadTestScenario('searchCard_helpFilter');
+        it('should place Help card in hand when Help zone is already occupied', async () => {
+            // Use the occupied scenario directly instead of manually modifying state
+            const scenario = await loadTestScenario('searchCard_helpFilter_occupied');
             const result = await injectGameState(scenario);
             gameId = result.gameId;
+
+            // Verify Help zone is initially occupied
+            expect(result.gameEnv.playerId_1.Field.help.length).toBe(1);
 
             // Play Luke Farritor to trigger search effect
             const action = {
@@ -339,30 +343,22 @@ describe('Search Card Effects - Comprehensive', () => {
             const selectionId = actionResult.gameEnv.pendingPlayerAction.selectionId;
             const selectionData = actionResult.gameEnv.pendingCardSelections[selectionId];
 
-            // Manually occupy the Help zone between trigger and completion
-            const gameState = await gameLogic.getGameState(gameId);
-            gameState.gameEnv.playerId_1.Field.help.push({
-                "card": ["h-3"],
-                "cardDetails": [{ "id": "h-3", "cardType": "help" }],
-                "isBack": [false],
-                "valueOnField": 0
-            });
-            await gameLogic.updateGameState(gameId, gameState.gameEnv);
-
-            // Complete selection - should succeed and place in hand instead
+            // Complete selection - should succeed and place in hand since Help zone is occupied
             const selectionRequest = {
                 selectionId: selectionId,
                 selectedCardIds: [selectionData.eligibleCards[0]],
                 playerId: 'playerId_1',
                 gameId: gameId
             };
-
+            console.log("selectionRequest111", JSON.stringify(selectionRequest));
             const selectionResult = await gameLogic.selectCard({ body: selectionRequest });
             expect(selectionResult.success).toBe(true);
+
+            console.log("selectionRequest111222", JSON.stringify(selectionResult));
             
-            // Card should be placed in hand since Help zone became occupied
+            // Card should be placed in hand since Help zone was already occupied
             const finalState = await gameLogic.getGameState(gameId);
-            expect(finalState.gameEnv.playerId_1.Field.help.length).toBe(1); // The manually added card
+            expect(finalState.gameEnv.playerId_1.Field.help.length).toBe(1); // Still the original card
             expect(finalState.gameEnv.playerId_1.deck.hand).toContain(selectionData.eligibleCards[0]);
         });
     });

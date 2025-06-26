@@ -1139,7 +1139,6 @@ class mozGamePlay {
             if (deckIndex !== -1) {
                 deck.splice(deckIndex, 1);
             }
-            
             // Add to destination based on effect
             if (effect.destination === 'spZone') {
                 // Create card object for SP zone placement

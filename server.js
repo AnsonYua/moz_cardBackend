@@ -26,14 +26,12 @@ app.use((req, res) => {
 
 let server;
 
-// Initialize deck manager and start server
-async function startServer() {
+// Start server (DeckManager is already initialized synchronously)
+function startServer() {
     try {
-        // Initialize deck manager first
-        await deckManager.initialize();
-        console.log('Deck Manager initialized successfully');
+        console.log('DeckManager already initialized synchronously');
 
-        // Then start the server
+        // Start the server
         server = app.listen(config.port, () => {
             console.log(`Server is running on port ${config.port}`);
         });
