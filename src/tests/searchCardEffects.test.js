@@ -525,8 +525,9 @@ describe('Search Card Effects - Comprehensive', () => {
                 gameId: gameId
             };
             
-            const selectionResult = await gameLogic.selectCard({ body: invalidSelectionRequest });
-            expect(selectionResult.error).toContain('Invalid or expired card selection');
+            await expect(gameLogic.selectCard({ body: invalidSelectionRequest }))
+                .rejects
+                .toThrow('Invalid or expired card selection');
         });
     });
    

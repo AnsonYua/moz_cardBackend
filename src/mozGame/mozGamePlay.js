@@ -158,33 +158,40 @@ class mozGamePlay {
             }
 
             // Check advanced placement restrictions (zone compatibility, special effects)
-            const placementCheck = await this.cardEffectManager.checkSummonRestriction(
-                gameEnv,
-                playerId,
-                cardDetails,
-                playPos
-            );
+            // Face-down cards bypass all restrictions since opponent cannot see what's being played
+            if (!isPlayInFaceDown) {
+                const placementCheck = await this.cardEffectManager.checkSummonRestriction(
+                    gameEnv,
+                    playerId,
+                    cardDetails,
+                    playPos
+                );
 
-            if (!placementCheck.canPlace) {
-                return this.throwError(placementCheck.reason);
-            }
+                if (!placementCheck.canPlace) {
+                    return this.throwError(placementCheck.reason);
+                }
 
-            // Log any override effects that allowed placement
-            if (placementCheck.overrideInfo) {
-                console.log(`Card placement allowed due to override from ${placementCheck.overrideInfo.overrideCardType} card: ${placementCheck.overrideInfo.overrideCardId}`);
-                console.log(`Reason: ${placementCheck.overrideInfo.overrideReason}`);
+                // Log any override effects that allowed placement
+                if (placementCheck.overrideInfo) {
+                    console.log(`Card placement allowed due to override from ${placementCheck.overrideInfo.overrideCardType} card: ${placementCheck.overrideInfo.overrideCardId}`);
+                    console.log(`Reason: ${placementCheck.overrideInfo.overrideReason}`);
+                }
             }
 
             // Validate card type and position compatibility based on game rules
             if (isPlayInFaceDown) {
-                // Face-down placement rules: Used for bluffing and strategic play
-                if (cardDetails["cardType"] == "character" && (playPos == "top" || playPos == "left" || playPos == "right")) {
-                    return this.throwError("Can't play character card (face down) in character zones");
+                // Face-down placement rules: Any card can be played face-down for strategic purposes
+                // Face-down cards have no power, no effects, and don't contribute to combos
+                // Phase restriction: No face-down cards can be played in SP zone during MAIN_PHASE
+                if (gameEnv["phase"] != TurnPhase.SP_PHASE && playPos == "sp") {
+                    return this.throwError("Cannot play face-down cards in SP zone during MAIN_PHASE");
                 }
-                if ((cardDetails["cardType"] == "help" || cardDetails["cardType"] == "sp") && (playPos == "top" || playPos == "left" || playPos == "right")) {
-                    return this.throwError("Can't play utility card (face down) in character zones");
-                }
+                // All other face-down placements are allowed for zone filling and bluffing
             } else {
+                // SP zone enforcement: During SP_PHASE, SP zone cards MUST be played face-down
+                if (gameEnv["phase"] == TurnPhase.SP_PHASE && playPos == "sp") {
+                    return this.throwError("Cards in SP zone must be played face-down during SP phase");
+                }
                 // Face-up card placement validation by card type
                 if (cardDetails["cardType"] == "character") {
                     // Character cards can only go in top/left/right zones
@@ -235,43 +242,50 @@ class mozGamePlay {
             action["turn"] = gameEnv["currentTurn"];
             gameEnv[playerId]["turnAction"].push(action);         // Record action history
 
-            // Process immediate card effects (triggered effects only if face up)
-            if (!isPlayInFaceDown) {
+            // Process immediate card effects - only for face-up cards
+            // SP zone cards do NOT process effects immediately - they wait for reveal phase
+            if (!isPlayInFaceDown && playPos !== "sp") {
                 let effectResult = null;
                 if (cardDetails["cardType"] == "character") {
                     // Character summon effects (e.g., draw cards, search deck)
                     effectResult = await this.processCharacterSummonEffects(gameEnv, playerId, cardDetails);
-                } else if (cardDetails["cardType"] == "help" || cardDetails["cardType"] == "sp") {
-                    // Utility card play effects (e.g., discard opponent cards, boost power)
+                } else if (cardDetails["cardType"] == "help") {
+                    // Help card play effects (e.g., discard opponent cards, boost power)
                     effectResult = await this.processUtilityCardEffects(gameEnv, playerId, cardDetails);
                 }
                 
                 // Check if card effect requires user selection
                 if (effectResult && effectResult.requiresCardSelection) {
-                    // Return the gameEnv directly - it contains pendingPlayerAction and pendingCardSelections
-                    return effectResult.gameEnv;
+                    // Return the effect result directly - it already contains the proper structure
+                    return effectResult;
+                }
+            }
+            
+            // Check if both players have filled SP zones - trigger reveal phase
+            if (gameEnv["phase"] == TurnPhase.SP_PHASE && playPos == "sp") {
+                const allPlayers = Object.keys(gameEnv).filter(key => key.startsWith('playerId_'));
+                const allSpZonesFilled = allPlayers.every(pid => 
+                    gameEnv[pid].Field.sp && gameEnv[pid].Field.sp.length > 0
+                );
+                
+                if (allSpZonesFilled) {
+                    // Trigger SP reveal and battle calculation
+                    return await this.processSpRevealAndBattle(gameEnv);
                 }
             }
             
             // Recalculate player points with all active effects
             gameEnv[playerId]["playerPoint"] = await this.calculatePlayerPoint(gameEnv, playerId);
             
-            // Check if all character zones are filled (battle ready)
-            const isSummonBattleReady = await this.checkIsSummonBattleReady(gameEnv);
+            // Check if main phase is complete (all character zones + help zones filled or skipped)
+            const isMainPhaseComplete = await this.checkIsMainPhaseComplete(gameEnv);
             
-            if (!isSummonBattleReady) {
-                // Continue turn-based play
+            if (!isMainPhaseComplete) {
+                // Continue turn-based play - players still need to place character/help cards
                 gameEnv = await this.shouldUpdateTurn(gameEnv, playerId);
             } else {
-                // All zones filled - prepare for battle resolution
-                const needsSpPhase = await this.checkNeedsSpPhase(gameEnv);
-                if (needsSpPhase) {
-                    // Execute SP cards in priority order before battle
-                    gameEnv = await this.startSpPhase(gameEnv);
-                } else {
-                    // Proceed directly to battle resolution
-                    gameEnv = await this.concludeLeaderBattleAndNewStart(gameEnv, playerId);
-                }
+                // All required zones filled - prepare for battle resolution with phase skipping logic
+                gameEnv = await this.advanceToSpPhaseOrBattle(gameEnv, playerId);
             }
         }
         return gameEnv;
@@ -433,15 +447,71 @@ class mozGamePlay {
        return allFillWithMonster;
     }
 
+    /**
+     * Checks if all Help zones are filled for all players
+     * In normal game flow, each player should have placed 1 Help card
+     * @param {Object} gameEnv - Current game environment
+     * @returns {boolean} True if all Help zones are filled (or skipped due to pre-occupation)
+     */
+    async checkIsHelpZoneFilled(gameEnv) {
+        const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
+        
+        for (const playerId of playerList) {
+            const helpZone = gameEnv[playerId].Field.help;
+            
+            // Check if Help zone has a card (either placed normally or via search effects)
+            if (!helpZone || helpZone.length === 0) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    /**
+     * Checks if the main phase is complete and ready for SP phase/battle
+     * Main phase is complete when:
+     * 1. All character zones are filled (3 per player)
+     * 2. All Help zones are filled (1 per player) - can be any card face-up or face-down
+     * @param {Object} gameEnv - Current game environment
+     * @returns {boolean} True if main phase is complete
+     */
+    async checkIsMainPhaseComplete(gameEnv) {
+        // First check if all character zones are filled
+        const isCharacterZonesFilled = await this.checkIsSummonBattleReady(gameEnv);
+        if (!isCharacterZonesFilled) {
+            return false;
+        }
+
+        // Check if Help zones are filled (any card face-up or face-down)
+        const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
+        
+        for (const playerId of playerList) {
+            const helpZone = gameEnv[playerId].Field.help;
+            
+            // Help zone must have at least one card (face-up or face-down)
+            if (!helpZone || helpZone.length === 0) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+
     async shouldUpdateTurn(gameEnvInput,playerId){
         var gameEnv = gameEnvInput;
         
 
         var currentTurnActionComplete = false
+        var shouldSkipTurn = false;
+        
         //end currentPlayer Turn
         if(gameEnv["phase"] == TurnPhase.MAIN_PHASE){
             const playerAction = gameEnv[playerId]["turnAction"];
             const currentTurn = gameEnv["currentTurn"];
+            
+            // Check if player played a card this turn
             for (let idx in playerAction){
                 if((playerAction[idx]["type"]=="PlayCard" ||
                     playerAction[idx]["type"]=="PlayCardBack")&&
@@ -449,11 +519,53 @@ class mozGamePlay {
                     currentTurnActionComplete = true;
                 }
             }
+            
+            // Check if player should skip turn due to zone pre-occupation
+            if (!currentTurnActionComplete) {
+                shouldSkipTurn = await this.shouldPlayerSkipTurn(gameEnv, playerId);
+                if (shouldSkipTurn) {
+                    console.log(`Player ${playerId} automatically skipping turn - no valid placements available`);
+                    currentTurnActionComplete = true;
+                }
+            }
         }
+        
         if(currentTurnActionComplete){
             gameEnv = await this.startNewTurn(gameEnv);
         }
         return gameEnv;
+    }
+
+    /**
+     * Determines if a player should automatically skip their turn
+     * This happens when all their available zones are pre-occupied or they have no cards to play
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} playerId - Player ID to check
+     * @returns {boolean} True if player should skip their turn
+     */
+    async shouldPlayerSkipTurn(gameEnv, playerId) {
+        const hand = gameEnv[playerId].deck.hand || [];
+        if (hand.length === 0) {
+            return true; // No cards to play
+        }
+
+        // Check if any character zone is available
+        const characterZones = ['top', 'left', 'right'];
+        for (const zone of characterZones) {
+            const zoneCards = gameEnv[playerId].Field[zone] || [];
+            const hasCharacter = await this.monsterInField(zoneCards);
+            if (!hasCharacter) {
+                return false; // Found available character zone
+            }
+        }
+        
+        // Check if Help zone is available (any card can be played face-down here)
+        const helpZone = gameEnv[playerId].Field.help || [];
+        if (helpZone.length === 0) {
+            return false; // Help zone is available - any card can be played face-down
+        }
+        
+        return true; // All zones are occupied, player should skip turn
     }
 
     async startNewTurn(gameEnvInput){
@@ -587,12 +699,17 @@ class mozGamePlay {
         if (gameEnv["currentPlayer"] == playerId) {
             if (gameEnv["phase"] == TurnPhase.MAIN_PHASE) {
                 // During MAIN_PHASE: only character and help cards allowed
-                if (cardDetails["cardType"] == "character" || cardDetails["cardType"] == "help") {
+                if (cardDetails["cardType"] == "character") {
                     returnValue = true;
+                } else if (cardDetails["cardType"] == "help") {
+                    // Allow help card placement only if Help zone is empty
+                    if (!this.shouldSkipHelpPhase(gameEnv, playerId)) {
+                        returnValue = true;
+                    }
                 }
             } else if (gameEnv["phase"] == TurnPhase.SP_PHASE) {
-                // During SP_PHASE: only SP cards allowed
-                if (cardDetails["cardType"] == "sp") {
+                // During SP_PHASE: only SP cards allowed, and only if SP zone is empty
+                if (cardDetails["cardType"] == "sp" && !this.shouldSkipSpPhase(gameEnv, playerId)) {
                     returnValue = true;
                 }
             }
@@ -1270,7 +1387,83 @@ class mozGamePlay {
         
         return false;
     }
+
+    /**
+     * Checks if a player should skip Help phase because Help zone is already occupied
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} playerId - Player ID to check
+     * @returns {boolean} True if Help phase should be skipped
+     */
+    shouldSkipHelpPhase(gameEnv, playerId) {
+        return gameEnv[playerId].Field.help && gameEnv[playerId].Field.help.length > 0;
+    }
+
+    /**
+     * Checks if a player should skip SP phase because SP zone is already occupied
+     * @param {Object} gameEnv - Current game environment  
+     * @param {string} playerId - Player ID to check
+     * @returns {boolean} True if SP phase should be skipped
+     */
+    shouldSkipSpPhase(gameEnv, playerId) {
+        return gameEnv[playerId].Field.sp && gameEnv[playerId].Field.sp.length > 0;
+    }
+
+    /**
+     * Determines if current player should skip the current phase due to zone occupation
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} playerId - Player ID to check
+     * @param {string} phase - Current phase to check
+     * @returns {boolean} True if phase should be skipped
+     */
+    shouldSkipCurrentPhase(gameEnv, playerId, phase) {
+        switch (phase) {
+            case 'HELP_PHASE':
+                return this.shouldSkipHelpPhase(gameEnv, playerId);
+            case TurnPhase.SP_PHASE:
+                return this.shouldSkipSpPhase(gameEnv, playerId);
+            default:
+                return false;
+        }
+    }
     
+    /**
+     * Advances to SP phase or directly to battle with phase skipping logic
+     * Skips SP phase if all players have SP zones already occupied
+     * @param {Object} gameEnv - Current game environment
+     * @param {string} playerId - Current player ID
+     * @returns {Object} Updated game environment
+     */
+    async advanceToSpPhaseOrBattle(gameEnv, playerId) {
+        const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
+        
+        // Check if SP phase should be skipped for all players
+        let allPlayersShouldSkipSp = true;
+        
+        for (const checkPlayerId of playerList) {
+            const shouldSkip = this.shouldSkipSpPhase(gameEnv, checkPlayerId);
+            const hand = gameEnv[checkPlayerId].deck.hand || [];
+            
+            // If any player has cards in hand and their SP zone isn't pre-occupied, they can play any card face-down
+            if (hand.length > 0 && !shouldSkip) {
+                allPlayersShouldSkipSp = false;
+            }
+        }
+
+        // Also check if there are any SP cards already on the field that need to execute effects
+        const hasSpCardsOnField = await this.checkNeedsSpPhase(gameEnv);
+
+        if (!allPlayersShouldSkipSp || hasSpCardsOnField) {
+            // Start SP phase - some players can play SP cards or SP effects need to execute
+            console.log('Starting SP phase - players can play SP cards or SP effects need to execute');
+            return await this.startSpPhase(gameEnv);
+        } else {
+            // Skip SP phase entirely - all SP zones pre-occupied and no SP cards on field
+            console.log('Skipping SP phase - all SP zones are pre-occupied or no SP cards present');
+            return await this.concludeLeaderBattleAndNewStart(gameEnv, playerId);
+        }
+    }
+
+
     /**
      * Starts the SP phase - executes all SP card effects in priority order
      * SP cards execute based on leader initial points (highest first)
@@ -1342,6 +1535,128 @@ class mozGamePlay {
             returnValue = true;
         }
         return returnValue;
+    }
+
+    /**
+     * Process SP zone reveal and battle calculation after both players fill SP zones
+     */
+    async processSpRevealAndBattle(gameEnv) {
+        // Phase 1: Reveal all SP zone cards
+        const allPlayers = Object.keys(gameEnv).filter(key => key.startsWith('playerId_'));
+        const spCards = [];
+        
+        for (const playerId of allPlayers) {
+            const spZone = gameEnv[playerId].Field.sp;
+            if (spZone && spZone.length > 0) {
+                const spCard = spZone[0];
+                // Reveal the card
+                spCard.isBack = [false];
+                
+                // Collect SP cards for priority execution
+                if (spCard.cardDetails[0].cardType === "sp") {
+                    spCards.push({
+                        playerId,
+                        card: spCard.cardDetails[0],
+                        priority: gameEnv[playerId].Field.leader.initialPoint
+                    });
+                }
+            }
+        }
+        
+        // Phase 2: Execute SP effects in priority order (higher initialPoint first, first player breaks ties)
+        spCards.sort((a, b) => {
+            if (a.priority !== b.priority) {
+                return b.priority - a.priority; // Higher priority first
+            }
+            // If same priority, first player (playerId_1) goes first
+            return a.playerId.localeCompare(b.playerId);
+        });
+        
+        // Execute pre-combo SP effects
+        for (const spCardInfo of spCards) {
+            await this.executeSPCardEffect(gameEnv, spCardInfo.playerId, spCardInfo.card, "before");
+        }
+        
+        // Phase 3: Calculate battle results (power + combos)
+        const battleResults = await this.calculateBattleResults(gameEnv);
+        
+        // Phase 4: Execute post-combo SP effects
+        for (const spCardInfo of spCards) {
+            await this.executeSPCardEffect(gameEnv, spCardInfo.playerId, spCardInfo.card, "after");
+        }
+        
+        // Phase 5: Recalculate final results after post-combo effects
+        const finalResults = await this.calculateBattleResults(gameEnv);
+        
+        // Set battle phase and return results
+        gameEnv["phase"] = TurnPhase.BATTLE_PHASE;
+        gameEnv["battleResults"] = finalResults;
+        gameEnv["spRevealComplete"] = true;
+        
+        return gameEnv;
+    }
+    
+    /**
+     * Execute SP card effect based on timing
+     */
+    async executeSPCardEffect(gameEnv, playerId, spCard, timing) {
+        if (!spCard.effects || !spCard.effects.rules) return;
+        
+        for (const rule of spCard.effects.rules) {
+            // Determine if this effect should execute before or after combo calculation
+            const isAfterCombo = this.isAfterComboEffect(rule);
+            
+            if ((timing === "before" && !isAfterCombo) || (timing === "after" && isAfterCombo)) {
+                await this.executeEffectRule(gameEnv, playerId, rule);
+            }
+        }
+    }
+    
+    /**
+     * Determine if SP effect should execute after combo calculation
+     */
+    isAfterComboEffect(rule) {
+        if (!rule.effect) return false;
+        
+        // Check for effects that modify combo results or total power after calculation
+        const afterComboKeywords = ["combo", "組合", "總能力", "total power", "特殊組合", "總能力結算"];
+        const description = rule.effect.description || "";
+        
+        return afterComboKeywords.some(keyword => description.includes(keyword));
+    }
+    
+    /**
+     * Calculate battle results including power and combos
+     */
+    async calculateBattleResults(gameEnv) {
+        const results = {};
+        const allPlayers = Object.keys(gameEnv).filter(key => key.startsWith('playerId_'));
+        
+        for (const playerId of allPlayers) {
+            // Calculate power (excluding face-down cards)
+            const power = await this.calculatePlayerPower(gameEnv, playerId);
+            
+            // Calculate combo bonuses (excluding face-down cards)
+            const combos = await this.calculatePlayerCombos(gameEnv, playerId);
+            
+            results[playerId] = {
+                power,
+                combos,
+                totalPoints: power + combos.totalBonus
+            };
+        }
+        
+        // Determine winner
+        const playerResults = allPlayers.map(pid => ({
+            playerId: pid,
+            totalPoints: results[pid].totalPoints
+        }));
+        
+        playerResults.sort((a, b) => b.totalPoints - a.totalPoints);
+        results.winner = playerResults[0];
+        results.battleComplete = true;
+        
+        return results;
     }
 }
 module.exports = new mozGamePlay();

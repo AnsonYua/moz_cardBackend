@@ -77,9 +77,9 @@ Process a player's game action (card placement, etc.).
   "playerId": "string",
   "gameId": "string",
   "action": {
-    "type": "string",        // Action type (e.g., "place_card")
+    "type": "string",        // "PlayCard" (face-up) or "PlayCardBack" (face-down)
     "card_idx": "number",    // Index of card in hand
-    "field_idx": "number"    // Target field/zone index
+    "field_idx": "number"    // Target field/zone index (0=top, 1=left, 2=right, 3=help, 4=sp)
   }
 }
 ```
@@ -90,6 +90,30 @@ Process a player's game action (card placement, etc.).
   "gameEnv": {
     // Updated game state after action
     "pendingPlayerAction": null  // No pending actions
+  },
+  "success": true
+}
+```
+
+**Response (SP Phase Complete - Battle Results):**
+```json
+{
+  "gameEnv": {
+    "phase": "BATTLE_PHASE",
+    "battleResults": {
+      "playerId_1": {
+        "power": 250,
+        "combos": { "totalBonus": 150 },
+        "totalPoints": 400
+      },
+      "playerId_2": {
+        "power": 180, 
+        "combos": { "totalBonus": 200 },
+        "totalPoints": 380
+      },
+      "winner": { "playerId": "playerId_1", "totalPoints": 400 }
+    },
+    "spRevealComplete": true
   },
   "success": true
 }
@@ -139,6 +163,28 @@ Complete a pending card selection triggered by a card effect.
   "gameEnv": {
     // Updated game state after selection
   }
+}
+```
+
+### POST /player/nextRound
+Start the next round after battle completion (if game continues).
+
+**Request Body:**
+```json
+{
+  "gameId": "string"
+}
+```
+
+**Response:**
+```json
+{
+  "gameEnv": {
+    "phase": "MAIN_PHASE",
+    "currentLeaderIdx": 1,  // Next leader
+    // All field zones cleared, new hands drawn
+  },
+  "success": true
 }
 ```
 
@@ -415,7 +461,10 @@ The game follows a strict phase-based system:
 - **SP Cards**: ❌ Cannot be played during MAIN_PHASE
 
 ### SP_PHASE (triggered when all character zones are filled)
-- **SP Cards**: Can be placed in SP zone for powerful effects (one per player)
+- **All Cards**: MUST be played face-down in SP zone (`"type": "PlayCardBack"`)
+- **Auto-reveal**: Cards automatically revealed after both players fill SP zones
+- **SP Effect Execution**: SP cards execute in priority order (leader initialPoint)
+- **Battle Calculation**: Automatic power + combo calculation after SP effects
 - **Character/Help Cards**: ❌ Cannot be played during SP_PHASE
 
 ### Card Types:
@@ -429,6 +478,14 @@ The game follows a strict phase-based system:
 - **IMPORTANT**: Zone checking uses `cardDetails.gameType` (string), NOT `cardDetails.traits` (array)
 - `traits` are used for card effects and abilities; `gameType` determines placement restrictions
 - Leaders with `"all"` in their zone compatibility can place any character type in that zone
+- **Face-down bypass**: Face-down cards ignore ALL zone compatibility restrictions
+
+### Face-Down Card Rules:
+- **Complete restriction bypass**: Face-down cards ignore leader zone compatibility and all card effect restrictions
+- **Power/combo exclusion**: Face-down cards contribute 0 power and don't count for combos
+- **No effects**: Face-down cards don't trigger their effects while face-down
+- **SP zone enforcement**: During SP_PHASE, all cards MUST be played face-down in SP zone
+- **Permanent status**: Face-down cards stay face-down (except SP zone auto-reveal)
 
 ### Correct Zone Compatibility Access Pattern:
 ```javascript
@@ -472,9 +529,9 @@ return gameData; // Client derives selection state from gameEnv
 ```
 
 Common action types:
-- `place_card`: Place a card from hand to field (phase-restricted)
-- `activate_effect`: Activate a card's special effect
-- `end_turn`: End current player's turn
+- `"PlayCard"`: Place a card face-up (normal placement, triggers effects)
+- `"PlayCardBack"`: Place a card face-down (strategic placement, bypasses restrictions)
+- **SP Phase Rule**: During SP_PHASE, only `"PlayCardBack"` allowed in SP zone
 
 ## Program Architecture
 

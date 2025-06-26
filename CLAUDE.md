@@ -144,6 +144,35 @@ The game now supports complex card effects with:
 - **Targeting system:** Can target self, opponent, or both players' cards
 - **Filtering system:** Target cards by type, traits, power, etc.
 - **Priority system:** Effects execute in order of leader initial points
+- **Two-phase SP execution:** Before combo calculation and after combo calculation
+- **Face-down bypass:** Face-down cards don't trigger effects until revealed
+
+### Phase Skipping System
+Automatic phase skipping for pre-occupied zones:
+- **Help Phase Skipping:** When Help zone is already occupied via search effects, players cannot play additional Help cards during MAIN_PHASE
+- **SP Phase Skipping:** When SP zones are pre-occupied via search effects, the game automatically skips SP_PHASE if no players can play SP cards
+- **Smart Phase Management:** The game checks all players' zones and hand contents to determine if phases should be skipped
+- **Implementation:** `advanceToSpPhaseOrBattle()` function handles automatic phase progression with skipping logic
+
+### SP Phase Complete System
+Automatic SP reveal and battle calculation:
+- **Face-down Enforcement:** All cards in SP zone must be played face-down during SP_PHASE
+- **Auto-reveal Trigger:** When both players fill SP zones, cards automatically reveal
+- **Priority Execution:** SP effects execute in leader initialPoint order (higher first, first player breaks ties)
+- **Two-phase Effects:** Effects marked with combo keywords execute after combo calculation
+- **Battle Results:** Complete power + combo calculation excluding face-down cards
+- **Next Round API:** `POST /player/nextRound` advances to next leader after battle
+
+### Main Phase Completion Logic
+Enhanced main phase completion requirements:
+- **Character Zone Requirement:** All 3 character zones (top, left, right) must be filled for each player
+- **Help Zone Requirement:** Each player must have placed 1 card in Help zone (any card face-up or face-down)
+- **Face-Down Card Mechanic:** Players can play any card face-down in Help zone if they don't want to use a Help card effect
+- **Turn Skipping:** Players automatically skip turns when all character zones AND Help zone are occupied
+- **Implementation:** `checkIsMainPhaseComplete()` validates both character and Help zone requirements before advancing to SP phase
+- **Normal Flow:** Players typically have 4 turns (3 character cards + 1 card in Help zone) before SP phase
+- **Card Effect Flow:** When search effects pre-place cards, players may skip turns and advance to SP phase early
+- **Calculation:** Face-down cards in Help zone have no effect during power calculation
 
 ### Card Selection System
 Interactive card selection for search effects:
@@ -176,3 +205,12 @@ Interactive card selection for search effects:
 - **utilityCards.json:** Combined help/SP cards with priority and effect rules
 
 When modifying game logic, ensure compatibility with the phase-based system and validate against existing test scenarios after updating them to the new structure.
+
+## Face-Down Card Implementation
+Strategic face-down placement system:
+- **Complete restriction bypass:** Face-down cards ignore zone compatibility and card effect restrictions
+- **Power/combo exclusion:** Face-down cards contribute 0 power and don't count toward combos  
+- **Action types:** `"PlayCard"` (face-up) vs `"PlayCardBack"` (face-down)
+- **SP zone enforcement:** During SP_PHASE, only face-down placement allowed in SP zone
+- **Permanent status:** Face-down cards stay face-down except SP zone auto-reveal
+- **Strategic uses:** Zone filling, bluffing, hand management, resource conservation
