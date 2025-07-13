@@ -219,6 +219,55 @@ class GameLogic {
             gameEnv: updatedGameEnv
         };
     }
+
+    async acknowledgeGameEvents(gameId, eventIds) {
+        // Read current game state
+        const gameData = await this.readJSONFileAsync(gameId);
+
+        // Mark specified events as processed
+        let eventsAcknowledged = 0;
+        if (gameData.gameEnv.gameEvents) {
+            for (const eventId of eventIds) {
+                const success = this.mozGamePlay.markEventProcessed(gameData.gameEnv, eventId);
+                if (success) {
+                    eventsAcknowledged++;
+                }
+            }
+        }
+
+        // Clean expired events and save
+        this.mozGamePlay.cleanExpiredEvents(gameData.gameEnv);
+        const updatedGameData = this.addUpdateUUID(gameData);
+        await this.saveOrCreateGame(updatedGameData, gameId);
+
+        return {
+            success: true,
+            eventsAcknowledged: eventsAcknowledged,
+            remainingEvents: gameData.gameEnv.gameEvents ? gameData.gameEnv.gameEvents.length : 0
+        };
+    }
+
+    async nextRound(gameId) {
+        // Read current game state
+        const gameData = await this.readJSONFileAsync(gameId);
+
+        // Call mozGamePlay's next round method
+        const updatedGameEnv = await this.mozGamePlay.concludeLeaderBattleAndNewStart(gameData.gameEnv, null);
+
+        if (updatedGameEnv.error) {
+            throw new Error(updatedGameEnv.error);
+        }
+
+        // Update the stored game state
+        gameData.gameEnv = updatedGameEnv;
+        const updatedGameData = this.addUpdateUUID(gameData);
+        await this.saveOrCreateGame(updatedGameData, gameId);
+
+        return {
+            success: true,
+            gameEnv: updatedGameEnv
+        };
+    }
 }
 
 module.exports = new GameLogic();

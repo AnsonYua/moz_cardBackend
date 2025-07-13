@@ -166,6 +166,26 @@ Complete a pending card selection triggered by a card effect.
 }
 ```
 
+### POST /player/acknowledgeEvents
+Mark frontend events as processed to prevent re-processing and allow cleanup.
+
+**Request Body:**
+```json
+{
+  "gameId": "string",
+  "eventIds": ["event_1640995200001", "event_1640995200002"]  // Array of event IDs to acknowledge
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "eventsAcknowledged": 2,              // Number of events successfully marked as processed
+  "remainingEvents": 3                  // Number of unprocessed events still in queue
+}
+```
+
 ### POST /player/nextRound
 Start the next round after battle completion (if game continues).
 
@@ -350,6 +370,129 @@ Common HTTP status codes:
 - `403`: Forbidden (test endpoint in production)
 - `500`: Internal Server Error
 
+## Game Event System
+
+The API includes a comprehensive event system that tracks all game state changes and provides clear indicators for frontend actions.
+
+### Event Structure
+All game events are stored in `gameEnv.gameEvents` array with the following structure:
+
+```json
+{
+  "id": "event_1640995200001",          // Unique event identifier
+  "type": "CARD_PLAYED",                // Event type (see complete list below)
+  "data": {                             // Event-specific data
+    "playerId": "playerId_1",
+    "card": { "cardId": "43", "name": "Card Name", "power": 150 },
+    "zone": "top",
+    "isFaceDown": false
+  },
+  "timestamp": 1640995200001,           // When event occurred
+  "expiresAt": 1640995203001,           // When event expires (3 seconds later)
+  "frontendProcessed": false            // Whether frontend has acknowledged this event
+}
+```
+
+### Complete Event Types
+
+**Game Setup Events:**
+- `GAME_STARTED` - Initial game creation with leader reveals
+- `INITIAL_HAND_DEALT` - Player received starting hand
+- `PLAYER_READY` - Individual player ready status
+- `HAND_REDRAWN` - Player chose to redraw hand
+- `GAME_PHASE_START` - Transition to MAIN_PHASE after both ready
+- `CARD_DRAWN` - Card drawn to hand
+
+**Turn & Phase Events:**
+- `TURN_SWITCH` - Player turn changed
+- `PHASE_CHANGE` - Game phase transition
+- `ALL_MAIN_ZONES_FILLED` - Player filled character+help zones
+- `ALL_SP_ZONES_FILLED` - Both players filled SP zones
+
+**Card Events:**
+- `CARD_PLAYED` - Card placed (with full card details)
+- `ZONE_FILLED` - Specific zone occupied
+- `CARD_EFFECT_TRIGGERED` - Card effect activated
+- `CARD_SELECTION_REQUIRED` - Search effect needs input
+- `CARD_SELECTION_COMPLETED` - Player completed selection
+
+**SP & Battle Events:**
+- `SP_CARDS_REVEALED` - Both SP cards revealed
+- `SP_EFFECTS_EXECUTED` - SP effects processed
+- `BATTLE_CALCULATED` - Power+combo calculation
+- `VICTORY_POINTS_AWARDED` - Round winner determined
+- `NEXT_ROUND_START` - New leader battle
+
+**Error Events:**
+- `ERROR_OCCURRED` - Any validation error or failed action
+- `CARD_SELECTION_PENDING` - Blocked action due to pending selection
+- `WAITING_FOR_PLAYER` - Waiting for other player
+- `ZONE_COMPATIBILITY_ERROR` - Card placement restriction violation
+- `PHASE_RESTRICTION_ERROR` - Wrong phase for action
+- `ZONE_OCCUPIED_ERROR` - Zone already filled
+
+### Event Lifecycle
+
+1. **Creation**: Events are created when game state changes occur
+2. **Persistence**: Events persist for 3 seconds (3 polling cycles at 1s intervals)
+3. **Processing**: Frontend detects events via polling and takes appropriate actions
+4. **Acknowledgment**: Frontend calls `/player/acknowledgeEvents` to mark events as processed
+5. **Cleanup**: Processed and expired events are automatically removed
+
+### Frontend Integration
+
+**Polling with Event Detection:**
+```javascript
+// Poll every 1 second for game state updates
+setInterval(async () => {
+  const response = await fetch(`/api/player/${playerId}?gameId=${gameId}`);
+  const data = await response.json();
+  
+  // Process new events
+  if (data.gameEnv.gameEvents && data.gameEnv.gameEvents.length > 0) {
+    const unprocessedEvents = data.gameEnv.gameEvents.filter(event => !event.frontendProcessed);
+    
+    for (const event of unprocessedEvents) {
+      handleGameEvent(event);
+    }
+    
+    // Acknowledge processed events
+    const eventIds = unprocessedEvents.map(e => e.id);
+    await fetch('/api/player/acknowledgeEvents', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gameId, eventIds })
+    });
+  }
+}, 1000);
+
+function handleGameEvent(event) {
+  switch(event.type) {
+    case 'TURN_SWITCH':
+      highlightCurrentPlayer(event.data.newPlayer);
+      break;
+    case 'CARD_PLAYED':
+      animateCardPlacement(event.data.card, event.data.zone);
+      break;
+    case 'CARD_SELECTION_REQUIRED':
+      showCardSelectionModal(event.data);
+      break;
+    case 'PHASE_CHANGE':
+      animatePhaseTransition(event.data.newPhase);
+      break;
+    case 'SP_CARDS_REVEALED':
+      animateCardReveal(event.data.cards);
+      break;
+    case 'BATTLE_CALCULATED':
+      showBattleResults(event.data.battleResults);
+      break;
+    case 'ERROR_OCCURRED':
+      showErrorNotification(event.data.message);
+      break;
+  }
+}
+```
+
 ## Game Flow Example
 
 1. **Start Game**: POST `/player/startGame`
@@ -357,8 +500,9 @@ Common HTTP status codes:
 3. **Main Phase Actions**: POST `/player/playerAction` (character and help cards only)
 4. **Card Selection** (if triggered): POST `/player/selectCard`
 5. **SP Phase Actions**: POST `/player/playerAction` (SP cards only, after all character zones filled)
-6. **AI Actions**: POST `/player/playerAiAction` (if playing against AI)
-7. **Check State**: GET `/player/:playerId`
+6. **Event Acknowledgment**: POST `/player/acknowledgeEvents` (mark processed events)
+7. **AI Actions**: POST `/player/playerAiAction` (if playing against AI)
+8. **Check State**: GET `/player/:playerId`
 
 ## Card Selection Flow
 

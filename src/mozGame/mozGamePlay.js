@@ -24,14 +24,88 @@ class mozGamePlay {
         this.cardInfoUtils = CardInfoUtils;
     }
 
+    // Event Management System
+    initializeEventSystem(gameEnv) {
+        if (!gameEnv.gameEvents) {
+            gameEnv.gameEvents = [];
+        }
+        if (!gameEnv.lastEventId) {
+            gameEnv.lastEventId = 0;
+        }
+        return gameEnv;
+    }
+
+    addGameEvent(gameEnv, eventType, eventData = {}) {
+        this.initializeEventSystem(gameEnv);
+        
+        const timestamp = Date.now();
+        const eventId = `event_${timestamp}_${gameEnv.lastEventId + 1}`;
+        
+        const event = {
+            id: eventId,
+            type: eventType,
+            data: eventData,
+            timestamp: timestamp,
+            expiresAt: timestamp + 3000, // 3 seconds
+            frontendProcessed: false
+        };
+        
+        gameEnv.gameEvents.push(event);
+        gameEnv.lastEventId = gameEnv.lastEventId + 1;
+        
+        // Clean expired events
+        this.cleanExpiredEvents(gameEnv);
+        
+        return event;
+    }
+
+    cleanExpiredEvents(gameEnv) {
+        if (!gameEnv.gameEvents) return;
+        
+        const now = Date.now();
+        gameEnv.gameEvents = gameEnv.gameEvents.filter(event => 
+            event.expiresAt > now || !event.frontendProcessed
+        );
+    }
+
+    markEventProcessed(gameEnv, eventId) {
+        if (!gameEnv.gameEvents) return false;
+        
+        const event = gameEnv.gameEvents.find(e => e.id === eventId);
+        if (event) {
+            event.frontendProcessed = true;
+            return true;
+        }
+        return false;
+    }
+
+    addErrorEvent(gameEnv, errorType, errorMessage, playerId = null) {
+        return this.addGameEvent(gameEnv, 'ERROR_OCCURRED', {
+            errorType: errorType,
+            message: errorMessage,
+            playerId: playerId
+        });
+    }
+
     updateInitialGameEnvironment(gameEnv){
+        // Initialize event system
+        this.initializeEventSystem(gameEnv);
+        
         // decide who goes first
         const leaderList = []
         const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
+        const leaderRevealed = {};
+        
         for (let playerId in playerList){
             let leader = this.cardInfoUtils.getCurrentLeader(gameEnv, playerList[playerId]);
             leaderList.push(leader);
+            leaderRevealed[playerList[playerId]] = {
+                cardId: leader.cardId,
+                name: leader.name,
+                initialPoint: leader.initialPoint
+            };
         }
+        
         var firstPlayer = 0; 
         if (leaderList[1].initialPoint>leaderList[0].initialPoint){
             firstPlayer = 1;
@@ -44,6 +118,22 @@ class mozGamePlay {
         for (let playerId in playerList){
             gameEnv[playerList[playerId]].redraw = 0;
         }
+        
+        // Add game started event
+        this.addGameEvent(gameEnv, 'GAME_STARTED', {
+            players: playerList,
+            firstPlayer: playerList[firstPlayer],
+            leaderRevealed: leaderRevealed
+        });
+        
+        // Add initial hand dealt events for each player
+        for (let playerId of playerList) {
+            this.addGameEvent(gameEnv, 'INITIAL_HAND_DEALT', {
+                playerId: playerId,
+                handSize: gameEnv[playerId].deck.hand.length
+            });
+        }
+        
         return gameEnv;
     }
     
@@ -51,10 +141,23 @@ class mozGamePlay {
         var gameEnv = gameEnvInput;
         if(gameEnv[playerId].redraw == 0){
             gameEnv[playerId].redraw = 1;
+            
+            // Add player ready event
+            this.addGameEvent(gameEnv, 'PLAYER_READY', {
+                playerId: playerId,
+                redrawRequested: isRedraw
+            });
+            
             if (isRedraw){
                 const {hand,mainDeck} =  await mozDeckHelper.reshuffleForPlayer(playerId);
                 gameEnv[playerId].deck.hand = hand;
                 gameEnv[playerId].deck.mainDeck = mainDeck;
+                
+                // Add hand redrawn event
+                this.addGameEvent(gameEnv, 'HAND_REDRAWN', {
+                    playerId: playerId,
+                    newHandSize: hand.length
+                });
             }
         }
         const playerList = mozGamePlay.getPlayerFromGameEnv(gameEnv);
@@ -71,7 +174,6 @@ class mozGamePlay {
             } 
         }
 
-
         if (allReady && gameEnv["phase"] == TurnPhase.START_REDRAW){
            var hand = gameEnv[playerList[gameEnv["firstPlayer"]]].deck.hand
            var mainDeck = gameEnv[playerList[gameEnv["firstPlayer"]]].deck.mainDeck
@@ -79,10 +181,24 @@ class mozGamePlay {
            gameEnv[playerList[gameEnv["firstPlayer"]]].deck.hand = result["hand"];
            gameEnv[playerList[gameEnv["firstPlayer"]]].deck.mainDeck = result["mainDeck"];
            
+           // Add card drawn event
+           this.addGameEvent(gameEnv, 'CARD_DRAWN', {
+               playerId: playerList[gameEnv["firstPlayer"]],
+               cardCount: 1,
+               newHandSize: result["hand"].length
+           });
+           
            mozPhaseManager.setCurrentPhase(TurnPhase.MAIN_PHASE)
            gameEnv["phase"] = mozPhaseManager.currentPhase;
            gameEnv["currentPlayer"] = playerList[gameEnv["firstPlayer"]];
            gameEnv["currentTurn"] = 0;
+           
+           // Add phase transition event
+           this.addGameEvent(gameEnv, 'GAME_PHASE_START', {
+               newPhase: TurnPhase.MAIN_PHASE,
+               currentPlayer: playerList[gameEnv["firstPlayer"]],
+               allPlayersReady: true
+           });
           
            for (let playerId in playerList){
                let leader = this.cardInfoUtils.getCurrentLeader(gameEnv, playerList[playerId]);
@@ -121,13 +237,18 @@ class mozGamePlay {
                 const selection = gameEnv.pendingCardSelections[pendingAction.selectionId];
                 if (selection) {
                     if (selection.playerId === playerId) {
+                        // Add error event for blocked action
+                        this.addErrorEvent(gameEnv, 'CARD_SELECTION_PENDING', `You must complete your card selection first. Select ${selection.selectCount} card(s).`, playerId);
                         return this.throwError(`You must complete your card selection first. Select ${selection.selectCount} card(s).`);
                     } else {
+                        // Add error event for waiting
+                        this.addErrorEvent(gameEnv, 'WAITING_FOR_PLAYER', `Waiting for ${selection.playerId} to complete card selection. Please wait.`, playerId);
                         return this.throwError(`Waiting for ${selection.playerId} to complete card selection. Please wait.`);
                     }
                 }
             }
             
+            this.addErrorEvent(gameEnv, 'GAME_BLOCKED', `Game is waiting for player action.`, playerId);
             return this.throwError(`Game is waiting for player action.`);
         }
         
@@ -138,6 +259,7 @@ class mozGamePlay {
             
             // Validate field position
             if (action["field_idx"] >= positionDict.length) {
+                this.addErrorEvent(gameEnv, 'INVALID_POSITION', "position out of range", playerId);
                 return this.throwError("position out of range");
             }
             
@@ -146,6 +268,7 @@ class mozGamePlay {
             
             // Validate card index in hand
             if (action["card_idx"] >= hand.length) {
+                this.addErrorEvent(gameEnv, 'INVALID_CARD_INDEX', "hand card out of range", playerId);
                 return this.throwError("hand card out of range");
             }
             
@@ -154,6 +277,7 @@ class mozGamePlay {
             const cardDetails = mozDeckHelper.getDeckCardDetails(cardToPlay);
             
             if (!cardDetails) {
+                this.addErrorEvent(gameEnv, 'CARD_NOT_FOUND', "Card not found", playerId);
                 return this.throwError("Card not found");
             }
 
@@ -168,6 +292,7 @@ class mozGamePlay {
                 );
 
                 if (!placementCheck.canPlace) {
+                    this.addErrorEvent(gameEnv, 'ZONE_COMPATIBILITY_ERROR', placementCheck.reason, playerId);
                     return this.throwError(placementCheck.reason);
                 }
 
@@ -184,44 +309,53 @@ class mozGamePlay {
                 // Face-down cards have no power, no effects, and don't contribute to combos
                 // Phase restriction: No face-down cards can be played in SP zone during MAIN_PHASE
                 if (gameEnv["phase"] != TurnPhase.SP_PHASE && playPos == "sp") {
+                    this.addErrorEvent(gameEnv, 'PHASE_RESTRICTION_ERROR', "Cannot play face-down cards in SP zone during MAIN_PHASE", playerId);
                     return this.throwError("Cannot play face-down cards in SP zone during MAIN_PHASE");
                 }
                 // All other face-down placements are allowed for zone filling and bluffing
             } else {
                 // SP zone enforcement: During SP_PHASE, SP zone cards MUST be played face-down
                 if (gameEnv["phase"] == TurnPhase.SP_PHASE && playPos == "sp") {
+                    this.addErrorEvent(gameEnv, 'SP_PHASE_RESTRICTION', "Cards in SP zone must be played face-down during SP phase", playerId);
                     return this.throwError("Cards in SP zone must be played face-down during SP phase");
                 }
                 // Face-up card placement validation by card type
                 if (cardDetails["cardType"] == "character") {
                     // Character cards can only go in top/left/right zones
                     if (playPos == "help" || playPos == "sp") {
+                        this.addErrorEvent(gameEnv, 'CARD_TYPE_ZONE_ERROR', "Can't play character card in utility zones", playerId);
                         return this.throwError("Can't play character card in utility zones");
                     }
                     // Ensure only one character per zone (no stacking)
                     if (playPos == "top" || playPos == "left" || playPos == "right") {
                         if (await this.monsterInField(gameEnv[playerId].Field[playPos])) {
+                            this.addErrorEvent(gameEnv, 'ZONE_OCCUPIED_ERROR', "Character already in this position", playerId);
                             return this.throwError("Character already in this position");
                         }
                     }
                 } else if (cardDetails["cardType"] == "help") {
                     // Help cards provide utility effects, only one allowed
                     if (playPos != "help") {
+                        this.addErrorEvent(gameEnv, 'CARD_TYPE_ZONE_ERROR', "Help cards can only be played in help zone", playerId);
                         return this.throwError("Help cards can only be played in help zone");
                     }
                     if (gameEnv[playerId].Field[playPos].length > 0) {
+                        this.addErrorEvent(gameEnv, 'ZONE_OCCUPIED_ERROR', "Help zone already occupied", playerId);
                         return this.throwError("Help zone already occupied");
                     }
                 } else if (cardDetails["cardType"] == "sp") {
                     // SP cards can only be played during SP_PHASE
                     if (gameEnv["phase"] != TurnPhase.SP_PHASE) {
+                        this.addErrorEvent(gameEnv, 'PHASE_RESTRICTION_ERROR', "SP cards can only be played during SP phase", playerId);
                         return this.throwError("SP cards can only be played during SP phase");
                     }
                     // SP cards are special powerful effects, only one allowed
                     if (playPos != "sp") {
+                        this.addErrorEvent(gameEnv, 'CARD_TYPE_ZONE_ERROR', "SP cards can only be played in SP zone", playerId);
                         return this.throwError("SP cards can only be played in SP zone");
                     }
                     if (gameEnv[playerId].Field[playPos].length > 0) {
+                        this.addErrorEvent(gameEnv, 'ZONE_OCCUPIED_ERROR', "SP zone already occupied", playerId);
                         return this.throwError("SP zone already occupied");
                     }
                 }
@@ -241,6 +375,30 @@ class mozGamePlay {
             action["selectedCard"] = cardObj;                     // Track action details
             action["turn"] = gameEnv["currentTurn"];
             gameEnv[playerId]["turnAction"].push(action);         // Record action history
+            
+            // Add successful card placement event
+            this.addGameEvent(gameEnv, 'CARD_PLAYED', {
+                playerId: playerId,
+                card: {
+                    cardId: cardDetails.cardId,
+                    name: cardDetails.name,
+                    cardType: cardDetails.cardType,
+                    power: cardDetails.power,
+                    gameType: cardDetails.gameType,
+                    traits: cardDetails.traits || []
+                },
+                zone: playPos,
+                isFaceDown: isPlayInFaceDown,
+                turn: gameEnv["currentTurn"]
+            });
+            
+            // Add zone filled event
+            this.addGameEvent(gameEnv, 'ZONE_FILLED', {
+                playerId: playerId,
+                zone: playPos,
+                cardType: cardDetails.cardType,
+                isFaceDown: isPlayInFaceDown
+            });
 
             // Process immediate card effects - only for face-up cards
             // SP zone cards do NOT process effects immediately - they wait for reveal phase
@@ -254,8 +412,28 @@ class mozGamePlay {
                     effectResult = await this.processUtilityCardEffects(gameEnv, playerId, cardDetails);
                 }
                 
+                // Add card effect triggered event
+                if (effectResult) {
+                    this.addGameEvent(gameEnv, 'CARD_EFFECT_TRIGGERED', {
+                        playerId: playerId,
+                        cardId: cardDetails.cardId,
+                        cardName: cardDetails.name,
+                        effectType: cardDetails.cardType === "character" ? "onSummon" : "onPlay",
+                        requiresSelection: effectResult.requiresCardSelection || false
+                    });
+                }
+                
                 // Check if card effect requires user selection
                 if (effectResult && effectResult.requiresCardSelection) {
+                    // Add card selection required event
+                    this.addGameEvent(gameEnv, 'CARD_SELECTION_REQUIRED', {
+                        playerId: playerId,
+                        selectionId: effectResult.cardSelection.selectionId,
+                        eligibleCardCount: effectResult.cardSelection.eligibleCards.length,
+                        selectCount: effectResult.cardSelection.selectCount,
+                        cardTypeFilter: effectResult.cardSelection.cardTypeFilter
+                    });
+                    
                     // Return the effect result directly - it already contains the proper structure
                     return effectResult;
                 }
@@ -269,6 +447,12 @@ class mozGamePlay {
                 );
                 
                 if (allSpZonesFilled) {
+                    // Add event for SP zones filled
+                    this.addGameEvent(gameEnv, 'ALL_SP_ZONES_FILLED', {
+                        allPlayers: allPlayers,
+                        triggerPlayer: playerId
+                    });
+                    
                     // Trigger SP reveal and battle calculation
                     return await this.processSpRevealAndBattle(gameEnv);
                 }
@@ -282,10 +466,36 @@ class mozGamePlay {
             
             if (!isMainPhaseComplete) {
                 // Continue turn-based play - players still need to place character/help cards
+                const oldPlayer = gameEnv.currentPlayer;
                 gameEnv = await this.shouldUpdateTurn(gameEnv, playerId);
+                
+                // Add turn switch event if player changed
+                if (gameEnv.currentPlayer !== oldPlayer) {
+                    this.addGameEvent(gameEnv, 'TURN_SWITCH', {
+                        oldPlayer: oldPlayer,
+                        newPlayer: gameEnv.currentPlayer,
+                        turn: gameEnv.currentTurn
+                    });
+                }
             } else {
+                // Add event for main phase completion
+                this.addGameEvent(gameEnv, 'ALL_MAIN_ZONES_FILLED', {
+                    allPlayersComplete: true,
+                    nextPhase: 'SP_PHASE'
+                });
+                
                 // All required zones filled - prepare for battle resolution with phase skipping logic
+                const oldPhase = gameEnv.phase;
                 gameEnv = await this.advanceToSpPhaseOrBattle(gameEnv, playerId);
+                
+                // Add phase change event if phase changed
+                if (gameEnv.phase !== oldPhase) {
+                    this.addGameEvent(gameEnv, 'PHASE_CHANGE', {
+                        oldPhase: oldPhase,
+                        newPhase: gameEnv.phase,
+                        reason: 'main_phase_complete'
+                    });
+                }
             }
         }
         return gameEnv;

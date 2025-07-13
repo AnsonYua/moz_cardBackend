@@ -103,6 +103,40 @@ class GameController {
         }
     }
 
+    async acknowledgeEvents(req, res) {
+        try {
+            const { gameId, eventIds } = req.body;
+            
+            if (!gameId) {
+                return res.status(400).json({ error: 'gameId is required' });
+            }
+            
+            if (!eventIds || !Array.isArray(eventIds)) {
+                return res.status(400).json({ error: 'eventIds array is required' });
+            }
+            
+            const result = await gameLogic.acknowledgeGameEvents(gameId, eventIds);
+            res.json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    async nextRound(req, res) {
+        try {
+            const { gameId } = req.body;
+            
+            if (!gameId) {
+                return res.status(400).json({ error: 'gameId is required' });
+            }
+            
+            const result = await gameLogic.nextRound(gameId);
+            res.json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
 
     async injectGameState(req, res) {
         try {

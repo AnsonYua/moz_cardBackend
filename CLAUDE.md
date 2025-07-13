@@ -58,6 +58,12 @@ The game follows a specific battle flow managed by `mozGamePlay.js`:
 - `src/routes/gameRoutes.js` - Route definitions
 - `server.js` - Express server setup with CORS and error handling
 
+**Event System:**
+- Real-time game state change tracking for frontend integration
+- Comprehensive event types covering all game actions and errors
+- Event persistence, acknowledgment, and automatic cleanup
+- Polling-based frontend integration with precise change indicators
+
 ### Game Concepts
 
 **Leaders/Summoners:** Each player has 4 leader cards that fight in sequence. Leaders have zone compatibility rules determining which character types can be summoned to their top/left/right zones.
@@ -214,3 +220,109 @@ Strategic face-down placement system:
 - **SP zone enforcement:** During SP_PHASE, only face-down placement allowed in SP zone
 - **Permanent status:** Face-down cards stay face-down except SP zone auto-reveal
 - **Strategic uses:** Zone filling, bluffing, hand management, resource conservation
+
+## Game Event System (January 2025)
+Comprehensive real-time game state tracking for frontend integration:
+
+### Event Architecture
+- **Event Storage:** All events stored in `gameEnv.gameEvents` array within game state
+- **Event Persistence:** Events persist for 3 seconds (matching 1-second frontend polling)
+- **Automatic Cleanup:** Expired and acknowledged events automatically removed
+- **Unique IDs:** Each event has timestamp-based unique identifier
+
+### Event Categories
+**Setup Events:**
+- `GAME_STARTED` - Game creation with leader reveals and first player determination
+- `INITIAL_HAND_DEALT` - Player receives starting hand
+- `PLAYER_READY` - Individual player ready status with optional redraw
+- `HAND_REDRAWN` - Player chose to redraw starting hand
+- `GAME_PHASE_START` - Transition to MAIN_PHASE after both players ready
+- `CARD_DRAWN` - Card drawn to hand during game
+
+**Turn & Phase Events:**
+- `TURN_SWITCH` - Player turn changed with old/new player data
+- `PHASE_CHANGE` - Game phase transition with reason
+- `ALL_MAIN_ZONES_FILLED` - All character and help zones complete
+- `ALL_SP_ZONES_FILLED` - Both players filled SP zones, triggering reveal
+
+**Card Action Events:**
+- `CARD_PLAYED` - Card placed with full card details and zone
+- `ZONE_FILLED` - Specific zone occupied (top/left/right/help/sp)
+- `CARD_EFFECT_TRIGGERED` - Card effect activated with effect type
+- `CARD_SELECTION_REQUIRED` - Search effect needs player input
+- `CARD_SELECTION_COMPLETED` - Player completed card selection
+
+**SP & Battle Events:**
+- `SP_CARDS_REVEALED` - Both SP cards revealed automatically  
+- `SP_EFFECTS_EXECUTED` - SP effects processed in priority order
+- `BATTLE_CALCULATED` - Power + combo calculation complete
+- `VICTORY_POINTS_AWARDED` - Round winner determined and points awarded
+- `NEXT_ROUND_START` - New leader battle begins
+
+**Error & Validation Events:**
+- `ERROR_OCCURRED` - Any validation error or failed action
+- `CARD_SELECTION_PENDING` - Action blocked due to pending selection
+- `WAITING_FOR_PLAYER` - Waiting for other player action
+- `ZONE_COMPATIBILITY_ERROR` - Card placement restriction violation
+- `PHASE_RESTRICTION_ERROR` - Wrong phase for attempted action
+- `ZONE_OCCUPIED_ERROR` - Attempted to place card in occupied zone
+
+### Frontend Integration
+**Polling Strategy:**
+- Frontend polls GET `/player/:playerId?gameId=X` every 1 second
+- Detects unprocessed events in `gameEnv.gameEvents` array
+- Processes events based on type and triggers appropriate UI actions
+- Calls POST `/player/acknowledgeEvents` to mark events as processed
+
+**Event Structure:**
+```json
+{
+  "id": "event_1640995200001",
+  "type": "CARD_PLAYED", 
+  "data": {
+    "playerId": "playerId_1",
+    "card": { "cardId": "43", "name": "Card Name", "power": 150 },
+    "zone": "top",
+    "isFaceDown": false
+  },
+  "timestamp": 1640995200001,
+  "expiresAt": 1640995203001,
+  "frontendProcessed": false
+}
+```
+
+**API Endpoints:**
+- `POST /player/acknowledgeEvents` - Mark event IDs as processed
+- All existing endpoints automatically generate appropriate events
+- Event cleanup happens on every API call to prevent memory growth
+
+### Implementation Benefits
+- **Precise Change Detection:** Frontend knows exactly what changed instead of comparing entire game state
+- **Efficient Updates:** Only process events when actual changes occur
+- **Error Handling:** All validation failures generate specific error events
+- **Reliability:** Event persistence prevents missed updates during network issues
+- **Performance:** Automatic cleanup prevents memory growth
+
+## Development Notes & Recent Updates
+
+### Key Implementation Guidelines
+- **Event System Usage:** All game state changes automatically generate appropriate events for frontend consumption
+- **Error Handling:** Every validation failure should generate a specific error event type
+- **Zone Compatibility:** Always use `gameType` field for zone placement, never `traits[0]`
+- **Leader Access:** Use `leader.zoneCompatibility[zone]` not `leader[zone]`
+- **Face-Down Cards:** Bypass all restrictions but contribute 0 power and no combos
+- **SP Phase Rules:** SP cards MUST be played face-down during SP_PHASE
+- **File-Based Storage:** All game state persisted to JSON files, no in-memory storage
+
+### Testing Considerations
+- Test scenarios may need updating for new card IDs and JSON structure
+- Event system requires testing of frontend polling and acknowledgment flow
+- SP phase enforcement and auto-reveal system needs comprehensive testing
+- Face-down card mechanics require validation across all game phases
+
+### Frontend Integration Requirements
+- Implement 1-second polling of GET `/player/:playerId?gameId=X`
+- Process events from `gameEnv.gameEvents` array based on event type
+- Call POST `/player/acknowledgeEvents` to mark events as processed
+- Handle all error event types with appropriate user feedback
+- Support card selection workflow via events and blocking logic

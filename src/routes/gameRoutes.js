@@ -19,6 +19,8 @@ router.post('/player/startReady', gameController.startReady);
 router.post('/player/playerAction', gameController.playerAction);
 router.post('/player/playerAiAction', gameController.playerAIAction);
 router.post('/player/selectCard', gameController.selectCard);
+router.post('/player/acknowledgeEvents', gameController.acknowledgeEvents);
+router.post('/player/nextRound', gameController.nextRound);
 router.post('/test/setCase', gameController.setCase);
 
 // Test-only endpoint for injecting game environment
